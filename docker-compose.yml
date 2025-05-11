@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8.4
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_crypto_app
+
+    ports:
+      - "3307:3306"
+    networks:
+      - nexora-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  nexora-backend:
+    build: ./nexora-backend
+    container_name: nexora-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - nexora-network
+    entrypoint: ["sh", "-c", "until mysql -h mysql -u root -proot -e 'SELECT 1'; do echo 'waiting for mysql'; sleep 2; done; java -jar /app.jar"]
+
+networks:
+  nexora-network:
+    driver: bridge
