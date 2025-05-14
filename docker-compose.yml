@@ -22,8 +22,8 @@ services:
 
 
   nexora-backend:
-    build: ./nexora-backend
-    container_name: nexora-backend
+    build: ./nexora-crypto-api
+    container_name: nexora-cypto-api
     ports:
       - "8080:8080"
     depends_on:
