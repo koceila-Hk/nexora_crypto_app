@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+./src/main/resources/application-docker.properties
+./src/main/resources/application-test.properties
+
 ### STS ###
 .apt_generated
 .classpath
@@ -31,3 +34,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### Application.properties ###
+./src/main/resources/application-docker.properties
+./src/main/resources/application-test.properties

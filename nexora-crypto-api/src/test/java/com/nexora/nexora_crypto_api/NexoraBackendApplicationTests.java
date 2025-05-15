@@ -7,9 +7,6 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 class NexoraBackendApplicationTests {
-//	@MockBean
-//	private JavaMailSender javaMailSender;
-
 
 	@Test
 	void contextLoads() {
