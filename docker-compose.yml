@@ -21,11 +21,11 @@ services:
       retries: 5
 
 
-  nexora-backend:
+  nexora-crypto-api:
     build: ./nexora-crypto-api
-    container_name: nexora-cypto-api
+    container_name: backend
     ports:
-      - "8080:8080"
+      - "8088:8088"
     depends_on:
       - mysql
     environment:
@@ -33,6 +33,16 @@ services:
     networks:
       - nexora-network
     entrypoint: ["sh", "-c", "until mysql -h mysql -u root -proot -e 'SELECT 1'; do echo 'waiting for mysql'; sleep 2; done; java -jar /app.jar"]
+
+  nexora-crypto-dashboard:
+    build: ./nexora-crypto-dashboard/webapp
+    container_name: frontend
+    ports:
+      - 4200:4200
+    networks:
+      - nexora-network
+    depends_on:
+      - nexora-crypto-api
 
 networks:
   nexora-network:
