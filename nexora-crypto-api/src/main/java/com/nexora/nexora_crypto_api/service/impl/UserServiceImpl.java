@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<User> allUsers() {
+    public List<User> allUsers() throws Exception {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
         return users;

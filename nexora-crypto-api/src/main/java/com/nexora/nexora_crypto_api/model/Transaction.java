@@ -37,8 +37,8 @@ public class Transaction {
     @Column(name = "date_transaction")
     private LocalDateTime dateTransaction;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @NotNull
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    @NotNull
+//    private User user;
 }

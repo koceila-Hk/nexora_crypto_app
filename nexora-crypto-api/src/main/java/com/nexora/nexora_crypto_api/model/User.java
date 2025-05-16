@@ -12,9 +12,11 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +24,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true)
-    private String username;
+    private String pseudonym;
 
     private String password;
 
@@ -41,8 +43,8 @@ public class User implements UserDetails {
     private LocalDateTime verificationCodeExpiresAt;
     private boolean enabled;
 
-    public User(String username, String email, String password) {
-        this.username = username;
+    public User(String pseudonym, String email, String password) {
+        this.pseudonym = pseudonym;
         this.email = email;
         this.password = password;
     }

@@ -14,14 +14,17 @@ export class RegisterComponent {
   registerForm: FormGroup;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
+     console.log('RegisterComponent chargé');
     this.registerForm = this.fb.group({
-      username: ['', Validators.required],
+      pseudonym: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
   onSubmit() {
+    console.log('Form submit triggered');
+
     if (this.registerForm.valid) {
       console.log('Sending data:', this.registerForm.value);
       this.http.post('http://localhost:8080/auth/signup', this.registerForm.value).subscribe({
