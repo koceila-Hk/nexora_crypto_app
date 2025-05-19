@@ -48,7 +48,6 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
 		<!-- Validation DTO @Valid -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
