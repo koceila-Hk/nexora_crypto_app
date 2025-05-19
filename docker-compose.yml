@@ -7,8 +7,8 @@ services:
     container_name: mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db_crypto_app
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
 
     ports:
       - "3307:3306"
@@ -25,20 +25,20 @@ services:
     build: ./nexora-crypto-api
     container_name: backend
     ports:
-      - "8088:8088"
+      - "8080:8080"
     depends_on:
       - mysql
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - nexora-network
-    entrypoint: ["sh", "-c", "until mysql -h mysql -u root -proot -e 'SELECT 1'; do echo 'waiting for mysql'; sleep 2; done; java -jar /app.jar"]
+    #entrypoint: ["sh", "-c", "until mysql -h mysql -u root -proot -e 'SELECT 1'; do echo 'waiting for mysql'; sleep 2; done; java -jar /app.jar"]
 
   nexora-crypto-dashboard:
-    build: ./nexora-crypto-dashboard/webapp
+    build: ./nexora-crypto-dashboard/webapps/dashboard
     container_name: frontend
     ports:
-      - 4200:4200
+      - 4200:80
     networks:
       - nexora-network
     depends_on:

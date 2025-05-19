@@ -9,8 +9,14 @@ RUN mvn clean package -DskipTests
 # Étape de runtime
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
-COPY target/nexora-crypto-api-0.0.1-SNAPSHOT.jar app.jar
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+COPY target/*.jar app.jar
 
 RUN apt-get update && apt-get install -y default-mysql-client && apt-get clean
-EXPOSE 8088
-CMD ["java", "-jar", "app.jar"]
+
+EXPOSE 8080
+
+CMD ["/wait-for-it.sh", "-t", "60", "mysql:3306", "--", "java", "-jar", "/app/app.jar"]
+
