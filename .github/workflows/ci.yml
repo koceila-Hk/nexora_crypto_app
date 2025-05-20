@@ -51,4 +51,4 @@ jobs:
           npm run build --prod
 
       - name: Build Docker containers
-        run: docker-compose -f docker-compose.yml build
+        run: docker compose -f docker-compose.yml build
