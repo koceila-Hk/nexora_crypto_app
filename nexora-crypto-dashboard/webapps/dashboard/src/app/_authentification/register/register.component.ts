@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,9 +13,9 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
+  errorMessage = String;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
-     console.log('RegisterComponent chargé');
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
     this.registerForm = this.fb.group({
       pseudonym: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -23,16 +24,17 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    console.log('Form submit triggered');
 
     if (this.registerForm.valid) {
-      console.log('Sending data:', this.registerForm.value);
       this.http.post('http://localhost:8080/auth/signup', this.registerForm.value).subscribe({
         next: (res) => {
-          console.log('Inscription réussie', res);
+          console.log('Inscription réussi', res);
+          sessionStorage.setItem('email', this.registerForm.value.email);
+          this.router.navigate(['/verify']);
         },
         error: (err) => {
           console.error('Erreur lors de l’inscription', err);
+          this.errorMessage = err.error;
         }
       });
     } else {
