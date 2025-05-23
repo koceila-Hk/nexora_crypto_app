@@ -1,0 +1,18 @@
+.hero-section {
+  background-color: #05050F;
+}
+.card {
+  background-color: #1A1A2E;
+}
+.btn-primary {
+  background-color: #C3B8FD;
+  border-color: #C3B8FD;
+}
+
+.btn {
+  color: black !important;
+}
+
+.cta-section {
+  background-color: #262C38;
+}

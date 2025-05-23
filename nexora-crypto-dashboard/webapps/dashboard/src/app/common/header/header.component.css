@@ -1,0 +1,21 @@
+.navbar {
+  background-color: #10101A;
+}
+.navbar-brand {
+  font-weight: bold;
+  color: #FFFFFF;
+}
+.navbar-brand img {
+  /* Inversion si le logo est clair, pour qu'il apparaisse blanc */
+  filter: brightness(0) invert(1);
+}
+.nav-link {
+  color: #FFFFFF;
+}
+.nav-link:hover {
+  color: #FFFFFF;
+}
+.btn-primary {
+  background-color: #7C75FF;
+  border-color: #7C75FF;
+}
