@@ -10,7 +10,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent  },
   { path: 'verify', component: VerifyComponent  },
   { path: 'login', component: LoginComponent },
-  { path: 'home-not-auth', component: HomeNotAuthComponent, canActivate: [AuthGuard]},
+  { path: 'home-not-auth', component: HomeNotAuthComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: 'login', pathMatch: 'full' }, 
+  { path: '', redirectTo: 'home-not-auth', pathMatch: 'full' }, 
 ]; 

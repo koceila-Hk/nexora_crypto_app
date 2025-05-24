@@ -16,3 +16,15 @@
 .cta-section {
   background-color: #262C38;
 }
+
+.stroke-row {
+  background-color: #0B0B15;
+  border: 8px solid #0E0E18;
+  border-radius: 10px;
+}
+
+.card-body {
+  background-color: #1A1728;
+  border: 5px solid #0E0E18;
+  border-radius: 8px;
+}
