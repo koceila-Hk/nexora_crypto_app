@@ -6,7 +6,6 @@
   color: #FFFFFF;
 }
 .navbar-brand img {
-  /* Inversion si le logo est clair, pour qu'il apparaisse blanc */
   filter: brightness(0) invert(1);
 }
 .nav-link {
@@ -16,6 +15,11 @@
   color: #FFFFFF;
 }
 .btn-primary {
-  background-color: #7C75FF;
-  border-color: #7C75FF;
+  background-color: #C3B8FD;
+  border-color: #C3B8FD;
+  color: black !important;
 }
+
+/* .btn {
+  color: black !important;
+} */
