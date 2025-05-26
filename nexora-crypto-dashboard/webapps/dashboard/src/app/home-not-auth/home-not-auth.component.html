@@ -1,10 +1,10 @@
 <!-- Header -->
 <app-header></app-header>
 
+<!-- Home page -->
 <section class="hero-section text-light">
   <div class="container py-5">
     <div class="row align-items-center stroke-row">
-
       <div class="col-md-6 mb-4">
         <h1>Rejoignez l'aventure dès le début !</h1>
         <p>Soyez parmi les premiers à explorer la simulation et à tester vos stratégies en cryptomonnaie.</p>
@@ -12,41 +12,7 @@
       </div>
 
       <div class="col-md-6">
-        <div class="card bg-secondary text-light">
-          <div class="card-body">
-            <h5 class="card-title">Cryptos disponible sur le marchés</h5>
-            <ul class="list-unstyled mb-0">
-              <li class="d-flex justify-content-between align-items-center mb-2">
-                <div class="d-flex align-items-center">
-                  <i class="bi bi-currency-bitcoin me-2"></i><span>BTC</span>
-                </div>
-                <span>$96,000.43</span>
-                <span class="text-success">+1,02%</span>
-              </li>
-              <li class="d-flex justify-content-between align-items-center mb-2">
-                <div class="d-flex align-items-center">
-                  <i class="bi bi-ethereum me-2"></i><span>ETH</span>
-                </div>
-                <span>$2,768.32</span>
-                <span class="text-danger">-0,70%</span>
-              </li>
-              <li class="d-flex justify-content-between align-items-center mb-2">
-                <div class="d-flex align-items-center">
-                  <i class="bi bi-coin me-2"></i><span>DOGE</span>
-                </div>
-                <span>$609.86</span>
-                <span class="text-success">+1,02%</span>
-              </li>
-              <li class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                  <i class="bi bi-currency-bitcoin me-2"></i><span>BNB</span>
-                </div>
-                <span>$1.03489</span>
-                <span class="text-danger">-0,65%</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <app-crypto-details></app-crypto-details>
       </div>
     </div>
   </div>
