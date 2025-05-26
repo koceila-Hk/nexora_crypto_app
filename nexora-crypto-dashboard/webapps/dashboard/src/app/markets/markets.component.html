@@ -1,0 +1,40 @@
+<app-header></app-header>
+
+<section class="hero-section text-light">
+  <div class="container py-5">
+    <div class="row align-items-center stroke-row">
+      <!-- Cartes de cryptomonnaies -->
+      <div class="col-md-8">
+        <app-crypto-details></app-crypto-details>
+      </div>    
+      <!-- Tableau d'achat -->
+    <div class="col-md-4">
+        <div class="d-flex mb-3">
+            <button class="btn btn-toggle active" id="btn-acheter">Acheter</button>
+            <button class="btn btn-toggle" id="btn-vendre">Vendre</button>
+        </div>
+
+        <!-- Dépenser -->
+        <div class="card card-custom">
+            <div class="d-flex justify-content-between">
+                <span>Dépense</span>
+                <span>Points</span>
+            </div>
+            <h2 class="text-center mt-2">0.00</h2>
+        </div>
+
+        <!-- Recevoir -->
+        <div class="card card-custom">
+            <div class="d-flex justify-content-between">
+                <span>Recevoir</span>
+                <!-- <span><img src="https://cryptologos.cc/logos/ethereum-eth-logo.png?v=030" alt="ETH" class="crypto-logo">ETH</span> -->
+            </div>
+            <h2 class="text-center mt-2">0.00</h2>
+        </div>
+        <button class="btn submit-btn w-100">Soumettre</button>
+    </div>
+    </div>
+</div>
+</section>
+
+<app-footer></app-footer>

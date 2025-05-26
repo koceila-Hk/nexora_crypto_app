@@ -1,11 +1,13 @@
 package com.nexora.nexora_crypto_api.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @Data
 public class CoinDetailDto {
     private String id;

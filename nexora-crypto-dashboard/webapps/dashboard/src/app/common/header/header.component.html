@@ -1,38 +1,46 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
+  <div class="container-fluid px-3">
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <!-- Logo (SVG ou image) -->
-      <img src="assets/logoWeb.png" alt="logo" width="30" height="30" class="me-2">
-      nexora
+      <img src="assets/logoLight-png.png" alt="logo" width="30" height="30" class="me-2">
+      <span class="fw-bold">nexora</span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
       data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
       aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Liens de navigation à gauche -->
-      <ul class="navbar-nav me-auto">
+      <!-- Menu principal -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+          <a class="nav-link active" aria-current="page" routerLink="/">Accueil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Acheter des cryptos</a>
+          <a class="nav-link" routerLink="/buy">Acheter des cryptos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Marchés</a>
+          <a class="nav-link" routerLink="/markets">Marchés</a>
         </li>
       </ul>
-      <!-- Liens à droite : recherche, connexion, inscription -->
-      <ul class="navbar-nav ms-auto d-flex align-items-center">
-        <li class="nav-item me-3">
-          <a class="nav-link" href="#"><i class="bi bi-search"></i></a>
+
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <li class="nav-item me-2">
+          <div class="search-box d-flex align-items-center">
+            <i class="bi bi-search search-icon"></i>
+            <input type="text" class="form-control search-input" placeholder="Rechercher..." />
+          </div>
         </li>
         <li class="nav-item me-2">
-          <a routerLink="/login" class="nav-link" role="/login">Connexion</a>
+          <a class="nav-link" routerLink="/login">Connexion</a>
         </li>
         <li class="nav-item">
-          <a routerLink="/register" class="btn btn-primary" role="button">Inscription</a>
+          <a class="btn btn-primary" routerLink="/register">Inscription</a>
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-light ms-2" (click)="toggleTheme()" title="Changer le thème">
+            <i class="bi" [ngClass]="currentThemeIcon"></i>
+          </button>
         </li>
       </ul>
     </div>

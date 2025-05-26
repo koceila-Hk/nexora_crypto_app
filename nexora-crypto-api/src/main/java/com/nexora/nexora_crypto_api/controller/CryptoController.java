@@ -1,6 +1,7 @@
 package com.nexora.nexora_crypto_api.controller;
 
 import com.nexora.nexora_crypto_api.dto.CoinDetailDto;
+import com.nexora.nexora_crypto_api.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class CryptoController {
     }
 
     @GetMapping("/details/{id}")
-    public ResponseEntity<CoinDetailDto> getCoinDetails(@PathVariable String id) {
-        CoinDetailDto details = coinGeckoService.getCoinDetails(id);
+    public ResponseEntity<CoinInfosForUserDto> getCoinDetails(@PathVariable String id, @RequestParam(defaultValue = "eur") String currency) {
+        CoinInfosForUserDto details = coinGeckoService.getCoinDetails(id, currency);
         return ResponseEntity.ok(details);
     }
 
