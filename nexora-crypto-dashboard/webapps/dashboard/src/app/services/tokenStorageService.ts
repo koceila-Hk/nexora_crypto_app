@@ -12,6 +12,20 @@ export class TokenStorageService {
     this.storage.setItem('access_token', token);
   }
 
+  getUserIdFromToken(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.userId || payload.sub || null;
+    } catch (e) {
+      console.error('Erreur de décodage du token', e);
+      return null;
+    }
+  }
+
+
   clear(): void {
     this.storage.clear();
   }

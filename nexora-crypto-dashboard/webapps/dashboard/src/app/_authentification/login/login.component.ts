@@ -36,7 +36,7 @@ export class LoginComponent {
           // console.log('Authentification réussi', res);
           const token = res.token;
           this.tokenStorage.saveToken(token);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/markets']);
         },
         error: (err) => {
           console.error('Erreur lors de l\'authentificaiton', err);

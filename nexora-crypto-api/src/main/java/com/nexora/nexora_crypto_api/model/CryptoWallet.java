@@ -26,8 +26,8 @@ public class CryptoWallet {
 
     private BigDecimal quantity;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    @NotNull
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User user;
 }
