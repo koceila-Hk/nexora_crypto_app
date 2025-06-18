@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,8 @@ import { CryptoService } from '../../services/crypto.service';
   styleUrl: './crypto-details.component.css'
 })
 export class CryptoDetailsComponent implements OnInit {
+  @Output() coinSelected = new EventEmitter<CoinDetails>();
+
   coins: CoinDetails[] = [];
 
   constructor(private cryptoService: CryptoService) {}
@@ -27,6 +29,10 @@ export class CryptoDetailsComponent implements OnInit {
     if (change == null) return '';
     return change >= 0 ? 'text-success' : 'text-danger';
   }
+
+  selectCoin(coin: CoinDetails) {
+  this.coinSelected.emit(coin);
+}
 }
 
 interface CoinDetails {

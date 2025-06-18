@@ -17,7 +17,7 @@ export class CryptoService {
   private baseUrl = 'http://localhost:8080/crypto/details';
   private coins = [
     'bitcoin',
-    'ethereum',
+    // 'ethereum',
     // 'dogecoin',
     // 'binancecoin'
     ];

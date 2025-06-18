@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -31,16 +32,17 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
-//    private BigDecimal balance;
-//
-//    @Column(name = "date_creation")
-//    private LocalDateTime dateCreation;
+    private BigDecimal balance;
+
+    @Column(name = "date_creation")
+    private LocalDateTime dateCreation;
 
     @Column(name = "verification_code")
     private String verificationCode;
 
     @Column(name = "verification_expiration")
     private LocalDateTime verificationCodeExpiresAt;
+
     private boolean enabled;
 
     public User(String pseudonym, String email, String password) {

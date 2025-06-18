@@ -6,7 +6,7 @@ import com.nexora.nexora_crypto_api.dto.VerifyUserDto;
 import com.nexora.nexora_crypto_api.model.User;
 
 public interface AuthenticationService {
-    User signup(RegisterUserDto input) throws Exception;
+    void signup(RegisterUserDto input) throws Exception;
     User authenticate(LoginUserDto input) throws Exception;
 
     void verifyUser(VerifyUserDto input) throws Exception;

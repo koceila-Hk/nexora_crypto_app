@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
@@ -31,7 +32,7 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     private EmailService emailService;
 
     @Override
-    public User signup(RegisterUserDto input) throws Exception {
+    public void signup(RegisterUserDto input) throws Exception {
         if (userRepository.existsByEmail(input.getEmail()) || userRepository.existsByPseudonym(input.getPseudonym())) {
             throw new Exception("User alreadyExist");
         }
@@ -40,7 +41,9 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
         sendVerificationEmail(user);
-        return userRepository.save(user);
+        user.setBalance(BigDecimal.valueOf(1000));
+        user.setDateCreation(LocalDateTime.now());
+        userRepository.save(user);
     }
 
     @Override
