@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.beans.Transient;
 import java.math.BigDecimal;
 
 @Getter
@@ -25,6 +26,9 @@ public class CryptoWallet {
     private String cryptoName;
 
     private BigDecimal quantity;
+
+    @Transient
+    private BigDecimal variationPercentage;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

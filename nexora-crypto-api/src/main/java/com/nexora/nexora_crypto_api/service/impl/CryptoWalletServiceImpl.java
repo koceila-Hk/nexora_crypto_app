@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class CryptoWalletServiceImpl implements CryptoWalletService {
@@ -24,4 +25,32 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
             return cryptoWalletRepository.save(wallet);
         });
     }
+
+    @Override
+    public List<CryptoWallet> getWalletsWithVariation(Long userId) {
+        List<CryptoWallet> wallets = walletRepository.findByUserId(userId);
+
+        for (CryptoWallet wallet : wallets) {
+            Object[] buyData = transactionRepository.findTotalAmountAndQuantityByUserAndCrypto(userId, wallet.getCryptoName());
+
+            if (buyData != null && buyData[0] != null && buyData[1] != null) {
+                BigDecimal totalBuyAmount = (BigDecimal) buyData[0];
+                BigDecimal totalQuantity = (BigDecimal) buyData[1];
+
+                if (totalQuantity.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal averageBuyPrice = totalBuyAmount.divide(totalQuantity, 4, RoundingMode.HALF_UP);
+                    BigDecimal currentPrice = coinGeckoService.getCryptoPrice(wallet.getCryptoName(), "eur");
+
+                    BigDecimal variation = currentPrice.subtract(averageBuyPrice)
+                            .divide(averageBuyPrice, 4, RoundingMode.HALF_UP)
+                            .multiply(BigDecimal.valueOf(100));
+
+                    wallet.setVariationPercentage(variation);
+                }
+            }
+        }
+
+        return wallets;
+    }
+
 }
