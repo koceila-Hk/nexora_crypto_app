@@ -32,7 +32,6 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - nexora-network
-    #entrypoint: ["sh", "-c", "until mysql -h mysql -u root -proot -e 'SELECT 1'; do echo 'waiting for mysql'; sleep 2; done; java -jar /app.jar"]
 
   nexora-crypto-dashboard:
     build: ./nexora-crypto-dashboard/webapps/dashboard
