@@ -6,4 +6,5 @@ import com.nexora.nexora_crypto_api.model.Transaction;
 public interface TransactionService {
 
     void buyCrypto(TransactionRequest request);
+    void sellCrypto(TransactionRequest request);
 }

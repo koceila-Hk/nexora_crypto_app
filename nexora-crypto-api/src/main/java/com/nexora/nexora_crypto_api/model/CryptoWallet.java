@@ -26,6 +26,9 @@ public class CryptoWallet {
 
     private BigDecimal quantity;
 
+    @Transient
+    private BigDecimal variationPercentage;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull

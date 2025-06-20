@@ -20,7 +20,17 @@ public class TransactionController {
     public ResponseEntity<String> buyCrypto(@RequestBody TransactionRequest request) {
         try {
             transactionService.buyCrypto(request);
-            return ResponseEntity.ok("Achat réussi !");
+            return ResponseEntity.ok("Successful purchase !");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @PostMapping("/sell")
+    public ResponseEntity<String> sellCrypto(@RequestBody TransactionRequest request) {
+        try {
+            transactionService.sellCrypto(request);
+            return ResponseEntity.ok("Successful sale !");
         } catch (RuntimeException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

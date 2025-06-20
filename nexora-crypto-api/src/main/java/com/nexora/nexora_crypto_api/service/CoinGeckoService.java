@@ -27,11 +27,10 @@ public class CoinGeckoService {
                 restTemplate.exchange(url, HttpMethod.GET, null,
                         new ParameterizedTypeReference<>() {
                         });
-
-        return response.getBody()
-                .getOrDefault(id, Map.of())
-                .getOrDefault(currency, BigDecimal.ZERO);
+        System.out.println("unitPrice : " + response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO));
+        return response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO);
     }
+
 
     public CoinInfosForUserDto getCoinDetails(String coinId, String eur) {
         String url = baseUrl + "coins/" + coinId;
