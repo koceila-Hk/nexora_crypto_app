@@ -10,39 +10,28 @@ import com.nexora.nexora_crypto_api.repository.UserRepository;
 import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import com.nexora.nexora_crypto_api.service.TransactionCommand;
 import com.nexora.nexora_crypto_api.service.UserService;
-import org.h2.command.Command;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Service
 public class BuyCryptoCommand implements TransactionCommand {
 
-
-    private final TransactionRequest request;
-    private final UserService userService;
-    private final UserRepository userRepository;
-    private final TransactionRepository transactionRepository;
-    private final CryptoWalletService cryptoWalletService;
-    private final CryptoWalletRepository walletRepository;
-
-    public BuyCryptoCommand(
-            TransactionRequest request,
-            UserService userService,
-            UserRepository userRepository,
-            TransactionRepository transactionRepository,
-            CryptoWalletService cryptoWalletService,
-            CryptoWalletRepository walletRepository
-    ) {
-        this.request = request;
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.transactionRepository = transactionRepository;
-        this.cryptoWalletService = cryptoWalletService;
-        this.walletRepository = walletRepository;
-    }
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
+    @Autowired
+    private CryptoWalletService cryptoWalletService;
+    @Autowired
+    private CryptoWalletRepository walletRepository;
 
     @Override
-    public void execute() {
+    public void execute(TransactionRequest request) {
         User user = userService.getUserById(request.getUserId());
         BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
 
@@ -50,9 +39,11 @@ public class BuyCryptoCommand implements TransactionCommand {
             throw new RuntimeException("Solde insuffisant");
         }
 
+        // deduct balance
         user.setBalance(user.getBalance().subtract(totalAmount));
         userRepository.save(user);
 
+        // Add transaction
         Transaction transaction = new Transaction();
         transaction.setType("BUY");
         transaction.setCryptoName(request.getCryptoName());

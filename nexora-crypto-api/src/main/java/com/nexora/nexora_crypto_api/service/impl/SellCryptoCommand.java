@@ -11,36 +11,28 @@ import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import com.nexora.nexora_crypto_api.service.TransactionCommand;
 import com.nexora.nexora_crypto_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Service
 public class SellCryptoCommand implements TransactionCommand {
-    private final TransactionRequest request;
-    private final UserService userService;
-    private final UserRepository userRepository;
-    private final TransactionRepository transactionRepository;
-    private final CryptoWalletService cryptoWalletService;
-    private final CryptoWalletRepository walletRepository;
 
-    public SellCryptoCommand(
-            TransactionRequest request,
-            UserService userService,
-            UserRepository userRepository,
-            TransactionRepository transactionRepository,
-            CryptoWalletService cryptoWalletService,
-            CryptoWalletRepository walletRepository
-    ) {
-        this.request = request;
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.transactionRepository = transactionRepository;
-        this.cryptoWalletService = cryptoWalletService;
-        this.walletRepository = walletRepository;
-    }
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
+    @Autowired
+    private CryptoWalletService cryptoWalletService;
+    @Autowired
+    private CryptoWalletRepository walletRepository;
+
 
     @Override
-    public void execute() {
+    public void execute(TransactionRequest request) {
         User user = userService.getUserById(request.getUserId());
         CryptoWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
 
@@ -54,11 +46,11 @@ public class SellCryptoCommand implements TransactionCommand {
         wallet.setQuantity(wallet.getQuantity().subtract(request.getQuantity()));
         walletRepository.save(wallet);
 
-        // Ajouter le montant au solde utilisateur
+        // Add amount for user
         user.setBalance(user.getBalance().add(totalAmount));
         userRepository.save(user);
 
-        // Créer la transaction
+        // create transaction
         Transaction transaction = new Transaction();
         transaction.setType("SELL");
         transaction.setCryptoName(request.getCryptoName());

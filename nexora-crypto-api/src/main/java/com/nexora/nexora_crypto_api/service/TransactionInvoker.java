@@ -1,13 +1,12 @@
 package com.nexora.nexora_crypto_api.service;
 
+
+import com.nexora.nexora_crypto_api.dto.TransactionRequest;
+import org.springframework.stereotype.Component;
+
+@Component
 public class TransactionInvoker {
-    private TransactionCommand command;
-
-    public void setCommand(TransactionCommand command) {
-        this.command = command;
-    }
-
-    public void process() {
-        command.execute();
+    public void process(TransactionCommand command, TransactionRequest request) {
+        command.execute(request);
     }
 }

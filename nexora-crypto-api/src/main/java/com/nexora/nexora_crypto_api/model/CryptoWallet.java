@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.beans.Transient;
 import java.math.BigDecimal;
 
 @Getter
