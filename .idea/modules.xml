@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/nexora-crypto.iml" filepath="$PROJECT_DIR$/.idea/nexora-crypto.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nexora-backend/nexora-crypto-api.iml" filepath="$PROJECT_DIR$/nexora-backend/nexora-crypto-api.iml" />
     </modules>
   </component>
 </project>
