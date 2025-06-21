@@ -1,0 +1,77 @@
+<!-- HEADER -->
+<app-header></app-header>
+
+<section class="hero-section text-light py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <!-- Solde de compte-->
+      <div class="col-md-5 mb-4">
+        <div class="card bg-dark text-light p-4 h-100 rounded-4 shadow-sm">
+          <h5>Commencez à explorer et testez vos stratégies !</h5>
+          <p class="mt-2 mb-3">Votre solde :</p>
+          <input type="text" class="form-control bg-secondary text-white mb-3 w-75" value="1000.00 Points" readonly>
+          <a routerLink="/markets" class="btn btn-primary" role="button">Commencer</a>
+        </div>
+      </div>
+
+      <!-- Bloc droit les cryptos possédez -->
+      <div class="col-md-7 mb-4">
+        <div class="card bg-dark text-light p-4 h-100 rounded-4 shadow-sm">
+          <h6>Voici les cryptos que vous possédez</h6>
+
+          <div *ngFor="let wallet of wallets" class="d-flex justify-content-between align-items-center mt-3 border-bottom pb-2">
+            <div class="d-flex align-items-center">
+              <!-- <img [src]="wallet.logoUrl" [alt]="wallet.cryptoName" class="me-2" style="width: 24px;"> -->
+              <strong>{{ wallet.cryptoName }}</strong>
+            </div>
+            <span>{{ wallet.quantity }}</span>
+            <span *ngIf="wallet.variationPercentage >= 0 ? 'text-success' : 'text-danger'">
+              {{ wallet.variationPercentage >= 0 ? '+' : '' }}{{ wallet.variationPercentage | number:'1.2-2' }}%
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div> 
+
+    <!-- Historique des transactions -->
+    <div class="row justify-content-center mt-4">
+      <div class="col-12">
+        <div class="text-center text-white my-4">
+          <h5>Historique des Transactions</h5>
+        </div>
+
+        <div class="card bg-dark text-light p-4 rounded-4 shadow-sm">
+          <div class="table-responsive">
+            <table class="table table-borderless text-light align-middle mb-0">
+              <thead class="text-secondary">
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Crypto</th>
+                  <th>Quantité</th>
+                  <th>Prix unitaire</th>
+                  <th>Total payé</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>01/05/2025</td>
+                  <td>Achat</td>
+                  <td>BTC</td>
+                  <td>0.23</td>
+                  <td>$96,000.43</td>
+                  <td>$960.43</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div> 
+  </div> 
+</section>
+
+<!-- Footer -->
+<app-footer></app-footer>

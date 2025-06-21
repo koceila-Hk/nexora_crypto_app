@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+
+body.dark-theme {
+  background-color: #121212;
+  color: white;
+}
+
+body.light-theme {
+  background-color: #f8f9fa;
+  color: black;
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

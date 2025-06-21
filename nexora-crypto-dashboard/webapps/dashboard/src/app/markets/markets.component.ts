@@ -25,7 +25,7 @@ import { TokenStorageService } from '../services/tokenStorageService';
 })
 export class MarketsComponent {
   selectedCoin: CoinDetails | null = null;
-  mode: 'buy' | 'sell' = 'buy'; // Mode sélectionné
+  mode: 'buy' | 'sell' = 'buy'; 
   amountInput: number = 0;
   resultAmount: number = 0;
   errorMessage: string = '';
@@ -42,8 +42,8 @@ export class MarketsComponent {
       const price = this.selectedCoin.currentPrice;
 
       this.resultAmount = this.mode === 'buy'
-        ? this.amountInput / price               // Points ➜ Crypto
-        : this.amountInput * price;             // Crypto ➜ Points
+        ? this.amountInput / price               
+        : this.amountInput * price;             
     } else {
       this.resultAmount = 0;
     }
@@ -72,7 +72,7 @@ export class MarketsComponent {
         next: (res) => {
           console.log(`${this.mode.toUpperCase()} réussi`, res);
           this.errorMessage = '';
-          // Redirection éventuelle après succès :
+          // Redirection
           // this.router.navigate(['/transactions']);
         },
         error: (err) => {
