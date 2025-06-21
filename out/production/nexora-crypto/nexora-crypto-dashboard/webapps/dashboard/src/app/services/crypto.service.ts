@@ -9,14 +9,6 @@ export interface CoinDetails {
   priceChangePercentage: number;
 }
 
-export interface WalletDetail {
-  cryptoName: string;
-  quantity: number;
-  // logoUrl: string;
-  variationPercentage: number;
-}
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -37,18 +29,5 @@ export class CryptoService {
       this.http.get<CoinDetails>(`${this.baseUrl}/${id}?currency=${currency}`)
     );
     return forkJoin(requests);
-  }
-}
-
-@Injectable({
-  providedIn: 'root'
-})
-export class WalletService {
-  private baseUrl = 'http://localhost:8080/wallets';
-
-  constructor(private http: HttpClient) {}
-
-  getWalletsWithVariation(userId: number): Observable<WalletDetail[]> {
-    return this.http.get<WalletDetail[]>(`${this.baseUrl}/variation/${userId}`);
   }
 }

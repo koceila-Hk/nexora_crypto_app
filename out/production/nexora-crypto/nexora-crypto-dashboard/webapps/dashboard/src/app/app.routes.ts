@@ -5,7 +5,6 @@ import { VerifyComponent } from './_authentification/verify/verify.component';
 import { DashboardComponent } from './app-dashboard-component/dashboard/dashboard.component';
 import { AuthGuard } from './interceptors/auth-guard';
 import { HomeNotAuthComponent } from './home-not-auth/home-not-auth.component';
-import { HomeAuthComponent } from './home-auth/home-auth.component';
 import { MarketsComponent } from './markets/markets.component';
 import { CryptoDetailsComponent } from './common/crypto-details/crypto-details.component';
 
@@ -14,7 +13,6 @@ export const routes: Routes = [
   { path: 'verify', component: VerifyComponent  },
   { path: 'login', component: LoginComponent },
   { path: 'home-not-auth', component: HomeNotAuthComponent},
-  { path: 'home-auth', component: HomeAuthComponent},
   { path: 'markets', component: MarketsComponent},
   { path: 'crypto-details', component: CryptoDetailsComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
