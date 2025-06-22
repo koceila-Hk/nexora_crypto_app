@@ -1,6 +1,6 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.dto.TransactionRequest;
+import com.nexora.nexora_crypto_api.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.model.User;
@@ -9,9 +9,7 @@ import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
 import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import com.nexora.nexora_crypto_api.service.UserService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +18,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -67,7 +62,7 @@ class TransactionServiceImplTest {
         wallet.setQuantity(BigDecimal.ZERO);
         wallet.setUser(user);
 
-        TransactionRequest request = new TransactionRequest();
+        TransactionDto request = new TransactionDto();
         request.setUserId(userId);
         request.setCryptoName(cryptoName);
         request.setQuantity(quantity);
@@ -101,7 +96,7 @@ class TransactionServiceImplTest {
         user.setId(userId);
         user.setBalance(balance);
 
-        TransactionRequest request = new TransactionRequest();
+        TransactionDto request = new TransactionDto();
         request.setUserId(userId);
         request.setCryptoName(cryptoName);
         request.setQuantity(quantity);

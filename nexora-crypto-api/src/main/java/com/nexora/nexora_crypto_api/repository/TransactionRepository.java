@@ -13,4 +13,6 @@ public interface TransactionRepository extends JpaRepository <Transaction, Long>
             "WHERE t.user.id = :userId AND t.cryptoName = :cryptoName AND t.type = 'BUY'")
     List<Object[]> findTotalAmountAndQuantityByUserAndCrypto(@Param("userId") Long userId, @Param("cryptoName") String cryptoName);
 
+    @Query("SELECT t FROM Transaction t WHERE t.user.id = :userId")
+    List<Transaction> findByUserId(Long userId);
 }

@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/crypto/**", "/transaction/**", "/wallets/**").permitAll()
+                        .requestMatchers("/auth/**", "/users/**", "/crypto/**", "/transaction/**", "/wallets/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
