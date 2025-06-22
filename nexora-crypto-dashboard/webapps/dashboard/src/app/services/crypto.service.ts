@@ -12,10 +12,25 @@ export interface CoinDetails {
 export interface WalletDetail {
   cryptoName: string;
   quantity: number;
-  // logoUrl: string;
+  // logoCrypto: string;
   variationPercentage: number;
 }
 
+export interface User {
+  // id: number;
+  // username: string;
+  balance: number;
+  // ajoute d'autres champs si nécessaire
+}
+
+export interface Transactions {
+  cryptoName: string;
+  quantity: number;
+  unitPrice: number;
+  type: string;
+  totalAmount: number;
+  dateTransaction: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -50,5 +65,29 @@ export class WalletService {
 
   getWalletsWithVariation(userId: number): Observable<WalletDetail[]> {
     return this.http.get<WalletDetail[]>(`${this.baseUrl}/variation/${userId}`);
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class UserService {
+  private baseUrl = 'http://localhost:8080/users/balance';
+
+  constructor(private http: HttpClient) {}
+
+  getUserById(id: number): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/${id}`);
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TransactionService {
+  private baseUrl = 'http://localhost:8080/transaction';
+
+  constructor(private http: HttpClient) {}
+
+  getTransactionsByUserId(userId: number): Observable<Transactions[]> {
+    return this.http.get<Transactions[]>(`${this.baseUrl}/${userId}`);
   }
 }

@@ -1,6 +1,6 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.dto.TransactionRequest;
+import com.nexora.nexora_crypto_api.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.model.User;
@@ -32,7 +32,7 @@ public class SellCryptoCommand implements TransactionCommand {
 
 
     @Override
-    public void execute(TransactionRequest request) {
+    public void execute(TransactionDto request) {
         User user = userService.getUserById(request.getUserId());
         CryptoWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
 

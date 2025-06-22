@@ -8,8 +8,10 @@
       <div class="col-md-5 mb-4">
         <div class="card bg-dark text-light p-4 h-100 rounded-4 shadow-sm">
           <h5>Commencez à explorer et testez vos stratégies !</h5>
-          <p class="mt-2 mb-3">Votre solde :</p>
-          <input type="text" class="form-control bg-secondary text-white mb-3 w-75" value="1000.00 Points" readonly>
+          <p class="mt-2">Votre solde :</p>
+          <p class="fs-4 fw-semibold text-white mb-3">
+            {{balance !== null ? (balance + ' Points') : 'Chargement...' }}
+          </p>
           <a routerLink="/markets" class="btn btn-primary" role="button">Commencer</a>
         </div>
       </div>
@@ -55,13 +57,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>01/05/2025</td>
-                  <td>Achat</td>
-                  <td>BTC</td>
-                  <td>0.23</td>
-                  <td>$96,000.43</td>
-                  <td>$960.43</td>
+                <tr *ngFor="let transaction of transactions">
+                  <td>{{ transaction.dateTransaction | date:'dd-MM-yyyy' }}</td>
+                  <td>{{ transaction.type }}</td>
+                  <td>{{ transaction.cryptoName }}</td>
+                  <td>{{ transaction.quantity }}</td>
+                  <td>{{ transaction.unitPrice | number:'1.2-2' }} €</td>
+                  <td>{{ transaction.totalAmount | number:'1.2-2' }} €</td>
                 </tr>
               </tbody>
             </table>

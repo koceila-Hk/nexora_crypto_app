@@ -1,9 +1,14 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.dto.TransactionRequest;
+import com.nexora.nexora_crypto_api.dto.TransactionDto;
+import com.nexora.nexora_crypto_api.model.Transaction;
+import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -13,13 +18,20 @@ public class TransactionServiceImpl implements TransactionService {
     private BuyCryptoCommand buyCryptoCommand;
     @Autowired
     private SellCryptoCommand sellCryptoCommand;
+    @Autowired
+    private TransactionRepository transactionRepository;
 
-    public void buyCrypto(TransactionRequest request) {
+    public void buyCrypto(TransactionDto request) {
         invoker.process(buyCryptoCommand, request);
     }
 
-    public void sellCrypto(TransactionRequest request) {
+    public void sellCrypto(TransactionDto request) {
         invoker.process(sellCryptoCommand, request);
+    }
+
+    @Override
+    public List<Transaction> getAllTransactionsById(Long userId) {
+        return transactionRepository.findByUserId((userId));
     }
 
 }
