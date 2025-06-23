@@ -1,7 +1,7 @@
 package com.nexora.nexora_crypto_api.controller;
 
-import com.nexora.nexora_crypto_api.dto.TransactionDto;
-import com.nexora.nexora_crypto_api.mapper.TransactionMapper;
+import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
+import com.nexora.nexora_crypto_api.mappers.TransactionMapper;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;

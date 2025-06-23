@@ -1,6 +1,6 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.dto.TransactionDto;
+import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.model.User;
