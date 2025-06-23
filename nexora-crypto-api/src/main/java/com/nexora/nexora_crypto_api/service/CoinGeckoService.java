@@ -1,7 +1,7 @@
 package com.nexora.nexora_crypto_api.service;
 
-import com.nexora.nexora_crypto_api.dto.CoinDetailDto;
-import com.nexora.nexora_crypto_api.dto.CoinInfosForUserDto;
+import com.nexora.nexora_crypto_api.model.dto.CoinDetailDto;
+import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;

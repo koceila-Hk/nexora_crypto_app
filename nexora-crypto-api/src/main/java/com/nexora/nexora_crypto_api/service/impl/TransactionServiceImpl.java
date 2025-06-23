@@ -1,13 +1,12 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.dto.TransactionDto;
+import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
