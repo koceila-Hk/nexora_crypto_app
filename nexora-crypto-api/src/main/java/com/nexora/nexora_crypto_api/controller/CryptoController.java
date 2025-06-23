@@ -1,7 +1,6 @@
 package com.nexora.nexora_crypto_api.controller;
 
-import com.nexora.nexora_crypto_api.dto.CoinDetailDto;
-import com.nexora.nexora_crypto_api.dto.CoinInfosForUserDto;
+import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

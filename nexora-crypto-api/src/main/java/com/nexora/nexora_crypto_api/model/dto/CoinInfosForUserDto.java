@@ -1,4 +1,4 @@
-package com.nexora.nexora_crypto_api.dto;
+package com.nexora.nexora_crypto_api.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

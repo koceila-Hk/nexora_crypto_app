@@ -1,10 +1,9 @@
-package com.nexora.nexora_crypto_api.mapper;
+package com.nexora.nexora_crypto_api.mappers;
 
-import com.nexora.nexora_crypto_api.dto.TransactionDto;
+import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.Transaction;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class TransactionMapper {

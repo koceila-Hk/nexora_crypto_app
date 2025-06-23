@@ -1,7 +1,7 @@
 package com.nexora.nexora_crypto_api.controller;
 
-import com.nexora.nexora_crypto_api.dto.UserDto;
-import com.nexora.nexora_crypto_api.mapper.UserMapper;
+import com.nexora.nexora_crypto_api.model.dto.UserDto;
+import com.nexora.nexora_crypto_api.mappers.UserMapper;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
