@@ -1,6 +1,6 @@
-package com.nexora.nexora_crypto_api.mapper;
+package com.nexora.nexora_crypto_api.mappers;
 
-import com.nexora.nexora_crypto_api.dto.UserDto;
+import com.nexora.nexora_crypto_api.model.dto.UserDto;
 import com.nexora.nexora_crypto_api.model.User;
 import org.springframework.stereotype.Component;
 

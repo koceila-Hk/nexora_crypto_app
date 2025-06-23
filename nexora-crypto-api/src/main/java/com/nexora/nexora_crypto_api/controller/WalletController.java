@@ -1,7 +1,6 @@
 package com.nexora.nexora_crypto_api.controller;
 
-import com.nexora.nexora_crypto_api.dto.WalletDetailDto;
-import com.nexora.nexora_crypto_api.model.CryptoWallet;
+import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
 import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
