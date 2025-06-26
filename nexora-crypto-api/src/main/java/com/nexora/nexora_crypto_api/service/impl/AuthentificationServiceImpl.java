@@ -12,7 +12,7 @@ import com.nexora.nexora_crypto_api.repository.UserRepository;
 import com.nexora.nexora_crypto_api.response.AuthenticationResponse;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
 import com.nexora.nexora_crypto_api.service.EmailService;
-import com.nexora.nexora_crypto_api.service.JwtService;
+import com.nexora.nexora_crypto_api.config.JwtService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
