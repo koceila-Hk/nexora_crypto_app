@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { CryptoService } from '../../services/crypto.service';
+import { CryptoService } from '../../_services/crypto.service';
 
 @Component({
   selector: 'app-crypto-details',

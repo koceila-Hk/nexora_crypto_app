@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from "../common/header/header.component";
-import { FooterComponent } from "../common/footer/footer.component";
+import { HeaderComponent } from "../_commons/header/header.component";
+import { FooterComponent } from "../_commons/footer/footer.component";
 import { CommonModule } from '@angular/common';
-import { CryptoDetailsComponent } from '../common/crypto-details/crypto-details.component';
-import { CoinDetails } from '../services/crypto.service';
+import { CryptoDetailsComponent } from '../_commons/crypto-details/crypto-details.component';
+import { CoinDetails } from '../_services/crypto.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { TokenStorageService } from '../services/tokenStorageService';
+import { TokenStorageService } from '../_services/tokenStorageService';
 
 @Component({
   selector: 'app-markets',

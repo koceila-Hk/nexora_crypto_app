@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { HeaderComponent } from "../common/header/header.component";
-import { FooterComponent } from "../common/footer/footer.component";
-import { UserService, WalletDetail, WalletService, TransactionService, Transactions } from '../services/crypto.service';
+import { HeaderComponent } from "../_commons/header/header.component";
+import { FooterComponent } from "../_commons/footer/footer.component";
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TokenStorageService } from '../services/tokenStorageService';
+import { TokenStorageService } from '../_services/tokenStorageService';
+import { UserService } from '../_services/user.service';
+import { Transactions, TransactionService } from '../_services/transaction.service';
+import { WalletDetail, WalletService } from '../_services/wallet.service';
 
 @Component({
   selector: 'app-home-auth',

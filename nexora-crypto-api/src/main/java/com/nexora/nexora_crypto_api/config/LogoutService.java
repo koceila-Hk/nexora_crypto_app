@@ -1,4 +1,4 @@
-package com.nexora.nexora_crypto_api.service.impl;
+package com.nexora.nexora_crypto_api.config;
 
 import com.nexora.nexora_crypto_api.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
