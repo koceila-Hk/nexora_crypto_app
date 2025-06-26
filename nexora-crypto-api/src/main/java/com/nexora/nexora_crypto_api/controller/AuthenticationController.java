@@ -8,7 +8,7 @@ import com.nexora.nexora_crypto_api.model.dto.VerifyUserDto;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.response.LoginResponse;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
-import com.nexora.nexora_crypto_api.service.JwtService;
+import com.nexora.nexora_crypto_api.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

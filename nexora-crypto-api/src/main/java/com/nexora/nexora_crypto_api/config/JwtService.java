@@ -1,4 +1,4 @@
-package com.nexora.nexora_crypto_api.service;
+package com.nexora.nexora_crypto_api.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
