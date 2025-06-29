@@ -1,5 +1,6 @@
-package com.nexora.nexora_crypto_api.config;
+package com.nexora.nexora_crypto_api.service;
 
+import com.nexora.nexora_crypto_api.config.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
