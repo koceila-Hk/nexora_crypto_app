@@ -6,24 +6,24 @@ export class AccountInfosUser {
 }
 
 export class AccountInfosWallet{
-    cryptoName: string;
-    quantity: number;
+    cryptoName!: string;
+    quantity: number | undefined;
     // logoCrypto: string;
-    variationPercentage: number;
+    variationPercentage!: number;
 }
 
 export class AccountInfosTransaction{
-    cryptoName: string;
-    quantity: number;
-    unitPrice: number;
-    type: string;
-    totalAmount: number;
-    dateTransaction: string;
+    cryptoName!: string;
+    quantity!: number;
+    unitPrice!: number;
+    type!: string;
+    totalAmount!: number;
+    dateTransaction!: string;
 }
 
 export class InfosCoin{
-    cryptoName: string;
-    icon: string;
-    currentPrice: number;
-    priceChangePercentage: number;
+    cryptoName!: string;
+    icon!: string;
+    currentPrice!: number;
+    priceChangePercentage!: number;
 }
