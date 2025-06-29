@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from "../common/header/header.component";
-import { FooterComponent } from "../common/footer/footer.component";
+import { HeaderComponent } from "../_commons/header/header.component";
+import { FooterComponent } from "../_commons/footer/footer.component";
 import { CommonModule } from '@angular/common';
-import { CryptoDetailsComponent } from '../common/crypto-details/crypto-details.component';
-import { CoinDetails } from '../services/crypto.service';
+import { CryptoDetailsComponent } from '../_commons/crypto-details/crypto-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { TokenStorageService } from '../services/tokenStorageService';
+import { TokenStorageService } from '../_services/tokenStorageService';
+import { InfosCoin } from '../_models/account';
 
 @Component({
   selector: 'app-markets',
@@ -24,15 +24,15 @@ import { TokenStorageService } from '../services/tokenStorageService';
   styleUrl: './markets.component.css'
 })
 export class MarketsComponent {
-  selectedCoin: CoinDetails | null = null;
-  mode: 'buy' | 'sell' = 'buy'; // Mode sélectionné
+  selectedCoin: InfosCoin | null = null;
+  mode: 'buy' | 'sell' = 'buy'; 
   amountInput: number = 0;
   resultAmount: number = 0;
   errorMessage: string = '';
 
   constructor(private http: HttpClient, private router: Router, private tokenStorage: TokenStorageService) {}
 
-  onCoinSelected(coin: CoinDetails): void {
+  onCoinSelected(coin: InfosCoin): void {
     this.selectedCoin = coin;
     this.calculateConversion();
   }
@@ -42,8 +42,8 @@ export class MarketsComponent {
       const price = this.selectedCoin.currentPrice;
 
       this.resultAmount = this.mode === 'buy'
-        ? this.amountInput / price               // Points ➜ Crypto
-        : this.amountInput * price;             // Crypto ➜ Points
+        ? this.amountInput / price               
+        : this.amountInput * price;             
     } else {
       this.resultAmount = 0;
     }
@@ -72,7 +72,7 @@ export class MarketsComponent {
         next: (res) => {
           console.log(`${this.mode.toUpperCase()} réussi`, res);
           this.errorMessage = '';
-          // Redirection éventuelle après succès :
+          // Redirection
           // this.router.navigate(['/transactions']);
         },
         error: (err) => {
