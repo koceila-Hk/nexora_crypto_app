@@ -28,10 +28,6 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-//    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-//        this.jwtService = jwtService;
-//        this.authenticationService = authenticationService;
-//    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
@@ -49,7 +45,12 @@ public class AuthenticationController {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedUser);
             String refreshToken = jwtService.generateRefreshToken(authenticatedUser);
+
+            authenticationService.revokeAllUserTokens(authenticatedUser);
+            authenticationService.saveUserToken(authenticatedUser, jwtToken);
+
             LoginResponse loginResponse = new LoginResponse(jwtToken, refreshToken, jwtService.getExpirationTime());
+
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((LoginResponse) Map.of("message", e.getMessage()));
