@@ -1,16 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AccountInfosTransaction } from '../_models/account';
+import { Injectable } from '@angular/core';
 
-
-// export interface Transactions {
-//   cryptoName: string;
-//   quantity: number;
-//   unitPrice: number;
-//   type: string;
-//   totalAmount: number;
-//   dateTransaction: string;
-// }
 
 @Injectable({
   providedIn: 'root'

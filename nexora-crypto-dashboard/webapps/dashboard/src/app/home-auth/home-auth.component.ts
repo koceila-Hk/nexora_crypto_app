@@ -5,8 +5,9 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TokenStorageService } from '../_services/tokenStorageService';
 import { UserService } from '../_services/user.service';
-import { Transactions, TransactionService } from '../_services/transaction.service';
-import { WalletDetail, WalletService } from '../_services/wallet.service';
+import {  TransactionService } from '../_services/transaction.service';
+import { WalletService } from '../_services/wallet.service';
+import { AccountInfosTransaction, AccountInfosWallet } from '../_models/account';
 
 @Component({
   selector: 'app-home-auth',
@@ -15,8 +16,8 @@ import { WalletDetail, WalletService } from '../_services/wallet.service';
   styleUrl: './home-auth.component.css'
 })
 export class HomeAuthComponent implements OnInit {
-    wallets: WalletDetail[] = [];
-    transactions: Transactions[] = [];
+    wallets: AccountInfosWallet[] = [];
+    transactions: AccountInfosTransaction[] = [];
   userId = 3;
     balance: any;
 
