@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { TokenStorageService } from '../../_services/tokenStorageService';
 
 
 @Component({
@@ -10,9 +11,8 @@ import { RouterLink } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent {
-
-
+export class HeaderComponent implements OnInit {
+  isAuthenticated = false;
   isDarkMode = true;
 
   toggleTheme() {
@@ -32,5 +32,15 @@ export class HeaderComponent {
   }
 
 
+  constructor(private tokenStorage: TokenStorageService, private router: Router) {}
 
+  ngOnInit(): void {
+    this.isAuthenticated = this.tokenStorage.isLoggedIn();
+  }
+
+  logout(): void {
+    this.tokenStorage.signOut();
+    this.isAuthenticated = false;
+    this.router.navigate(['/login']);
+  }
 }
