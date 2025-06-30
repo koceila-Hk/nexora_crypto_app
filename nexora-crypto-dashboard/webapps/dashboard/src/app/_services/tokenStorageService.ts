@@ -25,6 +25,13 @@ export class TokenStorageService {
     }
   }
 
+  isLoggedIn(): boolean {
+    return this.getToken() !== null;
+  }
+
+  signOut(): void {
+    this.clear();
+  }
 
   clear(): void {
     this.storage.clear();

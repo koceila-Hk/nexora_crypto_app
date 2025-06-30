@@ -54,9 +54,9 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
-        sendVerificationEmail(user);
         user.setBalance(BigDecimal.valueOf(1000));
         user.setDateCreation(LocalDateTime.now());
+        sendVerificationEmail(user);
         userRepository.save(user);
     }
 
@@ -142,7 +142,7 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         }
     }
 
-    private void saveUserToken(User user, String jwtToken) {
+    public void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)
@@ -153,7 +153,7 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         tokenRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user) {
+    public void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;

@@ -1,5 +1,6 @@
 package com.nexora.nexora_crypto_api.config;
 
+import com.nexora.nexora_crypto_api.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -65,9 +66,14 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        Map<String, Object> claims = new HashMap<>(extraClaims);
+
+        if (userDetails instanceof User user) {
+            claims.put("userId", user.getId());
+        }
         return Jwts
                 .builder()
-                .setClaims(extraClaims)
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))

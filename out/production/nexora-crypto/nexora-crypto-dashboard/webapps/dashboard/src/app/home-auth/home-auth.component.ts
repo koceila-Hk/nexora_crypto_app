@@ -18,6 +18,7 @@ import { AccountInfosTransaction, AccountInfosWallet } from '../_models/account'
 export class HomeAuthComponent implements OnInit {
     wallets: AccountInfosWallet[] = [];
     transactions: AccountInfosTransaction[] = [];
+  userId = 3;
     balance: any;
 
   constructor(
@@ -28,20 +29,20 @@ export class HomeAuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.tokenStorage.getUserIdFromToken();
-    console.log("userId : " + userId);
+    // const userId = this.tokenStorage.getUserIdFromToken();
+    // console.log("userId : " + userId);
 
-    if (userId != null) {
-      this.walletService.getWalletsWithVariation(userId).subscribe(data => {
+    if (this.userId != null) {
+      this.walletService.getWalletsWithVariation(this.userId).subscribe(data => {
         this.wallets = data;
       });
   
-      this.userService.getUserById(userId).subscribe(data => {
+      this.userService.getUserById(this.userId).subscribe(data => {
         this.balance = data.balance;
         console.log("balance : ", this.balance);
       });
 
-      this.transactionService.getTransactionsByUserId(userId).subscribe(data => {
+      this.transactionService.getTransactionsByUserId(this.userId).subscribe(data => {
         // next: (data) => {
           this.transactions = data;
         });

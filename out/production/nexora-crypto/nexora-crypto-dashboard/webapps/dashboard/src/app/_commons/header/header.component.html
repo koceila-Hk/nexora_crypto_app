@@ -17,7 +17,7 @@
           <a class="nav-link active" aria-current="page" routerLink="/">Accueil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/buy">Acheter des cryptos</a>
+          <a class="nav-link" routerLink="/home-auth">Acheter des cryptos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/markets">Marchés</a>
@@ -31,12 +31,22 @@
             <input type="text" class="form-control search-input" placeholder="Rechercher..." />
           </div>
         </li>
-        <li class="nav-item me-2">
-          <a class="nav-link" routerLink="/login">Connexion</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-primary" routerLink="/register">Inscription</a>
-        </li>
+            <!-- Si non connecté -->
+        <ng-container *ngIf="!isAuthenticated; else loggedInBlock">
+          <li class="nav-item me-2">
+            <a class="nav-link" routerLink="/login">Connexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-primary" routerLink="/register">Inscription</a>
+          </li>
+        </ng-container>
+
+        <!-- Si connecté -->
+        <ng-template #loggedInBlock>
+          <li class="nav-item">
+            <button class="btn btn-danger" (click)="logout()">Déconnexion</button>
+          </li>
+        </ng-template>
         <li class="nav-item">
           <button class="btn btn-outline-light ms-2" (click)="toggleTheme()" title="Changer le thème">
             <i class="bi" [ngClass]="currentThemeIcon"></i>

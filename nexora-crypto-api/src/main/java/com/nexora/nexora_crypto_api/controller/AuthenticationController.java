@@ -11,6 +11,8 @@ import com.nexora.nexora_crypto_api.service.AuthenticationService;
 import com.nexora.nexora_crypto_api.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +30,19 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-//    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-//        this.jwtService = jwtService;
-//        this.authenticationService = authenticationService;
-//    }
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
         try {
             authenticationService.signup(registerUserDto);
+
+            logger.info("Signup successful: {}", registerUserDto.getEmail());
+
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Registration successfully"));
         } catch (Exception e) {
+            logger.error("Signup failed: {}, errorMessage: {}", registerUserDto.getEmail(), e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "User already used"));
         }
     }
@@ -49,9 +53,17 @@ public class AuthenticationController {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedUser);
             String refreshToken = jwtService.generateRefreshToken(authenticatedUser);
+
+            authenticationService.revokeAllUserTokens(authenticatedUser);
+            authenticationService.saveUserToken(authenticatedUser, jwtToken);
+
             LoginResponse loginResponse = new LoginResponse(jwtToken, refreshToken, jwtService.getExpirationTime());
+
+            logger.info("Login successful: {}", loginUserDto.getEmail());
+
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {
+            logger.error("Login failed: {}, errorMessage: {}", loginUserDto.getEmail(), e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((LoginResponse) Map.of("message", e.getMessage()));
         }
     }
@@ -60,8 +72,10 @@ public class AuthenticationController {
     public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
         try {
             authenticationService.verifyUser(verifyUserDto);
+            logger.info("Verify successful: {}", verifyUserDto.getEmail());
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","Account verified successfully"));
         } catch (Exception e) {
+            logger.warn("Verify failed: {}, errorMessage: {}", verifyUserDto.getEmail(), e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Not authenticate"));
         }
     }
@@ -70,8 +84,10 @@ public class AuthenticationController {
     public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
         try {
             authenticationService.resendVerificationCode(email);
+            logger.info("Resend successful: {}", email);
             return ResponseEntity.ok("Verification code sent");
         } catch (Exception e) {
+            logger.warn("Resend failed: {}, errorMessage: {}", email, e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

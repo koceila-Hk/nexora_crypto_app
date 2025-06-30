@@ -17,4 +17,7 @@ public interface AuthenticationService {
     void resendVerificationCode(String email) throws Exception;
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+    void revokeAllUserTokens(User user);
+    void saveUserToken(User user, String jwtToken);
 }

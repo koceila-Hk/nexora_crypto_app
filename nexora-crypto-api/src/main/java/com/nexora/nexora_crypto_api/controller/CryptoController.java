@@ -15,9 +15,7 @@ public class CryptoController {
     private CoinGeckoService coinGeckoService;
 
     @GetMapping("/price")
-    public ResponseEntity<BigDecimal> getPrice(
-            @RequestParam String id,
-            @RequestParam(defaultValue = "eur") String currency) {
+    public ResponseEntity<BigDecimal> getPrice(@RequestParam String id, @RequestParam(defaultValue = "eur") String currency) {
 
         BigDecimal price = coinGeckoService.getCryptoPrice(id, currency);
         return ResponseEntity.ok(price);
