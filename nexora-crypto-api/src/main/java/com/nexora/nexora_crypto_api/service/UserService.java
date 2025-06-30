@@ -8,6 +8,4 @@ public interface UserService {
 
     List<User> allUsers() throws Exception;
     User getUserById(Long userId);
-
-    //void save(User user);
 }

@@ -1,5 +1,6 @@
 package com.nexora.nexora_crypto_api.config;
 
+import com.nexora.nexora_crypto_api.service.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,6 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+
 import java.util.List;
 
 @Configuration
@@ -24,8 +26,7 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public SecurityConfiguration(
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationProvider authenticationProvider //ignore Bean warning we will get to that
+            AuthenticationProvider authenticationProvider, JwtAuthenticationFilter jwtAuthenticationFilter //ignore Bean warning we will get to that
     ) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -37,8 +38,8 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/users/**", "/crypto/**", "/transaction/**", "/wallets/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/auth/**", "/users/**", "/crypto/**", "/log").permitAll()
+                        .requestMatchers("/wallets/**", "/transaction/**").authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
