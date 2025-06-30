@@ -2,9 +2,9 @@ name: CI Pipeline - Nexora Crypto App
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ main, develop ]
 
 jobs:
   build-test:
