@@ -5,9 +5,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TokenStorageService } from '../_services/tokenStorageService';
 import { UserService } from '../_services/user.service';
-import {  TransactionService } from '../_services/transaction.service';
-import { WalletService } from '../_services/wallet.service';
-import { AccountInfosTransaction, AccountInfosWallet } from '../_models/account';
+import { Transactions, TransactionService } from '../_services/transaction.service';
+import { WalletDetail, WalletService } from '../_services/wallet.service';
 
 @Component({
   selector: 'app-home-auth',
@@ -28,20 +27,20 @@ export class HomeAuthComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.tokenStorage.getUserIdFromToken();
-    console.log("userId : " + userId);
+    // const userId = this.tokenStorage.getUserIdFromToken();
+    // console.log("userId : " + userId);
 
-    if (userId != null) {
-      this.walletService.getWalletsWithVariation(userId).subscribe(data => {
+    if (this.userId != null) {
+      this.walletService.getWalletsWithVariation(this.userId).subscribe(data => {
         this.wallets = data;
       });
-  
-      this.userService.getUserById(userId).subscribe(data => {
+
+      this.userService.getUserById(this.userId).subscribe(data => {
         this.balance = data.balance;
         console.log("balance : ", this.balance);
       });
 
-      this.transactionService.getTransactionsByUserId(userId).subscribe(data => {
+      this.transactionService.getTransactionsByUserId(this.userId).subscribe(data => {
         // next: (data) => {
           this.transactions = data;
         });
