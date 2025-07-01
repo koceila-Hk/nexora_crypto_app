@@ -1,9 +1,14 @@
-.hero-section {
-  background-color: #05050F;
+.hero-section,
+h1,
+p {
+  background-color: var(--hero-color);
+  color: var(--text-color);
 }
+
 .card {
-  background-color: #1A1A2E;
+  background-color: var(--card-color);
 }
+
 .btn-primary {
   background-color: #C3B8FD;
   border-color: #C3B8FD;
@@ -14,11 +19,11 @@
 }
 
 .cta-section {
-  background-color: #262C38;
+  background-color: var(--cta-color);
 }
 
 .stroke-row {
-  background-color: #0B0B15;
-  border: 8px solid #0E0E18;
+  background-color: var(--stroke-color);
+  border: 8px solid var(--stroke-border);
   border-radius: 10px;
 }

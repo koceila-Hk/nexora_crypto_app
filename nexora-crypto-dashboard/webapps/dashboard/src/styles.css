@@ -1,15 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
-
 body.dark-theme {
-  background-color: #121212;
-  color: white;
+  --background-color: #121212;
+  --text-color: white;
+  --section-color: #1A1A2E;
+  --hero-color: #05050F;
+  --cta-color: #262C38;
+  --card-color: #1A1A2E;
+  --stroke-color: #0B0B15;
+  --stroke-border: #0E0E18;
+  --footer-bg-color: #05050F;
+  --footer-link-color: white;
 }
 
 body.light-theme {
-  background-color: #f8f9fa;
-  color: black;
+  --background-color: #f8f9fa;
+  --text-color: black;
+  --section-color: #ffffff;
+  --hero-color: #f1f1f1;
+  --cta-color: #e0e0e0;
+  --card-color: #ffffff;
+  --stroke-color: #f8f9fa;
+  --stroke-border: #cccccc;
+  --footer-bg-color: #f1f1f1;
+  --footer-link-color: black;
 }
 
 body {
+  background-color: var(--background-color);
+  color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
