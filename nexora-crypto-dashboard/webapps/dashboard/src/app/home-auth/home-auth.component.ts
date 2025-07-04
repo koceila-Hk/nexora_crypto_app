@@ -35,7 +35,7 @@ export class HomeAuthComponent implements OnInit {
       this.walletService.getWalletsWithVariation(userId).subscribe(data => {
         this.wallets = data;
       });
-  
+
       this.userService.getUserById(userId).subscribe(data => {
         this.balance = data.balance;
         console.log("balance : ", this.balance);
