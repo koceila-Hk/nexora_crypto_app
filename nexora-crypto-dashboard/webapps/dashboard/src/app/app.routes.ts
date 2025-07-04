@@ -8,6 +8,8 @@ import { HomeNotAuthComponent } from './home-not-auth/home-not-auth.component';
 import { HomeAuthComponent } from './home-auth/home-auth.component';
 import { MarketsComponent } from './markets/markets.component';
 import { CryptoDetailsComponent } from './_commons/crypto-details/crypto-details.component';
+import { DashboardBuyCryptoComponent } from './dashboard-buy-crypto/dashboard-buy-crypto.component';
+import { ChartDetailComponent } from './chart-detail/chart-detail.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent  },
@@ -16,7 +18,9 @@ export const routes: Routes = [
   { path: 'home-not-auth', component: HomeNotAuthComponent},
   { path: 'home-auth', component: HomeAuthComponent},
   { path: 'markets', component: MarketsComponent},
+  { path: 'dashboard-buy-crypto', component: DashboardBuyCryptoComponent},
   { path: 'crypto-details', component: CryptoDetailsComponent},
+   { path: 'crypto/:id', component: ChartDetailComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'home-not-auth', pathMatch: 'full' }, 
 ]; 
