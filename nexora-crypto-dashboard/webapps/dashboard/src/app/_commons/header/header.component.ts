@@ -43,4 +43,12 @@ export class HeaderComponent implements OnInit {
     this.isAuthenticated = false;
     this.router.navigate(['/login']);
   }
+
+  navigateAccueil() {
+    if (this.isAuthenticated) {
+      this.router.navigate(['/home-auth']);
+    } else {
+      this.router.navigate(['/home-not-auth']);
+    }
+  }
 }
