@@ -1,5 +1,56 @@
-<p>chart-detail works!</p>
-<section class="bg-dark text-light p-4 rounded">
-  <h3>Cours pour {{ cryptoId.toUpperCase() }}</h3>
-  <canvas id="cryptoChart" height="100"></canvas>
+<app-header></app-header>
+
+<section class="container-fluid hero-section py-5">
+  <section class="container">
+    <div class="d-flex flex-column flex-lg-row justify-content-between stroke-row p-4 mt-4">
+
+      <!-- Section Formulaire achat/vente -->
+      <section class="col-lg-5 mb-4 mb-lg-0">
+        <form (ngSubmit)="submit()">
+          <div class="d-flex mb-3">
+            <button class="btn btn-toggle me-2" type="button" [class.active]="mode === 'buy'"
+              (click)="mode = 'buy'; calculateConversion()">
+              Acheter
+            </button>
+            <button class="btn btn-toggle" type="button" [class.active]="mode === 'sell'"
+              (click)="mode = 'sell'; calculateConversion()">
+              Vendre
+            </button>
+          </div>
+          <div class="card-custom">
+            <div class="d-flex justify-content-between">
+              <span>{{ mode === 'buy' ? 'Dépense' : 'Vendre' }}</span>
+              <span>{{ mode === 'buy' ? 'Points' : selectedCoin?.cryptoName }}</span>
+            </div>
+            <input type="number" class="form-control text-center mt-2" name="amountInput" [(ngModel)]="amountInput"
+              (input)="calculateConversion()" required min="0.000001" />
+          </div>
+
+          <div class="card-custom">
+            <div class="d-flex justify-content-between">
+              <span>{{ mode === 'buy' ? 'Recevoir' : 'Obtenir' }}</span>
+              <span>{{ mode === 'buy' ? selectedCoin?.cryptoName : 'Points' }}</span>
+            </div>
+            <h2 class="text-center mt-2">
+              {{ resultAmount }}
+            </h2>
+          </div>
+
+          <button type="submit" class="btn submit-btn w-100" [disabled]="!selectedCoin || !amountInput">
+            Soumettre
+          </button>
+        </form>
+      </section>
+
+      <section class="col-lg-6">
+        <h5 class="text-center text-white mb-2">
+          Cours pour {{ cryptoId.toUpperCase() }}
+        </h5>
+        <div #chartContainer style="width:100%; height:300px;"></div>
+      </section>
+
+    </div>
+  </section>
 </section>
+
+<app-footer></app-footer>

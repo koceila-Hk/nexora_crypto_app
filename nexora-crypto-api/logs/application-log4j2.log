@@ -1,21 +1,21 @@
-2025-07-01 00:02:24 [background-preinit] INFO  : HV000001: Hibernate Validator 8.0.1.Final
-2025-07-01 00:02:25 [main] INFO  : Starting NexoraBackendApplicationTests using Java 17.0.12 with PID 25000 (started by HABAREK in C:\Users\HABAREK\Documents\nexora_crypto_app\nexora-crypto-api)
-2025-07-01 00:02:25 [main] INFO  : The following 1 profile is active: "test"
-2025-07-01 00:02:26 [main] INFO  : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-07-01 00:02:26 [main] INFO  : Finished Spring Data repository scanning in 91 ms. Found 4 JPA repository interfaces.
-2025-07-01 00:02:27 [main] INFO  : HikariPool-1 - Starting...
-2025-07-01 00:02:27 [main] INFO  : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
-2025-07-01 00:02:27 [main] INFO  : HikariPool-1 - Start completed.
-2025-07-01 00:02:27 [main] INFO  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-07-01 00:02:27 [main] INFO  : HHH000412: Hibernate ORM core version 6.4.4.Final
-2025-07-01 00:02:27 [main] INFO  : HHH000026: Second-level cache disabled
-2025-07-01 00:02:28 [main] INFO  : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-07-01 00:02:29 [main] INFO  : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-07-01 00:02:29 [main] INFO  : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-07-01 00:02:29 [main] INFO  : Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-07-01 00:02:30 [main] WARN  : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-07-01 00:02:31 [main] INFO  : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2464c125, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6183dd2, org.springframework.security.web.context.SecurityContextHolderFilter@20c3f386, org.springframework.security.web.header.HeaderWriterFilter@77d86aba, org.springframework.web.filter.CorsFilter@5fe9851f, org.springframework.security.web.authentication.logout.LogoutFilter@5927fc8e, com.nexora.nexora_crypto_api.service.JwtAuthenticationFilter@6eaf016e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1b18f38f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3e40bea1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3b5299a3, org.springframework.security.web.session.SessionManagementFilter@7d65286a, org.springframework.security.web.access.ExceptionTranslationFilter@7bc342f6, org.springframework.security.web.access.intercept.AuthorizationFilter@44acce5d]
-2025-07-01 00:02:31 [main] INFO  : Started NexoraBackendApplicationTests in 7.082 seconds (process running for 8.906)
-2025-07-01 00:02:32 [SpringApplicationShutdownHook] INFO  : Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-07-01 00:02:32 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown initiated...
-2025-07-01 00:02:32 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown completed.
+2025-07-06 19:40:36 [background-preinit] INFO  : HV000001: Hibernate Validator 8.0.1.Final
+2025-07-06 19:40:36 [main] INFO  : Starting BuyCryptoCommandTest using Java 17.0.12 with PID 16104 (started by HABAREK in C:\Users\HABAREK\Documents\nexora_crypto_app\nexora-crypto-api)
+2025-07-06 19:40:36 [main] INFO  : The following 1 profile is active: "test"
+2025-07-06 19:40:37 [main] INFO  : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-06 19:40:37 [main] INFO  : Finished Spring Data repository scanning in 87 ms. Found 4 JPA repository interfaces.
+2025-07-06 19:40:38 [main] INFO  : HikariPool-1 - Starting...
+2025-07-06 19:40:38 [main] INFO  : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-07-06 19:40:38 [main] INFO  : HikariPool-1 - Start completed.
+2025-07-06 19:40:38 [main] INFO  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-07-06 19:40:38 [main] INFO  : HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-07-06 19:40:38 [main] INFO  : HHH000026: Second-level cache disabled
+2025-07-06 19:40:38 [main] INFO  : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-07-06 19:40:40 [main] INFO  : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-07-06 19:40:40 [main] INFO  : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-07-06 19:40:40 [main] INFO  : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-07-06 19:40:41 [main] WARN  : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-07-06 19:40:41 [main] INFO  : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@48e0d3a7, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@57a22410, org.springframework.security.web.context.SecurityContextHolderFilter@5985102f, org.springframework.security.web.header.HeaderWriterFilter@550244cb, org.springframework.web.filter.CorsFilter@2e138608, org.springframework.security.web.authentication.logout.LogoutFilter@5df744d4, com.nexora.nexora_crypto_api.service.JwtAuthenticationFilter@4734a551, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7a5151d7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3f13c9a2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@37d12ccb, org.springframework.security.web.session.SessionManagementFilter@130f8e03, org.springframework.security.web.access.ExceptionTranslationFilter@5d233d7, org.springframework.security.web.access.intercept.AuthorizationFilter@14c16388]
+2025-07-06 19:40:42 [main] INFO  : Started BuyCryptoCommandTest in 6.819 seconds (process running for 8.418)
+2025-07-06 19:40:43 [SpringApplicationShutdownHook] INFO  : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-07-06 19:40:43 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown initiated...
+2025-07-06 19:40:43 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown completed.

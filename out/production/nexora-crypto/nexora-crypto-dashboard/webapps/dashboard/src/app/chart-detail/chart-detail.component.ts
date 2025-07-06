@@ -1,28 +1,29 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { createChart, IChartApi, LineStyle, Time, LineSeriesPartialOptions } from 'lightweight-charts';
+import {
+  createChart,
+  IChartApi,
+  LineStyle,
+  Time,
+  LineSeriesOptions,
+  ISeriesApi,
+  LineSeriesPartialOptions
+} from 'lightweight-charts';
 import { HeaderComponent } from '../_commons/header/header.component';
 import { FooterComponent } from '../_commons/footer/footer.component';
-import { InfosCoin } from '../_models/account';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-crypto-detail',
   templateUrl: './chart-detail.component.html',
   styleUrls: ['./chart-detail.component.css'],
-  imports: [HeaderComponent, FooterComponent, FormsModule]
+  imports: [HeaderComponent, FooterComponent]
 })
 export class ChartDetailComponent implements OnInit, AfterViewInit {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   chart!: IChartApi;
   cryptoId: string = '';
-  selectedCoin: InfosCoin | null = null;
-  mode: 'buy' | 'sell' = 'buy';
-  amountInput: number = 0;
-  resultAmount: number = 0;
-  errorMessage: string = '';
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.cryptoId = this.route.snapshot.paramMap.get('id') || 'btc';
@@ -65,22 +66,5 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
     }));
 
     lineSeries.setData(data);
-  }
-
-
-  calculateConversion(): void {
-    if (this.selectedCoin && this.amountInput > 0) {
-      const price = this.selectedCoin.currentPrice;
-
-      this.resultAmount = this.mode === 'buy'
-        ? this.amountInput / price
-        : this.amountInput * price;
-    } else {
-      this.resultAmount = 0;
-    }
-  }
-
-  submit() {
-    console.log('Submitted', this.mode, this.amountInput, this.resultAmount);
   }
 }

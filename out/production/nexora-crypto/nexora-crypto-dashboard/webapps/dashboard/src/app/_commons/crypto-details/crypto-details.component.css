@@ -1,6 +1,10 @@
 
 .card-body {
-  background-color: #1A1728;
-  border: 5px solid #0E0E18;
+  background-color: var(--section-color);
+  border: 5px solid var(--stroke-border);
   border-radius: 8px;
+}
+
+span, h5 {
+  color: var(--text-color);
 }

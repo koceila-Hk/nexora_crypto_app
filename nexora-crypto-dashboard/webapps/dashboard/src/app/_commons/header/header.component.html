@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-3">
     <a class="navbar-brand d-flex align-items-center" style="cursor: pointer;" (click)="navigateAccueil()">
       <img src="assets/logoLight-png.png" alt="logo" width="30" height="30" class="me-2">
@@ -14,7 +14,7 @@
       <!-- Menu principal -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" style="cursor: pointer;" (click)="navigateAccueil()">Accueil</a>
+          <a class="nav-link" style="cursor: pointer;" (click)="navigateAccueil()">Accueil</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard-buy-crypto">Acheter des cryptos</a>
@@ -48,8 +48,8 @@
           </li>
         </ng-template>
         <li class="nav-item">
-          <button class="btn btn-outline-light ms-2" (click)="toggleTheme()" title="Changer le thème">
-            <i class="bi" [ngClass]="currentThemeIcon"></i>
+          <button class="btn ms-2" [ngClass]="isDarkMode ? 'btn-outline-dark' : 'btn-outline-light'" (click)="toggleTheme()" title="Changer le thème">
+            <i class="bi theme-icon" [ngClass]="currentThemeIcon"></i>
           </button>
         </li>
       </ul>

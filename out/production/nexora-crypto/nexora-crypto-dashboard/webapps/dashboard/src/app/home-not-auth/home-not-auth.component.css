@@ -1,9 +1,16 @@
+h1, h2,
+p {
+  color: var(--text-color);
+}
+
 .hero-section {
-  background-color: #05050F;
-}
+  background-color: var(--background-color);
+} 
+
 .card {
-  background-color: #1A1A2E;
+  background-color: var(--card-color);
 }
+
 .btn-primary {
   background-color: #C3B8FD;
   border-color: #C3B8FD;
@@ -14,11 +21,11 @@
 }
 
 .cta-section {
-  background-color: #262C38;
+  background-color: var(--cta-color);
 }
 
 .stroke-row {
-  background-color: #0B0B15;
-  border: 8px solid #0E0E18;
+  background-color: var(--stroke-color);
+  border: 8px solid var(--stroke-border);
   border-radius: 10px;
 }

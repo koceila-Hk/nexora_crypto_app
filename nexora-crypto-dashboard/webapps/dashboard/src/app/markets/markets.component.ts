@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CryptoService } from '../_services/crypto.service';
 import { FooterComponent } from "../_commons/footer/footer.component";
 import { HeaderComponent } from "../_commons/header/header.component";
-import { RouterLink } from '@angular/router';
+// import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-crypto-details',
   standalone: true,
-  imports: [CommonModule, FooterComponent, HeaderComponent, RouterLink],
+  imports: [CommonModule, FooterComponent, HeaderComponent],
   templateUrl: './markets.component.html',
   styleUrl: './markets.component.css'
 })
@@ -17,13 +17,13 @@ export class MarketsComponent implements OnInit {
 
   coins: CoinDetails[] = [];
 
-  constructor(private cryptoService: CryptoService) {}
+  constructor(private cryptoService: CryptoService) { }
 
   ngOnInit(): void {
-      this.cryptoService.getAllCoinDetails().subscribe({
-          next: data => this.coins = data,
-          error: err => console.error('Erreur de chargement des cryptos', err)
-        });
+    this.cryptoService.getAllCoinDetails().subscribe({
+      next: data => this.coins = data,
+      error: err => console.error('Erreur de chargement des cryptos', err)
+    });
   }
 
   getChangeClass(change: number | undefined): string {
@@ -32,8 +32,16 @@ export class MarketsComponent implements OnInit {
   }
 
   selectCoin(coin: CoinDetails) {
-  this.coinSelected.emit(coin);
-}
+    this.coinSelected.emit(coin);
+  }
+
+  openCoinInNewTab(coin: any): void {
+    const encodedId = encodeURIComponent(coin.cryptoName.toLowerCase());
+    const url = `${window.location.origin}/#/crypto-chart/${encodedId}`;
+    window.open(url, '_blank');
+  }
+
+
 }
 
 interface CoinDetails {
