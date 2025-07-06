@@ -1,9 +1,11 @@
-.hero-section,
-h1,
+h1, h2,
 p {
-  background-color: var(--hero-color);
   color: var(--text-color);
 }
+
+.hero-section {
+  background-color: var(--background-color);
+} 
 
 .card {
   background-color: var(--card-color);

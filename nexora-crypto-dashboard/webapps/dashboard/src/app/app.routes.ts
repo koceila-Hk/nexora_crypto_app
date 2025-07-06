@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'markets', component: MarketsComponent},
   { path: 'dashboard-buy-crypto', component: DashboardBuyCryptoComponent},
   { path: 'crypto-details', component: CryptoDetailsComponent},
-   { path: 'crypto/:id', component: ChartDetailComponent },
+   { path: 'crypto-chart/:id', component: ChartDetailComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'home-not-auth', pathMatch: 'full' }, 
 ]; 

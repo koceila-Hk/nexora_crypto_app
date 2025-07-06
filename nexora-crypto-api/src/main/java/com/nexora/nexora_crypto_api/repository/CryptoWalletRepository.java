@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CryptoWalletRepository extends JpaRepository <CryptoWallet, Long> {
-    Optional<CryptoWallet> findByUserAndCryptoName(User user, String cryptoName);
+    Optional<CryptoWallet> findByUserIdAndCryptoName(Long userId, String cryptoName);
+
 
     List<CryptoWallet> findByUserId(Long userId);
 }

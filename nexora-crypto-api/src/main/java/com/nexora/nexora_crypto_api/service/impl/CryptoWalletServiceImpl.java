@@ -26,7 +26,7 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
 
     @Override
     public CryptoWallet getOrCreateWallet(String cryptoName, User user) {
-        return cryptoWalletRepository.findByUserAndCryptoName(user, cryptoName).orElseGet(() -> {
+        return cryptoWalletRepository.findByUserIdAndCryptoName(user.getId(), cryptoName).orElseGet(() -> {
             CryptoWallet wallet = new CryptoWallet();
             wallet.setUser(user);
             wallet.setCryptoName(cryptoName);
