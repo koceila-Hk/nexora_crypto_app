@@ -32,7 +32,7 @@ public class JwtService {
 
     @PostConstruct
     public void testJwtKey() {
-        System.out.println("JWT_SECRET_KEY injecté : " + secretKey);
+        System.out.println("JWT_SECRET_KEY: " + secretKey);
     }
 
     public String extractUsername(String token) {
