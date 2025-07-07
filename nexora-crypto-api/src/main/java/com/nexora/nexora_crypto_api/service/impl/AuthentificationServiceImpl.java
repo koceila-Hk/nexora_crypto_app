@@ -56,8 +56,8 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         user.setEnabled(false);
         user.setBalance(BigDecimal.valueOf(1000));
         user.setDateCreation(LocalDateTime.now());
-        sendVerificationEmail(user);
         userRepository.save(user);
+        sendVerificationEmail(user);
     }
 
     @Override

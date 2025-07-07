@@ -1,21 +1,27 @@
-2025-07-06 19:40:36 [background-preinit] INFO  : HV000001: Hibernate Validator 8.0.1.Final
-2025-07-06 19:40:36 [main] INFO  : Starting BuyCryptoCommandTest using Java 17.0.12 with PID 16104 (started by HABAREK in C:\Users\HABAREK\Documents\nexora_crypto_app\nexora-crypto-api)
-2025-07-06 19:40:36 [main] INFO  : The following 1 profile is active: "test"
-2025-07-06 19:40:37 [main] INFO  : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-07-06 19:40:37 [main] INFO  : Finished Spring Data repository scanning in 87 ms. Found 4 JPA repository interfaces.
-2025-07-06 19:40:38 [main] INFO  : HikariPool-1 - Starting...
-2025-07-06 19:40:38 [main] INFO  : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
-2025-07-06 19:40:38 [main] INFO  : HikariPool-1 - Start completed.
-2025-07-06 19:40:38 [main] INFO  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-07-06 19:40:38 [main] INFO  : HHH000412: Hibernate ORM core version 6.4.4.Final
-2025-07-06 19:40:38 [main] INFO  : HHH000026: Second-level cache disabled
-2025-07-06 19:40:38 [main] INFO  : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-07-06 19:40:40 [main] INFO  : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-07-06 19:40:40 [main] INFO  : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-07-06 19:40:40 [main] INFO  : Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-07-06 19:40:41 [main] WARN  : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-07-06 19:40:41 [main] INFO  : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@48e0d3a7, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@57a22410, org.springframework.security.web.context.SecurityContextHolderFilter@5985102f, org.springframework.security.web.header.HeaderWriterFilter@550244cb, org.springframework.web.filter.CorsFilter@2e138608, org.springframework.security.web.authentication.logout.LogoutFilter@5df744d4, com.nexora.nexora_crypto_api.service.JwtAuthenticationFilter@4734a551, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7a5151d7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3f13c9a2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@37d12ccb, org.springframework.security.web.session.SessionManagementFilter@130f8e03, org.springframework.security.web.access.ExceptionTranslationFilter@5d233d7, org.springframework.security.web.access.intercept.AuthorizationFilter@14c16388]
-2025-07-06 19:40:42 [main] INFO  : Started BuyCryptoCommandTest in 6.819 seconds (process running for 8.418)
-2025-07-06 19:40:43 [SpringApplicationShutdownHook] INFO  : Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-07-06 19:40:43 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown initiated...
-2025-07-06 19:40:43 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown completed.
+2025-07-06 23:35:37 [background-preinit] INFO  : HV000001: Hibernate Validator 8.0.1.Final
+2025-07-06 23:35:37 [main] INFO  : Starting NexoraBackendApplicationTests using Java 17.0.12 with PID 27544 (started by HABAREK in C:\Users\HABAREK\Documents\nexora_crypto_app\nexora-crypto-api)
+2025-07-06 23:35:37 [main] INFO  : The following 1 profile is active: "test"
+2025-07-06 23:35:38 [main] INFO  : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-06 23:35:38 [main] INFO  : Finished Spring Data repository scanning in 95 ms. Found 4 JPA repository interfaces.
+2025-07-06 23:35:39 [main] INFO  : HikariPool-1 - Starting...
+2025-07-06 23:35:39 [main] INFO  : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-07-06 23:35:39 [main] INFO  : HikariPool-1 - Start completed.
+2025-07-06 23:35:39 [main] INFO  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-07-06 23:35:39 [main] INFO  : HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-07-06 23:35:39 [main] INFO  : HHH000026: Second-level cache disabled
+2025-07-06 23:35:40 [main] INFO  : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-07-06 23:35:41 [main] INFO  : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-07-06 23:35:41 [main] INFO  : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-07-06 23:35:41 [main] INFO  : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-07-06 23:35:42 [main] WARN  : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-07-06 23:35:43 [main] INFO  : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1331742, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@38c61ab, org.springframework.security.web.context.SecurityContextHolderFilter@63ad4b55, org.springframework.security.web.header.HeaderWriterFilter@2e1a8c1a, org.springframework.web.filter.CorsFilter@68378acc, org.springframework.security.web.authentication.logout.LogoutFilter@1abe611c, com.nexora.nexora_crypto_api.service.JwtAuthenticationFilter@41861964, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@258d7d06, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@40f95b87, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5ea73927, org.springframework.security.web.session.SessionManagementFilter@2073d71b, org.springframework.security.web.access.ExceptionTranslationFilter@70b716a8, org.springframework.security.web.access.intercept.AuthorizationFilter@2de5eb04]
+2025-07-06 23:35:43 [main] INFO  : Started NexoraBackendApplicationTests in 7.146 seconds (process running for 8.614)
+2025-07-06 23:35:44 [main] INFO  : Could not detect default configuration classes for test class [com.nexora.nexora_crypto_api.repository.UserRepositoryTest]: UserRepositoryTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-07-06 23:35:44 [main] INFO  : Found @SpringBootConfiguration com.nexora.nexora_crypto_api.NexoraBackendApplication for test class com.nexora.nexora_crypto_api.repository.UserRepositoryTest
+2025-07-06 23:35:45 [main] INFO  : Could not detect default configuration classes for test class [com.nexora.nexora_crypto_api.service.impl.BuyCryptoCommandTest]: BuyCryptoCommandTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-07-06 23:35:45 [main] INFO  : Found @SpringBootConfiguration com.nexora.nexora_crypto_api.NexoraBackendApplication for test class com.nexora.nexora_crypto_api.service.impl.BuyCryptoCommandTest
+2025-07-06 23:35:45 [main] INFO  : Could not detect default configuration classes for test class [com.nexora.nexora_crypto_api.service.impl.UserServiceImplTest]: UserServiceImplTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-07-06 23:35:45 [main] INFO  : Found @SpringBootConfiguration com.nexora.nexora_crypto_api.NexoraBackendApplication for test class com.nexora.nexora_crypto_api.service.impl.UserServiceImplTest
+2025-07-06 23:35:45 [SpringApplicationShutdownHook] INFO  : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-07-06 23:35:45 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown initiated...
+2025-07-06 23:35:45 [SpringApplicationShutdownHook] INFO  : HikariPool-1 - Shutdown completed.

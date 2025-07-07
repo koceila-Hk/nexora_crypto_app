@@ -27,12 +27,13 @@ public class Transaction {
     @Column(name = "crypto_name")
     private String cryptoName;
 
+    @Column(precision = 15, scale = 8)
     private BigDecimal quantity;
 
-    @Column(name = "unit_price")
+    @Column(name = "unit_price", precision = 15, scale = 8)
     private BigDecimal unitPrice;
 
-    @Column(name = "total_amount")
+    @Column(name = "total_amount", precision = 15, scale = 8)
     private BigDecimal totalAmount;
 
     @Column(name = "date_transaction")

@@ -50,15 +50,15 @@ export class DashboardBuyCryptoComponent {
   }
 
   submit(): void {
-  //   const userId = this.tokenStorage.getUserIdFromToken();
-  //   console.log(userId);
-  //     if (!userId) {
-  //   this.errorMessage = 'Utilisateur non authentifié';
-  //   return;
-  // }
+    const userId = this.tokenStorage.getUserIdFromToken();
+    console.log(userId);
+      if (!userId) {
+    this.errorMessage = 'Utilisateur non authentifié';
+    return;
+  }
     if (this.selectedCoin && this.amountInput > 0) {
       const transaction = {
-        userId: 3,
+        userId,
         cryptoName: this.selectedCoin.cryptoName,
         quantity: this.mode === 'buy' ? this.resultAmount : this.amountInput,
         unitPrice: this.selectedCoin.currentPrice,
@@ -73,7 +73,7 @@ export class DashboardBuyCryptoComponent {
           console.log(`${this.mode.toUpperCase()} réussi`, res);
           this.errorMessage = '';
           // Redirection
-          // this.router.navigate(['/transactions']);
+          this.router.navigate(['/home-auth']);
         },
         error: (err) => {
           console.error(`Erreur lors de la transaction :`, err);

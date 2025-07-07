@@ -53,7 +53,7 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
                     BigDecimal currentPrice = coinGeckoService.getCryptoPrice(wallet.getCryptoName().toLowerCase(), "eur");
 
                     BigDecimal variation = currentPrice.subtract(averageBuyPrice)
-                            .divide(averageBuyPrice, 2, RoundingMode.HALF_UP)
+                            .divide(averageBuyPrice, 5, RoundingMode.HALF_UP)
                             .multiply(BigDecimal.valueOf(100));
 
 //                    wallet.setVariationPercentage(variation);
