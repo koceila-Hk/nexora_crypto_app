@@ -8,6 +8,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,10 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-//    @PostConstruct
-//    public void testJwtKey() {
-//        System.out.println("JWT_SECRET_KEY injecté : " + secretKey);
-//    }
+    @PostConstruct
+    public void testJwtKey() {
+        System.out.println("JWT_SECRET_KEY injecté : " + secretKey);
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
