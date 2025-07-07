@@ -30,10 +30,10 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    @PostConstruct
-    public void testJwtKey() {
-        System.out.println("JWT_SECRET_KEY: " + secretKey);
-    }
+//    @PostConstruct
+//    public void testJwtKey() {
+//        System.out.println("JWT_SECRET_KEY: " + secretKey);
+//    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
