@@ -23,6 +23,7 @@ public class CryptoWallet {
     @Column(name = "crypto_name")
     private String cryptoName;
 
+    @Column(precision = 15, scale = 8)
     private BigDecimal quantity;
 
     @Transient
