@@ -13,7 +13,7 @@ export class CryptoService {
   private coins = [
     'bitcoin',
     // 'ethereum',
-    // 'dogecoin',
+    'dogecoin',
     // 'binancecoin'
     ];
 
