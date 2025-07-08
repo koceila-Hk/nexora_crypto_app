@@ -5,6 +5,7 @@ COPY nexora-crypto-api /build
 
 RUN mvn clean package -DskipTests
 
+
 FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
