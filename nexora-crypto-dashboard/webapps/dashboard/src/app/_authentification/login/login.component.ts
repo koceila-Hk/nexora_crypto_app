@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TokenStorageService } from '../../_services/tokenStorageService';
+import { environment } from '../../../environments/envionment';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +32,7 @@ export class LoginComponent {
   onSubmit() {
 
     if (this.loginForm.valid) {
-      this.http.post('http://localhost:8080/auth/login', this.loginForm.value).subscribe({
+      this.http.post(environment.apiUrl + '/auth/login', this.loginForm.value).subscribe({
         next: (res: any) => {
           // console.log('Authentification réussi', res);
           const token = res.token;
