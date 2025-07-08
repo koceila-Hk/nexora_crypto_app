@@ -1,4 +1,4 @@
-FROM maven:3.8.6-openjdk-17-slim AS build
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY nexora-crypto-api/pom.xml .
 COPY nexora-crypto-api/src ./src
