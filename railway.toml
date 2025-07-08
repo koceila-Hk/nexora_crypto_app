@@ -1,0 +1,5 @@
+[build]
+builder = "Dockerfile"
+
+[deploy]
+startCommand = "java -jar app.jar --spring.profiles.active=docker"
