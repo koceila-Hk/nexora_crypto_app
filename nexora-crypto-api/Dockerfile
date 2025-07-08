@@ -1,9 +1,11 @@
-FROM eclipse-temurin:17-jdk-alpine
-
+FROM maven:3.8.6-openjdk-17-slim AS build
 WORKDIR /app
+COPY nexora-crypto-api/pom.xml .
+COPY nexora-crypto-api/src ./src
+RUN mvn clean package -DskipTests
 
-COPY target/*.jar app.jar
-
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=docker"]
