@@ -1,5 +1,7 @@
 [build]
-builder = "Dockerfile"
+builder = "docker"
+dockerfilePath = "nexora-crypto-api/Dockerfile"
+buildContext = "nexora-crypto-api"
 
 [deploy]
 startCommand = "java -jar app.jar --spring.profiles.active=docker"
