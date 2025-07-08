@@ -1,5 +1,5 @@
 .crypto-section {
-  background-color: var(--hero-color);
+  background-color: var(--background-color);
   color: var(--text-color);
 }
 
@@ -14,11 +14,13 @@
 
 .crypto-table {
   background-color: var(--card-color);
-  border-radius: 12px;
+  border: 5px solid var(--stroke-border);
 }
 
 span {
-  color: var(--text-color);
+  color: var(--title-tb-color);
+  font-size: 13px;
+  font-weight: 400;
 }
 .crypto-row:hover {
   background-color: var(--cta-color);

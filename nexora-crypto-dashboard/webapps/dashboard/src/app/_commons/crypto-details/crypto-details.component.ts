@@ -1,26 +1,27 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CryptoService } from '../../_services/crypto.service';
+import { InfosCoin } from '../../_models/account';
 
 @Component({
   selector: 'app-crypto-details',
   standalone: true,
-  imports: [ CommonModule],
+  imports: [CommonModule],
   templateUrl: './crypto-details.component.html',
   styleUrl: './crypto-details.component.css'
 })
 export class CryptoDetailsComponent implements OnInit {
-  @Output() coinSelected = new EventEmitter<CoinDetails>();
+  @Output() coinSelected = new EventEmitter<InfosCoin>();
 
-  coins: CoinDetails[] = [];
+  coins: InfosCoin[] = [];
 
-  constructor(private cryptoService: CryptoService) {}
+  constructor(private cryptoService: CryptoService) { }
 
   ngOnInit(): void {
-      this.cryptoService.getAllCoinDetails().subscribe({
-          next: data => this.coins = data,
-          error: err => console.error('Erreur de chargement des cryptos', err)
-        });
+    this.cryptoService.getAllCoinDetails().subscribe({
+      next: data => this.coins = data,
+      error: err => console.error('Erreur de chargement des cryptos', err)
+    });
   }
 
   getChangeClass(change: number | undefined): string {
@@ -28,14 +29,8 @@ export class CryptoDetailsComponent implements OnInit {
     return change >= 0 ? 'text-success' : 'text-danger';
   }
 
-  selectCoin(coin: CoinDetails) {
-  this.coinSelected.emit(coin);
-}
+  selectCoin(coin: InfosCoin) {
+    this.coinSelected.emit(coin);
+  }
 }
 
-interface CoinDetails {
-  cryptoName: string;
-  icon: string;
-  currentPrice: number;
-  priceChangePercentage: number;
-}

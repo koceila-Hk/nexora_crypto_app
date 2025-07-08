@@ -1,4 +1,4 @@
-/* ===== Navbar ===== */
+/*  Navbar  */
 .navbar {
   background-color: var(--background-color);
   transition: background-color 0.3s ease;
@@ -16,7 +16,7 @@
   width: 30px;
 }
 
-/* ===== Liens de navigation ===== */
+/* Liens de navigation  */
 .nav-link {
   color: var(--text-color);
   transition: color 0.3s ease;
@@ -26,7 +26,7 @@
   color: var(--footer-link-color); /* différent si souhaité pour hover */
 }
 
-/* ===== Boutons ===== */
+/*  Boutons */
 .btn-primary {
   background-color: #C3B8FD;
   border-color: #C3B8FD;
@@ -38,7 +38,7 @@
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* ===== Barre de recherche ===== */
+/*  Barre de recherche */
 .search-box {
   position: relative;
 }
@@ -68,8 +68,31 @@
   padding: 4px 8px;
 }
 
-/* ===== Icône de thème (lune/soleil) ===== */
+/* Icone de thème dark light  */
 .theme-icon {
   color: var(--text-color);
   transition: color 0.3s ease;
+}
+
+/* Icone de thème  */
+.theme-icon-profile {
+  color: var(--text-color);
+}
+
+.profile-icon {
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.profile-icon:hover {
+  opacity: 0.8;
+}
+
+.dropdown-menu {
+  min-width: 180px;
+  font-size: 14px;
+}
+
+.dropdown-item i {
+  font-size: 16px;
 }

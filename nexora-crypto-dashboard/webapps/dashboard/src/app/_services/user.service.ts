@@ -9,7 +9,7 @@ import { environment } from '../../environments/envionment';
 export class UserService {
   private baseUrl = environment.apiUrl + '/users/balance';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getUserById(id: number): Observable<AccountInfosUser> {
     return this.http.get<AccountInfosUser>(`${this.baseUrl}/${id}`);
