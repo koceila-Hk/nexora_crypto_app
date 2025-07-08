@@ -1,8 +1,8 @@
         <div class="card bg-secondary text-light">
           <div class="card-body">
-            <h5 class="card-title">Cryptos disponible sur le marchés</h5>
+            <h1>Cryptos disponible sur le marchés</h1>
             <ul class="list-unstyled mb-0">
-              <li *ngFor="let coin of coins" class="d-flex justify-content-between align-items-center mb-2" (click)="selectCoin(coin)">
+              <li *ngFor="let coin of coins" class="crypto-item d-flex justify-content-between align-items-center mb-2" (click)="selectCoin(coin)">
                 <div class="d-flex align-items-center">
                   <span>{{ coin?.cryptoName || 'Chargement...' }}</span>
                   <img *ngIf="coin" [src]="coin.icon" alt="{{ coin.cryptoName }}" width="24" height="24" class="me-2 rounded-circle">

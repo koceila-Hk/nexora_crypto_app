@@ -11,7 +11,7 @@ import { environment } from '../../environments/envionment';
 export class WalletService {
   private baseUrl = environment.apiUrl + '/wallets';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getWalletsWithVariation(userId: number): Observable<AccountInfosWallet[]> {
     return this.http.get<AccountInfosWallet[]>(`${this.baseUrl}/variation/${userId}`);

@@ -18,8 +18,8 @@ export class LoginComponent {
   errorMessage = String;
 
   constructor(
-    private fb: FormBuilder, 
-    private http: HttpClient, 
+    private fb: FormBuilder,
+    private http: HttpClient,
     private router: Router,
     private tokenStorage: TokenStorageService
   ) {
