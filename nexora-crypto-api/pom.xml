@@ -14,7 +14,7 @@
 
 	<groupId>com.nexora</groupId>
 	<artifactId>nexora-crypto-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>nexora-crypto</name>
 	<description>Application de simulation de cryptomonnaies</description>
 
