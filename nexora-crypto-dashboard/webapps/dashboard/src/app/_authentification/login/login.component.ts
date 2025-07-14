@@ -15,7 +15,7 @@ import { environment } from '../../../environments/envionment';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  errorMessage = String;
+  errorMessage!: String;
 
   constructor(
     private fb: FormBuilder,
@@ -34,14 +34,16 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.http.post(environment.apiUrl + '/auth/login', this.loginForm.value).subscribe({
         next: (res: any) => {
-          // console.log('Authentification réussi', res);
+          // console.log('response :', res)
           const token = res.token;
+          const refreshToken = res.refreshToken;
           this.tokenStorage.saveToken(token);
+          this.tokenStorage.saveRefreshToken(refreshToken);
           this.router.navigate(['/home-auth']);
         },
         error: (err) => {
           console.error('Erreur lors de l\'authentificaiton', err);
-          this.errorMessage = err.error;
+          this.errorMessage = 'Erreur lors de l\'authentificaiton';
         }
       });
     } else {

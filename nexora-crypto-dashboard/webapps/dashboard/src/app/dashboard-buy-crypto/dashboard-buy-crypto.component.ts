@@ -42,10 +42,8 @@ export class DashboardBuyCryptoComponent {
   calculateConversion(): void {
     if (this.selectedCoin && this.amountInput > 0) {
       const price = this.selectedCoin.currentPrice;
-
-      this.resultAmount = this.mode === 'buy'
-        ? this.amountInput / price
-        : this.amountInput * price;
+      this.resultAmount = this.mode === 'buy' ? this.amountInput / price : this.amountInput * price;
+      this.errorMessage = '';
     } else {
       this.resultAmount = 0;
     }
@@ -55,7 +53,12 @@ export class DashboardBuyCryptoComponent {
     const userId = this.tokenStorage.getUserIdFromToken();
     // console.log(userId);
     if (!userId) {
-      this.errorMessage = 'Utilisateur non authentifié';
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.selectedCoin) {
+      this.errorMessage = 'Veuillez sélectionner une cryptomonnaie.';
       return;
     }
     if (this.selectedCoin && this.amountInput > 0) {

@@ -37,12 +37,11 @@ export class HomeAuthComponent implements OnInit {
       });
 
       this.userService.getUserById(userId).subscribe(data => {
-        // this.balance = data.balance;
-        console.log("balance : ", this.balance);
+        this.balance = data.balance;
+        // console.log("balance : ", this.balance);
       });
 
       this.transactionService.getTransactionsByUserId(userId).subscribe(data => {
-        // next: (data) => {
           this.transactions = data;
         });
     } else {
