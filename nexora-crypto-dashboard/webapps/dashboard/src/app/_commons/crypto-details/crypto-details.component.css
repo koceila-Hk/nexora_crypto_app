@@ -1,10 +1,18 @@
-
 .card-body {
-  background-color: var(--section-color);
+  background-color: var(--card-color);
   border: 5px solid var(--stroke-border);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
-span, h5 {
+span {
   color: var(--text-color);
+}
+
+.crypto-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.crypto-item:hover {
+  background-color: #495057; 
 }

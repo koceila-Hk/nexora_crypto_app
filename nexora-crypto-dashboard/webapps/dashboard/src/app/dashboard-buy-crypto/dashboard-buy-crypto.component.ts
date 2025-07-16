@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../_services/tokenStorageService';
 import { InfosCoin } from '../_models/account';
+import { environment } from '../../environments/envionment';
 
 @Component({
   selector: 'app-markets',
@@ -23,14 +24,15 @@ import { InfosCoin } from '../_models/account';
   templateUrl: './dashboard-buy-crypto.component.html',
   styleUrl: './dashboard-buy-crypto.component.css'
 })
+
 export class DashboardBuyCryptoComponent {
   selectedCoin: InfosCoin | null = null;
-  mode: 'buy' | 'sell' = 'buy'; 
+  mode: 'buy' | 'sell' = 'buy';
   amountInput: number = 0;
   resultAmount: number = 0;
   errorMessage: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private tokenStorage: TokenStorageService) {}
+  constructor(private http: HttpClient, private router: Router, private tokenStorage: TokenStorageService) { }
 
   onCoinSelected(coin: InfosCoin): void {
     this.selectedCoin = coin;
@@ -40,10 +42,8 @@ export class DashboardBuyCryptoComponent {
   calculateConversion(): void {
     if (this.selectedCoin && this.amountInput > 0) {
       const price = this.selectedCoin.currentPrice;
-
-      this.resultAmount = this.mode === 'buy'
-        ? this.amountInput / price               
-        : this.amountInput * price;             
+      this.resultAmount = this.mode === 'buy' ? this.amountInput / price : this.amountInput * price;
+      this.errorMessage = '';
     } else {
       this.resultAmount = 0;
     }
@@ -51,11 +51,16 @@ export class DashboardBuyCryptoComponent {
 
   submit(): void {
     const userId = this.tokenStorage.getUserIdFromToken();
-    console.log(userId);
-      if (!userId) {
-    this.errorMessage = 'Utilisateur non authentifié';
-    return;
-  }
+    // console.log(userId);
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.selectedCoin) {
+      this.errorMessage = 'Veuillez sélectionner une cryptomonnaie.';
+      return;
+    }
     if (this.selectedCoin && this.amountInput > 0) {
       const transaction = {
         userId,
@@ -66,13 +71,11 @@ export class DashboardBuyCryptoComponent {
         type: this.mode.toUpperCase()
       };
 
-      const apiUrl = `http://localhost:8080/transaction/${this.mode}`;
+      const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
 
       this.http.post(apiUrl, transaction).subscribe({
         next: (res) => {
-          console.log(`${this.mode.toUpperCase()} réussi`, res);
           this.errorMessage = '';
-          // Redirection
           this.router.navigate(['/home-auth']);
         },
         error: (err) => {

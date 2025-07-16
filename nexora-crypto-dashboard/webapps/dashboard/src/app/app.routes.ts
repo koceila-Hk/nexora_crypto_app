@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'home-not-auth', component: HomeNotAuthComponent},
   { path: 'home-auth', component: HomeAuthComponent},
   { path: 'markets', component: MarketsComponent},
-  { path: 'dashboard-buy-crypto', component: DashboardBuyCryptoComponent},
+  { path: 'buy&sell-crypto', component: DashboardBuyCryptoComponent},
   { path: 'crypto-details', component: CryptoDetailsComponent},
    { path: 'crypto-chart/:id', component: ChartDetailComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },

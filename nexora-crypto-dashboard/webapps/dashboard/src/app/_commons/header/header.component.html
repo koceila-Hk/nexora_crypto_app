@@ -4,9 +4,8 @@
       <img src="assets/logoLight-png.png" alt="logo" width="30" height="30" class="me-2">
       <span class="fw-bold">nexora</span>
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-      data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-      aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -17,7 +16,7 @@
           <a class="nav-link" style="cursor: pointer;" (click)="navigateAccueil()">Accueil</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard-buy-crypto">Acheter des cryptos</a>
+          <a class="nav-link" routerLink="/buy&sell-crypto">Acheter des cryptos</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/markets">Marchés</a>
@@ -31,7 +30,7 @@
             <input type="text" class="form-control search-input" placeholder="Rechercher..." />
           </div>
         </li>
-            <!-- Si non connecté -->
+        <!-- Si non connecté -->
         <ng-container *ngIf="!isAuthenticated; else loggedInBlock">
           <li class="nav-item me-2">
             <a class="nav-link" routerLink="/login">Connexion</a>
@@ -43,12 +42,37 @@
 
         <!-- Si connecté -->
         <ng-template #loggedInBlock>
-          <li class="nav-item">
-            <button class="btn btn-danger" (click)="logout()">Déconnexion</button>
+          <li class="nav-item dropdown">
+            <div class="dropdown">
+              <a class="d-flex align-items-center profile-icon" href="#" role="button" id="dropdownMenuLink"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="theme-icon-profile bi bi-person-circle fs-4"></i>
+              </a>
+
+              <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="dropdownMenuLink">
+                <li>
+                  <a class="dropdown-item" routerLink="/profile">
+                    <i class="bi bi-person me-2"></i> Mon profil
+                  </a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li>
+                  <button class="dropdown-item text-danger" (click)="logout()">
+                    <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
+                  </button>
+                </li>
+              </ul>
+            </div>
           </li>
         </ng-template>
+
+
+
         <li class="nav-item">
-          <button class="btn ms-2" [ngClass]="isDarkMode ? 'btn-outline-dark' : 'btn-outline-light'" (click)="toggleTheme()" title="Changer le thème">
+          <button class="btn ms-2" [ngClass]="isDarkMode ? 'btn-outline-dark' : 'btn-outline-light'"
+            (click)="toggleTheme()" title="Changer le thème">
             <i class="bi theme-icon" [ngClass]="currentThemeIcon"></i>
           </button>
         </li>
