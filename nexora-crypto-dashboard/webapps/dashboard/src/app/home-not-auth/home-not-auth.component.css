@@ -1,6 +1,11 @@
-h1, h2,
 p {
+  color: #A1A0A9;
+}
+
+h2 {
   color: var(--text-color);
+  font-size: 30px;
+  font-weight: 600;
 }
 
 .hero-section {
@@ -24,8 +29,8 @@ p {
   background-color: var(--cta-color);
 }
 
-.stroke-row {
+.row {
   background-color: var(--stroke-color);
   border: 8px solid var(--stroke-border);
-  border-radius: 10px;
+  border-radius: 15px;
 }

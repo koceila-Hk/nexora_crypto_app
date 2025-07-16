@@ -29,7 +29,7 @@ export class HomeAuthComponent implements OnInit {
 
   ngOnInit(): void {
     const userId = this.tokenStorage.getUserIdFromToken();
-    console.log("userId : " + userId);
+    // console.log("userId : " + userId);
 
     if (userId != null) {
       this.walletService.getWalletsWithVariation(userId).subscribe(data => {
@@ -38,11 +38,10 @@ export class HomeAuthComponent implements OnInit {
 
       this.userService.getUserById(userId).subscribe(data => {
         this.balance = data.balance;
-        console.log("balance : ", this.balance);
+        // console.log("balance : ", this.balance);
       });
 
       this.transactionService.getTransactionsByUserId(userId).subscribe(data => {
-        // next: (data) => {
           this.transactions = data;
         });
     } else {

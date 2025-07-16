@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -118,17 +119,37 @@ public class AuthentificationServiceImpl implements AuthenticationService {
 
     @Override
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String refreshToken = null;
+
+        // 1. Essaye depuis le header Authorization
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            refreshToken = authHeader.substring(7);
+        }
+
+        // 2. Si pas de token dans le header, essaye depuis le body JSON
+        if (refreshToken == null) {
+            try {
+                Map<String, String> body = new ObjectMapper().readValue(request.getInputStream(), Map.class);
+                refreshToken = body.get("refreshToken");
+            } catch (Exception e) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("Refresh token missing or invalid");
+                return;
+            }
+        }
+
+        if (refreshToken == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Unauthorized: No refresh token");
             return;
         }
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
+
+        String userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
-            var user = this.userRepository.findByEmail(userEmail)
+            var user = userRepository.findByEmail(userEmail)
                     .orElseThrow();
+
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -137,10 +158,16 @@ public class AuthentificationServiceImpl implements AuthenticationService {
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}");
+                return;
             }
         }
+
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.getWriter().write("Invalid refresh token");
     }
+
 
     public void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()

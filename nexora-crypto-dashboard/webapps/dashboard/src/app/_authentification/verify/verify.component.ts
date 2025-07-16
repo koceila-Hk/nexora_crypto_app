@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/envionment';
 
 @Component({
   selector: 'app-verify',
@@ -40,7 +41,7 @@ export class VerifyComponent implements OnInit {
       
     };
 
-    this.http.post('http://localhost:8080/auth/verify', payload).subscribe({
+    this.http.post(environment.apiUrl + '/auth/verify', payload).subscribe({
       next: (res) => {
         console.log('Vérification réussie', res);
         sessionStorage.removeItem('email');

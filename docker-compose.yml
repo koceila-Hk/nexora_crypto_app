@@ -29,6 +29,7 @@ services:
     depends_on:
       - mysql
     environment:
+      - SECURITY_JWT_SECRET_KEY=${SECURITY_JWT_SECRET_KEY}
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - nexora-network
