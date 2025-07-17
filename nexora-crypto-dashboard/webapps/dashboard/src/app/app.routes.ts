@@ -10,6 +10,8 @@ import { MarketsComponent } from './markets/markets.component';
 import { CryptoDetailsComponent } from './_commons/crypto-details/crypto-details.component';
 import { DashboardBuyCryptoComponent } from './dashboard-buy-crypto/dashboard-buy-crypto.component';
 import { ChartDetailComponent } from './chart-detail/chart-detail.component';
+import { TermsOfUseComponent } from './terms-use/terms.use.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy.policy.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent  },
@@ -20,7 +22,9 @@ export const routes: Routes = [
   { path: 'markets', component: MarketsComponent},
   { path: 'buy&sell-crypto', component: DashboardBuyCryptoComponent},
   { path: 'crypto-details', component: CryptoDetailsComponent},
-   { path: 'crypto-chart/:id', component: ChartDetailComponent },
+  { path: 'crypto-chart/:id', component: ChartDetailComponent },
+  { path: 'terms', component: TermsOfUseComponent},
+  { path: 'privacy', component: PrivacyPolicyComponent},
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'home-not-auth', pathMatch: 'full' }, 
 ]; 
