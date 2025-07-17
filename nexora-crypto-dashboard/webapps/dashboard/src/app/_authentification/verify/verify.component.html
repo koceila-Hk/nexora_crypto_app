@@ -1,13 +1,40 @@
-<h2>Vérification de votre compte</h2>
-<form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
-  <label for="verificationCode">Code de vérification</label>
-  <input id="verificationCode" formControlName="verificationCode" type="text" />
-  <div *ngIf="verifyForm.get('verificationCode')?.invalid && verifyForm.get('verificationCode')?.touched">
-    <small>Le code est requis.</small>
+<form [formGroup]="verifyForm" (ngSubmit)="onSubmit()" class="gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+
+            <div class="mb-md-5 mt-md-4 pb-5">
+              <a class="navbar-brand d-flex align-items-center mb-4">
+                <img src="assets/logoLight-png.png" alt="logo" width="30" height="30" class="me-2">
+                <span class="fw-bold">nexora</span>
+              </a>
+
+              <h2 class="text-white mb-4">Vérification de votre compte</h2>
+              <p class="text-white-50 mb-4">Un code vous a été envoyé par email.</p>
+
+              <div class="form-outline form-white mb-4">
+                <label class="form-label" for="verificationCode">Code de vérification</label>
+                <input id="verificationCode" type="text" class="form-control form-control-lg"
+                  formControlName="verificationCode" />
+                <div *ngIf="submitted && verifyForm.get('verificationCode')?.hasError('required')" class="text-danger mt-2">
+                  Le code est requis.
+                </div>
+              </div>
+
+              <button class="btn btn-outline-light btn-lg px-5 mt-2" type="submit" [disabled]="verifyForm.invalid">
+                Vérifier
+              </button>
+
+              <div *ngIf="successMessage" class="text-success mt-3">{{ successMessage }}</div>
+              <div *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <button type="submit" [disabled]="verifyForm.invalid">Vérifier</button>
-
-  <!-- <p *ngIf="successMessage" style="color:green">{{ successMessage }}</p>
-  <p *ngIf="errorMessage" style="color:red">{{ errorMessage }}</p> -->
 </form>

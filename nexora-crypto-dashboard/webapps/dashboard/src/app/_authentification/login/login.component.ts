@@ -16,6 +16,7 @@ import { environment } from '../../../environments/envionment';
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage!: String;
+  submit = false;
 
   constructor(
     private fb: FormBuilder,
@@ -24,12 +25,13 @@ export class LoginComponent {
     private tokenStorage: TokenStorageService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
       password: ['', Validators.required]
     });
   }
 
   onSubmit() {
+    this.submit = true;
 
     if (this.loginForm.valid) {
       this.http.post(environment.apiUrl + '/auth/login', this.loginForm.value).subscribe({
