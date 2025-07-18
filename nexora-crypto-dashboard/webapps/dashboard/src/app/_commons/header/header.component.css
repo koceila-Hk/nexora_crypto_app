@@ -11,20 +11,28 @@
 }
 
 .navbar-brand img {
-  /* Aucun filtre ici pour garder les vraies couleurs */
   height: 30px;
   width: 30px;
 }
 
-/* Liens de navigation  */
+/* Liens */
 .nav-link {
   color: var(--text-color);
   transition: color 0.3s ease;
 }
-
 .nav-link:hover {
-  color: var(--footer-link-color); /* différent si souhaité pour hover */
+  opacity: 0.8;
 }
+
+.navbar-underline {
+  height: 0.25rem;
+  background-color: #2D2D37;
+  width: 88%;
+}
+
+/* .nav-link:hover {
+  color: var(--footer-link-color); 
+} */
 
 /*  Boutons */
 .btn-primary {
@@ -44,8 +52,8 @@
 }
 
 .search-icon {
-  font-size: 1.3rem;
   color: var(--text-color);
+  font-size: 1.3rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }

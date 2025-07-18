@@ -44,6 +44,7 @@ export class RegisterComponent {
   }
 
   onSubmit() {
+    // console.log('click')
     this.submit = true;
     this.registerForm.markAllAsTouched();
 

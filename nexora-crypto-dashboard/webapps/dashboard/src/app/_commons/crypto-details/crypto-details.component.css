@@ -4,6 +4,10 @@
   border-radius: 10px;
 }
 
+.bg-secondary {
+  --bs-bg-opacity:0;
+}
+
 span {
   color: var(--text-color);
 }
