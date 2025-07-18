@@ -10,8 +10,11 @@ import { MarketsComponent } from './markets/markets.component';
 import { CryptoDetailsComponent } from './_commons/crypto-details/crypto-details.component';
 import { DashboardBuyCryptoComponent } from './dashboard-buy-crypto/dashboard-buy-crypto.component';
 import { ChartDetailComponent } from './chart-detail/chart-detail.component';
-import { TermsOfUseComponent } from './terms-use/terms.use.component';
-import { PrivacyPolicyComponent } from './privacy-policy/privacy.policy.component';
+import { TermsOfUseComponent } from './_legal/terms/terms.use.component';
+import { PrivacyPolicyComponent } from './_legal/privacy-policy/privacy.policy.component';
+import { ContactComponent } from './_legal/contact/contact.component';
+import { CookiesComponent } from './_legal/cookies/cookies.component';
+import { MentionsLegalesComponent } from './_legal/mentions-legales/mentions-legales.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent  },
@@ -25,6 +28,9 @@ export const routes: Routes = [
   { path: 'crypto-chart/:id', component: ChartDetailComponent },
   { path: 'terms', component: TermsOfUseComponent},
   { path: 'privacy', component: PrivacyPolicyComponent},
+  { path: 'contact', component: ContactComponent },
+  { path: 'cookies', component: CookiesComponent },
+  { path: 'mentions-legales', component: MentionsLegalesComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'home-not-auth', pathMatch: 'full' }, 
 ]; 

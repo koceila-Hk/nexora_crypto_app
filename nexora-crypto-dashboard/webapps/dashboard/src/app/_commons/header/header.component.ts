@@ -8,13 +8,13 @@ import { TokenStorageService } from '../../_services/tokenStorageService';
   standalone: true,
   imports: [RouterLink, CommonModule],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'], 
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
   isAuthenticated = false;
   isDarkMode = true;
 
-  constructor(private tokenStorage: TokenStorageService, private router: Router) {}
+  constructor(private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
     this.isAuthenticated = this.tokenStorage.isLoggedIn();
@@ -48,7 +48,6 @@ export class HeaderComponent implements OnInit {
   }
 
   get currentThemeIcon(): string {
-    // Change l'icône en fonction du mode actuel
     return this.isDarkMode ? 'bi-sun-fill' : 'bi-moon-stars-fill';
   }
 

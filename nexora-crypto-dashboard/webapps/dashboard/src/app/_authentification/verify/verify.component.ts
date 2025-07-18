@@ -9,7 +9,8 @@ import { environment } from '../../../environments/envionment';
   selector: 'app-verify',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './verify.component.html'
+  templateUrl: './verify.component.html',
+  styleUrl: './verify.component.css'
 })
 export class VerifyComponent implements OnInit {
   verifyForm: FormGroup;
@@ -30,9 +31,9 @@ export class VerifyComponent implements OnInit {
 
   ngOnInit() {
     this.email = sessionStorage.getItem('email') || '';
-    if (!this.email) {
-      this.router.navigate(['/register']);
-    }
+    // if (!this.email) {
+    //   this.router.navigate(['/register']);
+    // }
   }
 
   onSubmit() {
@@ -53,7 +54,7 @@ export class VerifyComponent implements OnInit {
 
         setTimeout(() => {
           this.router.navigate(['/login']);
-        }, 2000); 
+        }, 2000);
       },
       error: (err) => {
         this.successMessage = '';
