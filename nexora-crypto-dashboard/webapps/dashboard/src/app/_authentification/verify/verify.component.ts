@@ -31,9 +31,9 @@ export class VerifyComponent implements OnInit {
 
   ngOnInit() {
     this.email = sessionStorage.getItem('email') || '';
-    // if (!this.email) {
-    //   this.router.navigate(['/register']);
-    // }
+    if (!this.email) {
+      this.router.navigate(['/register']);
+    }
   }
 
   onSubmit() {
@@ -58,7 +58,7 @@ export class VerifyComponent implements OnInit {
       },
       error: (err) => {
         this.successMessage = '';
-        this.errorMessage = err?.error?.message || 'Échec de la vérification. Veuillez réessayer.';
+        this.errorMessage = err.error.message;
       }
     });
   }

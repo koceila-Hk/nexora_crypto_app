@@ -49,14 +49,14 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
   initChartWithPrice(basePrice: number): void {
     this.chart = createChart(this.chartContainer.nativeElement, {
       width: this.chartContainer.nativeElement.offsetWidth,
-      height: 400,
+      height: 330,
       layout: {
         background: { color: '#0e0e0e' },
         textColor: '#c9d1d9'
       },
       grid: {
-        vertLines: { color: 'rgb(49, 25, 172)' },
-        horzLines: { color: 'rgb(49, 25, 172)' }
+        vertLines: { color: 'hsla(250, 47%, 53%, 1.00)' },
+        horzLines: { color: 'rgba(250, 47%, 53%, 1.00)' }
       },
       timeScale: {
         borderColor: 'rgb(49, 25, 172)',

@@ -31,12 +31,12 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    @PostConstruct
-    public void testJwtKey() {
-        System.out.println("JWT_SECRET_KEY: " + secretKey);
-        System.out.println("Access token expires in: " + jwtExpiration + " ms");
-        System.out.println("Refresh token expires in: " + refreshExpiration + " ms");
-    }
+//    @PostConstruct
+//    public void testJwtKey() {
+//        System.out.println("JWT_SECRET_KEY: " + secretKey);
+//        System.out.println("Access token expires in: " + jwtExpiration + " ms");
+//        System.out.println("Refresh token expires in: " + refreshExpiration + " ms");
+//    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
