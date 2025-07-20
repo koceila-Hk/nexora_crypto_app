@@ -1,5 +1,5 @@
 .hero-section {
-  background-color: #05050F;
+  background-color: var(--background-color);
 }
 .btn-purple {
   background-color: #8a2be2;
@@ -42,4 +42,8 @@
 }
 .text-end {
   text-align: end;
+}
+
+a#tv-attr-logo {
+  display: none !important;
 }
