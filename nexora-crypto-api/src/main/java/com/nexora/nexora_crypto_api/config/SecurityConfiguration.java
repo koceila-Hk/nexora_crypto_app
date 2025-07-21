@@ -42,12 +42,9 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**", "/auth/refresh-token", "/users/**", "/crypto/**", "/log").permitAll()
-                        .requestMatchers( "/users/**","/wallets/**", "/transaction/**").authenticated()
+                        .requestMatchers( "/wallets/**", "/transaction/**").authenticated()
                 )
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(unauthorizedEntryPoint())
-                        .accessDeniedHandler(accessDeniedHandler())
-                )
+                .exceptionHandling(eh -> eh.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -64,7 +61,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://nexora-frontend.onrender.com", "http://localhost:8080", "http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of("https://nexora-frontend.onrender.com", "http://localhost:8080", "http://localhost:8083", "http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setExposedHeaders(List.of("Authorization"));
@@ -74,19 +71,19 @@ public class SecurityConfiguration {
         return source;
     }
 
-    private AuthenticationEntryPoint unauthorizedEntryPoint() {
-        return (request, response, authException) -> {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Unauthorized\"}");
-        };
-    }
-
-    private AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, accessDeniedException) -> {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Forbidden\"}");
-        };
-    }
+//    private AuthenticationEntryPoint unauthorizedEntryPoint() {
+//        return (request, response, authException) -> {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.setContentType("application/json");
+//            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+//        };
+//    }
+//
+//    private AccessDeniedHandler accessDeniedHandler() {
+//        return (request, response, accessDeniedException) -> {
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//            response.setContentType("application/json");
+//            response.getWriter().write("{\"error\": \"Forbidden\"}");
+//        };
+//    }
 }

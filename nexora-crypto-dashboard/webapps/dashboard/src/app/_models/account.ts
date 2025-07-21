@@ -27,3 +27,10 @@ export class InfosCoin{
     currentPrice!: number;
     priceChangePercentage!: number;
 }
+
+interface CoinDetails {
+  cryptoName: string;
+  icon: string;
+  currentPrice: number;
+  priceChangePercentage: number;
+}

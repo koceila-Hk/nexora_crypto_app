@@ -1,6 +1,7 @@
 package com.nexora.nexora_crypto_api.service;
 
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 

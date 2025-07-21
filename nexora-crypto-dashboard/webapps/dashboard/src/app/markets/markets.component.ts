@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { CryptoService } from '../_services/crypto.service';
 import { FooterComponent } from "../_commons/footer/footer.component";
 import { HeaderComponent } from "../_commons/header/header.component";
-// import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-crypto-details',
