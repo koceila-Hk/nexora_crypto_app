@@ -16,13 +16,13 @@
           <span>{{ coin.cryptoName }}</span>
         </div>
         <div style="width: 33%;">
-          {{ coin.currentPrice | currency:'USD':'symbol':'1.2-2' }}
+          €{{ coin.currentPrice | number:'1.2-3' }}
         </div>
         <div style="width: 33%; text-align: right;" [ngClass]="{
                'text-success': coin.priceChangePercentage >= 0,
                'text-danger': coin.priceChangePercentage < 0
              }">
-          {{ coin.priceChangePercentage >= 0 ? '+' : '' }}{{ coin.priceChangePercentage | number:'1.2-2' }}%
+          {{ coin.priceChangePercentage >= 0 ? '+' : '-' }}{{ coin.priceChangePercentage | number:'1.2-2' }}%
         </div>
       </div>
     </div>

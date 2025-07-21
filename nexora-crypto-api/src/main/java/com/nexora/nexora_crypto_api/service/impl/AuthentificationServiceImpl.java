@@ -121,13 +121,13 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refreshToken = null;
 
-        // 1. Essaye depuis le header Authorization
+        // Essaye depuis le header Authorization
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             refreshToken = authHeader.substring(7);
         }
 
-        // 2. Si pas de token dans le header, essaye depuis le body JSON
+        // Si pas de token dans le header e body JSON
         if (refreshToken == null) {
             try {
                 Map<String, String> body = new ObjectMapper().readValue(request.getInputStream(), Map.class);
