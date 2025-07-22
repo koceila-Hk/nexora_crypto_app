@@ -8,10 +8,11 @@ import { UserService } from '../_services/user.service';
 import {  TransactionService } from '../_services/transaction.service';
 import { WalletService } from '../_services/wallet.service';
 import { AccountInfosTransaction, AccountInfosWallet } from '../_models/account';
+import { TransacationTypePipe } from '../pipes/TransactionType';
 
 @Component({
   selector: 'app-home-auth',
-  imports: [HeaderComponent, FooterComponent, CommonModule, RouterLink],
+  imports: [HeaderComponent, FooterComponent, CommonModule, RouterLink, TransacationTypePipe],
   templateUrl: './home-auth.component.html',
   styleUrl: './home-auth.component.css'
 })

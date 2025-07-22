@@ -22,7 +22,7 @@
                'text-success': coin.priceChangePercentage >= 0,
                'text-danger': coin.priceChangePercentage < 0
              }">
-          {{ coin.priceChangePercentage >= 0 ? '+' : '-' }}{{ coin.priceChangePercentage | number:'1.2-2' }}%
+          {{ coin.priceChangePercentage >= 0 ? '+' : ' ' }}{{ coin.priceChangePercentage | number:'1.2-2' }}%
         </div>
       </div>
     </div>
