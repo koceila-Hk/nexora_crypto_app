@@ -84,7 +84,7 @@ public class AuthenticationController {
 
             ResponseCookie accessCookie = ResponseCookie.from("access_token", jwtToken)
                     .httpOnly(true)
-                    .secure(true) // à désactiver en local
+                    .secure(false) // à désactiver en local
                     .path("/")
                     .sameSite("Lax")
                     .maxAge(Duration.ofMinutes(15))
@@ -92,7 +92,7 @@ public class AuthenticationController {
 
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                     .httpOnly(true)
-                    .secure(true)
+                    .secure(false)
                     .path("/")
                     .sameSite("Lax")
                     .maxAge(Duration.ofDays(7))

@@ -42,12 +42,12 @@ export class AuthService {
   currentUser = this._currentUser.asReadonly()
   isConnected = computed(() => this.currentUser() !== null)
 
-  login(value: any): Observable<{
+  login(credentials: AccountInfosUser): Observable<{
     user: AccountInfosUser
   }> {
     return this.http.post<{
       user: AccountInfosUser
-    }>(environment.apiUrl + '/auth/login', FormData, { withCredentials: true })
+    }>(environment.apiUrl + '/auth/login', credentials,{ withCredentials: true })
       .pipe(
         tap(response => {
           // Les deux tokens sont automatiquement stockés dans des cookies HTTP-only
