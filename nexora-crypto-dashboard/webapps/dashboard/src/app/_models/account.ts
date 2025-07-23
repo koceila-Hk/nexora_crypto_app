@@ -8,7 +8,7 @@ export class AccountInfosUser {
 export class AccountInfosWallet{
     cryptoName!: string;
     quantity: number | undefined;
-    // logoCrypto: string;
+    logoCrypto: string | undefined;
     variationPercentage!: number;
 }
 
