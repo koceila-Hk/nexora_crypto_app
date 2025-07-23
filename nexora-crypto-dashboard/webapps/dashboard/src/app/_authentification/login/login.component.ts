@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TokenStorageService } from '../../_services/tokenStorageService';
 import { environment } from '../../../environments/envionment';
+import { AuthService } from '../../_services/AuthService';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
@@ -30,26 +32,46 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
-    this.submit = true;
-
-    if (this.loginForm.valid) {
-      this.http.post(environment.apiUrl + '/auth/login', this.loginForm.value).subscribe({
-        next: (res: any) => {
-          // console.log('response :', res)
-          const token = res.token;
-          const refreshToken = res.refreshToken;
-          this.tokenStorage.saveToken(token);
-          this.tokenStorage.saveRefreshToken(refreshToken);
-          this.router.navigate(['/home-auth']);
-        },
-        error: (err) => {
-          console.error('Erreur lors de l\'authentificaiton', err);
-          this.errorMessage = 'Erreur lors de l\'authentificaiton';
+      onSubmit() {
+        this.submit = true;
+        if (this.loginForm.valid) {
+          this.authService.login(this.loginForm.value).subscribe({
+            next: () => {
+              console.log('Logged in successfully');
+              this.router.navigateByUrl('/');
+            },
+            error: (error: HttpErrorResponse) => {  
+              console.error('Login failed', error);
+              // Afficher un message d'erreur à l'utilisateur
+            }
+          });
+        } else {
+          console.warn('Formulaire invalide');
+          
         }
-      });
-    } else {
-      console.warn('Formulaire invalide');
-    }
   }
 }  
+
+  // onSubmit() {
+  //   this.submit = true;
+
+  //   if (this.loginForm.valid) {
+  //     this.http.post(environment.apiUrl + '/auth/login', this.loginForm.value).subscribe({
+  //       next: (res: any) => {
+  //         // console.log('response :', res)
+  //         const token = res.token;
+  //         const refreshToken = res.refreshToken;
+  //         this.tokenStorage.saveToken(token);
+  //         this.tokenStorage.saveRefreshToken(refreshToken);
+  //         this.router.navigate(['/home-auth']);
+  //       },
+  //       error: (err) => {
+  //         console.error('Erreur lors de l\'authentificaiton', err);
+  //         this.errorMessage = 'Erreur lors de l\'authentificaiton';
+  //       }
+  //     });
+  //   } else {
+  //     console.warn('Formulaire invalide');
+  //   }
+  // }
+
