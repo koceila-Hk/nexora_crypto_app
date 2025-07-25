@@ -14,11 +14,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Map;
 
 @RequestMapping("/auth")
@@ -47,8 +50,30 @@ public class AuthenticationController {
         }
     }
 
+//    @PostMapping("/login")
+//    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) throws Exception {
+//        try {
+//            User authenticatedUser = authenticationService.authenticate(loginUserDto);
+//            String jwtToken = jwtService.generateToken(authenticatedUser);
+//            String refreshToken = jwtService.generateRefreshToken(authenticatedUser);
+//
+//            authenticationService.revokeAllUserTokens(authenticatedUser);
+//            authenticationService.saveUserToken(authenticatedUser, jwtToken);
+//
+//            LoginResponse loginResponse = new LoginResponse(jwtToken, refreshToken, jwtService.getExpirationTime());
+//
+//            logger.info("Login successful: {}", loginUserDto.getEmail());
+//
+//            return ResponseEntity.ok(loginResponse);
+//        } catch (Exception e) {
+//            logger.error("Login failed: {}, errorMessage: {}", loginUserDto.getEmail(), e.getMessage());
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((LoginResponse) Map.of("message", e.getMessage()));
+//        }
+//    }
+
+
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) throws Exception {
+    public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
         try {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedUser);
@@ -57,14 +82,27 @@ public class AuthenticationController {
             authenticationService.revokeAllUserTokens(authenticatedUser);
             authenticationService.saveUserToken(authenticatedUser, jwtToken);
 
-            LoginResponse loginResponse = new LoginResponse(jwtToken, refreshToken, jwtService.getExpirationTime());
+            ResponseCookie accessCookie = ResponseCookie.from("access_token", jwtToken)
+                    .httpOnly(true)
+                    .secure(false) // à désactiver en local
+                    .path("/")
+                    .sameSite("Lax")
+                    .maxAge(Duration.ofMinutes(15))
+                    .build();
 
-            logger.info("Login successful: {}", loginUserDto.getEmail());
+            ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
+                    .httpOnly(true)
+                    .secure(false)
+                    .path("/")
+                    .sameSite("Lax")
+                    .maxAge(Duration.ofDays(7))
+                    .build();
 
-            return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, accessCookie.toString(), refreshCookie.toString())
+                    .body(Map.of("message", "Connexion réussie"));
         } catch (Exception e) {
-            logger.error("Login failed: {}, errorMessage: {}", loginUserDto.getEmail(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((LoginResponse) Map.of("message", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
         }
     }
 
