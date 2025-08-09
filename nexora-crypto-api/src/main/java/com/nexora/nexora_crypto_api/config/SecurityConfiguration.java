@@ -83,7 +83,7 @@ public class SecurityConfiguration {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setPath("/");  // le même path que celui utilisé pour créer le cookie
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);  // si HTTPS est utilisé
+        cookie.setSecure(true);  // si HTTPS est utilisé
         cookie.setMaxAge(0); // expiration immédiate
         response.addCookie(cookie);
     }

@@ -61,16 +61,16 @@ public class AuthenticationController {
 
             ResponseCookie accessCookie = ResponseCookie.from("access_token", jwtToken)
                     .httpOnly(true)
-                    .secure(false) // à désactiver en local
+                    .secure(true) // à désactiver en local
                     .path("/")
-                    .sameSite("Lax")
+                    .sameSite("None") // Lax
                     .build();
 
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                     .httpOnly(true)
-                    .secure(false)
+                    .secure(true)
                     .path("/")
-                    .sameSite("Lax")
+                    .sameSite("None")
                     .build();
 
             logger.info("Login successful: {}", loginUserDto.getEmail());
