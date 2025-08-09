@@ -27,6 +27,9 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         User currentUser = (User) authentication.getPrincipal();
         UserDto userDto = userMapper.toDto(currentUser);
         return ResponseEntity.ok(userDto);
