@@ -36,10 +36,10 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
-          this.authService.getCurrentUser().subscribe(user => {
-            // console.log('succes login :', user);
+          // this.authService.getCurrentUser().subscribe(user => {
+            console.log('succes login');
             this.router.navigate(['home-auth']);
-          });
+          // });
         },
         error: () => {
           this.errorMessage = 'Erreur lors de l\'authentificaiton';
