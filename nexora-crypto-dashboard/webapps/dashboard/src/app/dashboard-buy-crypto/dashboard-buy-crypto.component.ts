@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { TokenStorageService } from '../_services/tokenStorageService';
 import { InfosCoin } from '../_models/account';
 import { environment } from '../../environments/envionment';
+import { AuthService } from '../_services/AuthService';
 
 @Component({
   selector: 'app-markets',
@@ -32,7 +33,11 @@ export class DashboardBuyCryptoComponent {
   resultAmount: number = 0;
   errorMessage: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private tokenStorage: TokenStorageService) { }
+  constructor(private http: HttpClient,
+              private router: Router, 
+              private tokenStorage: TokenStorageService,
+              private authService: AuthService)
+  { }
 
   onCoinSelected(coin: InfosCoin): void {
     this.selectedCoin = coin;
@@ -50,7 +55,8 @@ export class DashboardBuyCryptoComponent {
   }
 
   submit(): void {
-    const userId = this.tokenStorage.getUserIdFromToken();
+    // const userId = this.tokenStorage.getUserIdFromToken();
+    const userId = this.authService.currentUser()?.id;
     // console.log(userId);
     if (!userId) {
       this.router.navigate(['/login']);
@@ -73,7 +79,7 @@ export class DashboardBuyCryptoComponent {
 
       const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
 
-      this.http.post(apiUrl, transaction).subscribe({
+      this.http.post(apiUrl, transaction, {withCredentials: true}).subscribe({
         next: (res) => {
           this.errorMessage = '';
           this.router.navigate(['/home-auth']);

@@ -14,6 +14,6 @@ export class TransactionService {
   constructor(private http: HttpClient) {}
 
   getTransactionsByUserId(userId: number): Observable<AccountInfosTransaction[]> {
-    return this.http.get<AccountInfosTransaction[]>(`${this.baseUrl}/${userId}`);
+    return this.http.get<AccountInfosTransaction[]>(`${this.baseUrl}/${userId}`, { withCredentials: true });
   }
 }
