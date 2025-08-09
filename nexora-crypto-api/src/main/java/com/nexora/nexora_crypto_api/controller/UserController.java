@@ -5,6 +5,7 @@ import com.nexora.nexora_crypto_api.mappers.UserMapper;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,10 +25,11 @@ public class UserController {
     private UserMapper userMapper;
 
     @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
+    public ResponseEntity<UserDto> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(currentUser);
+        UserDto userDto = userMapper.toDto(currentUser);
+        return ResponseEntity.ok(userDto);
     }
 
     @GetMapping("/")

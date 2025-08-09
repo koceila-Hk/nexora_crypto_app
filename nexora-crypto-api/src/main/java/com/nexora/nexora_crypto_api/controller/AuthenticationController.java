@@ -50,28 +50,6 @@ public class AuthenticationController {
         }
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) throws Exception {
-//        try {
-//            User authenticatedUser = authenticationService.authenticate(loginUserDto);
-//            String jwtToken = jwtService.generateToken(authenticatedUser);
-//            String refreshToken = jwtService.generateRefreshToken(authenticatedUser);
-//
-//            authenticationService.revokeAllUserTokens(authenticatedUser);
-//            authenticationService.saveUserToken(authenticatedUser, jwtToken);
-//
-//            LoginResponse loginResponse = new LoginResponse(jwtToken, refreshToken, jwtService.getExpirationTime());
-//
-//            logger.info("Login successful: {}", loginUserDto.getEmail());
-//
-//            return ResponseEntity.ok(loginResponse);
-//        } catch (Exception e) {
-//            logger.error("Login failed: {}, errorMessage: {}", loginUserDto.getEmail(), e.getMessage());
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((LoginResponse) Map.of("message", e.getMessage()));
-//        }
-//    }
-
-
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
         try {
@@ -84,24 +62,25 @@ public class AuthenticationController {
 
             ResponseCookie accessCookie = ResponseCookie.from("access_token", jwtToken)
                     .httpOnly(true)
-                    .secure(false) // à désactiver en local
+                    .secure(true) // à désactiver en local
                     .path("/")
                     .sameSite("Lax")
-                    .maxAge(Duration.ofMinutes(15))
                     .build();
 
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                     .httpOnly(true)
-                    .secure(false)
+                    .secure(true)
                     .path("/")
                     .sameSite("Lax")
-                    .maxAge(Duration.ofDays(7))
                     .build();
+
+            logger.info("Login successful: {}", loginUserDto.getEmail());
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, accessCookie.toString(), refreshCookie.toString())
                     .body(Map.of("message", "Connexion réussie"));
         } catch (Exception e) {
+            logger.error("Login failed: {}, errorMessage: {}", loginUserDto.getEmail(), e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
         }
     }
@@ -135,3 +114,28 @@ public class AuthenticationController {
         authenticationService.refreshToken(request, response);
     }
 }
+
+
+
+
+
+//    @PostMapping("/login")
+//    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) throws Exception {
+//        try {
+//            User authenticatedUser = authenticationService.authenticate(loginUserDto);
+//            String jwtToken = jwtService.generateToken(authenticatedUser);
+//            String refreshToken = jwtService.generateRefreshToken(authenticatedUser);
+//
+//            authenticationService.revokeAllUserTokens(authenticatedUser);
+//            authenticationService.saveUserToken(authenticatedUser, jwtToken);
+//
+//            LoginResponse loginResponse = new LoginResponse(jwtToken, refreshToken, jwtService.getExpirationTime());
+//
+//            logger.info("Login successful: {}", loginUserDto.getEmail());
+//
+//            return ResponseEntity.ok(loginResponse);
+//        } catch (Exception e) {
+//            logger.error("Login failed: {}, errorMessage: {}", loginUserDto.getEmail(), e.getMessage());
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((LoginResponse) Map.of("message", e.getMessage()));
+//        }
+//    }

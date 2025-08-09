@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TokenStorageService } from '../../_services/tokenStorageService';
-import { environment } from '../../../environments/envionment';
 import { AuthService } from '../../_services/AuthService';
 
 @Component({
@@ -23,7 +22,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private tokenStorage: TokenStorageService,
+    // private tokenStorage: TokenStorageService,
     private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
@@ -32,26 +31,25 @@ export class LoginComponent {
     });
   }
 
-      onSubmit() {
-        this.submit = true;
-        if (this.loginForm.valid) {
-          this.authService.login(this.loginForm.value).subscribe({
-            next: () => {
-              console.log('Logged in successfully');
-              this.router.navigateByUrl('/');
-            },
-            error: (error: HttpErrorResponse) => {  
-              console.error('Login failed', error);
-              // Afficher un message d'erreur à l'utilisateur
-            }
+  onSubmit() {
+    this.submit = true;
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).subscribe({
+        next: () => {
+          this.authService.getCurrentUser().subscribe(user => {
+            // console.log('succes login :', user);
+            this.router.navigate(['home-auth']);
           });
-        } else {
-          console.warn('Formulaire invalide');
-          
+        },
+        error: () => {
+          this.errorMessage = 'Erreur lors de l\'authentificaiton';
         }
-  }
-}  
+      });
+    }
+  }  
+}
 
+// token in local storage
   // onSubmit() {
   //   this.submit = true;
 

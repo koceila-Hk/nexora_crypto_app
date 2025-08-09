@@ -9,6 +9,7 @@ public class UserMapper {
     public UserDto toDto(User user) {
 
         UserDto dto = new UserDto();
+        dto.setId(user.getId());
         dto.setBalance(user.getBalance());
         return dto;
     }
