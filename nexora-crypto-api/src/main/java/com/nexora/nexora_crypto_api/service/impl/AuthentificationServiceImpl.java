@@ -178,7 +178,7 @@ public class AuthentificationServiceImpl implements AuthenticationService {
 
         Cookie accessTokenCookie = new Cookie("access_token", accessToken);
         accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(false); // à adapter selon environnement
+        accessTokenCookie.setSecure(true); // à adapter selon environnement
         accessTokenCookie.setPath("/");
         accessTokenCookie.setMaxAge(60 * 15); // 15 minutes par exemple
         response.addCookie(accessTokenCookie);
