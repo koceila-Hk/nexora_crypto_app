@@ -14,7 +14,7 @@
 
 	<groupId>com.nexora</groupId>
 	<artifactId>nexora-crypto-api</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<name>nexora-crypto</name>
 	<description>Application de simulation de cryptomonnaies</description>
 
@@ -143,11 +143,6 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
         -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
