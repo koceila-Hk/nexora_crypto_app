@@ -34,10 +34,9 @@ export class DashboardBuyCryptoComponent {
   errorMessage: string = '';
 
   constructor(private http: HttpClient,
-              private router: Router, 
-              private tokenStorage: TokenStorageService,
-              private authService: AuthService)
-  { }
+    private router: Router,
+    private tokenStorage: TokenStorageService,
+    private authService: AuthService) { }
 
   onCoinSelected(coin: InfosCoin): void {
     this.selectedCoin = coin;
@@ -55,40 +54,38 @@ export class DashboardBuyCryptoComponent {
   }
 
   submit(): void {
-    // const userId = this.tokenStorage.getUserIdFromToken();
-    const userId = this.authService.currentUser()?.id;
-    // console.log(userId);
-    if (!userId) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     if (!this.selectedCoin) {
       this.errorMessage = 'Veuillez sélectionner une cryptomonnaie.';
       return;
     }
-    if (this.selectedCoin && this.amountInput > 0) {
-      const transaction = {
-        userId,
-        cryptoName: this.selectedCoin.cryptoName,
-        quantity: this.mode === 'buy' ? this.resultAmount : this.amountInput,
-        unitPrice: this.selectedCoin.currentPrice,
-        totalAmount: this.mode === 'buy' ? this.amountInput : this.resultAmount,
-        type: this.mode.toUpperCase()
-      };
 
-      const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
+    // const userId = this.tokenStorage.getUserIdFromToken();
+    const userId = this.authService.currentUser()?.id;
+    // console.log(userId);
+    if (!userId) {
+      if (this.selectedCoin && this.amountInput > 0) {
+        const transaction = {
+          userId,
+          cryptoName: this.selectedCoin.cryptoName,
+          quantity: this.mode === 'buy' ? this.resultAmount : this.amountInput,
+          unitPrice: this.selectedCoin.currentPrice,
+          totalAmount: this.mode === 'buy' ? this.amountInput : this.resultAmount,
+          type: this.mode.toUpperCase()
+        };
 
-      this.http.post(apiUrl, transaction, {withCredentials: true}).subscribe({
-        next: (res) => {
-          this.errorMessage = '';
-          this.router.navigate(['/home-auth']);
-        },
-        error: (err) => {
-          console.error(`Erreur lors de la transaction :`, err);
-          this.errorMessage = err.error?.message || 'Erreur inconnue';
-        }
-      });
+        const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
+
+        this.http.post(apiUrl, transaction, { withCredentials: true }).subscribe({
+          next: (res) => {
+            this.errorMessage = '';
+            this.router.navigate(['/home-auth']);
+          },
+          error: (err) => {
+            console.error(`Erreur lors de la transaction :`, err);
+            this.errorMessage = err.error?.message || 'Erreur inconnue';
+          }
+        });
+      }
     }
   }
 }
