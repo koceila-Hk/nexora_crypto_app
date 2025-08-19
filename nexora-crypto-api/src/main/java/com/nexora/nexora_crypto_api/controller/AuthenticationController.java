@@ -45,7 +45,7 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Registration successfully"));
         } catch (Exception e) {
             logger.error("Signup failed: {}, errorMessage: {}", registerUserDto.getEmail(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "User already used"));
+            return null;
         }
     }
 
@@ -63,14 +63,14 @@ public class AuthenticationController {
                     .httpOnly(true)
                     .secure(true) // à désactiver en local
                     .path("/")
-                    .sameSite("None") // Lax
+                    .sameSite("Lax") // Lax
                     .build();
 
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                     .httpOnly(true)
                     .secure(true)
                     .path("/")
-                    .sameSite("None")
+                    .sameSite("Lax")
                     .build();
 
             logger.info("Login successful: {}", loginUserDto.getEmail());

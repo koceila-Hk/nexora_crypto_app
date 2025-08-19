@@ -11,4 +11,5 @@ public class WalletDetailDto {
     private String cryptoName;
     private BigDecimal quantity;
     private BigDecimal variationPercentage;
+    private String icon;
 }

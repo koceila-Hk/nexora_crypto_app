@@ -67,7 +67,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("https://nexora-frontend.onrender.com", "https://nexora-backend-5rb6.onrender.com", "http://localhost:8080", "http://localhost:8083", "http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of("https://nexora-frontend.onrender.com", "http://localhost:8080", "http://localhost:8083", "http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setExposedHeaders(List.of("Authorization"));
@@ -83,8 +83,8 @@ public class SecurityConfiguration {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setPath("/");  // le même path que celui utilisé pour créer le cookie
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);  // si HTTPS est utilisé
-        cookie.setMaxAge(0); // expiration immédiate
+        cookie.setSecure(true);  // if https used
+        cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
 

@@ -40,12 +40,7 @@ export class HomeAuthComponent  {
           this.walletService.getWalletsWithVariation(userId).subscribe(data => {
             this.wallets = data;
           });
-    
-          // this.userService.getUserById(userId).subscribe(data => {
-          //   this.balance = data.balance;
-          //   // console.log("balance : ", this.balance);
-          // });
-    
+  
           this.transactionService.getTransactionsByUserId(userId).subscribe(data => {
             this.transactions = data;
           });

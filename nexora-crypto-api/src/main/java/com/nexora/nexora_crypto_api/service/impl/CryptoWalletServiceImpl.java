@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CryptoWalletServiceImpl implements CryptoWalletService {
@@ -50,7 +51,9 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
 
                 if (totalQuantity.compareTo(BigDecimal.ZERO) > 0) {
                     BigDecimal averageBuyPrice = totalBuyAmount.divide(totalQuantity, 4, RoundingMode.HALF_UP);
-                    BigDecimal currentPrice = coinGeckoService.getCryptoPrice(wallet.getCryptoName().toLowerCase(), "eur");
+                    Map<String, Object> priceData = coinGeckoService.getCryptoPrice(wallet.getCryptoName().toLowerCase(), "eur");
+                    BigDecimal currentPrice = (BigDecimal) priceData.get("price");
+                    String icon = (String) priceData.get("icon");
 
                     BigDecimal variation = currentPrice.subtract(averageBuyPrice)
                             .divide(averageBuyPrice, 5, RoundingMode.HALF_UP)
@@ -62,6 +65,7 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
                     dto.setCryptoName(wallet.getCryptoName());
                     dto.setQuantity(wallet.getQuantity());
                     dto.setVariationPercentage(variation);
+                    dto.setIcon(icon);
 
                     result.add(dto);
                 }
