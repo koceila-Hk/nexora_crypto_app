@@ -14,6 +14,7 @@ public class TransactionDto {
     private BigDecimal quantity;
     private BigDecimal unitPrice;
     private String type;
+
     private BigDecimal totalAmount;
     private LocalDateTime dateTransaction;
 }

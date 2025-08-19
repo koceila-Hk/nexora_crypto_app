@@ -18,6 +18,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           // Les deux tokens sont automatiquement stockés dans des cookies HTTP-only
+          console.log('response :', response);
           this._currentUser.set(response.user);
         })
       );

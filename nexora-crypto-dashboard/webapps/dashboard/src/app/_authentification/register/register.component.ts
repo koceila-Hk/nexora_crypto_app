@@ -22,6 +22,7 @@ import { environment } from '../../../environments/envionment';
 export class RegisterComponent {
   registerForm: FormGroup;
   errorMessage: string = '';
+  infoMessage: string = '';
   submit = false;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
@@ -51,11 +52,18 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.http.post(environment.apiUrl + '/auth/signup', this.registerForm.value).subscribe({
         next: (res) => {
+          this.infoMessage = "Vous allez recevoir un code de vérification par email.";
           sessionStorage.setItem('email', this.registerForm.value.email);
-          this.router.navigate(['/verify']);
+          setTimeout(() => {
+            this.router.navigate(['/verify']);
+          }, 4000);
         },
-        error: (err) => {
-          this.errorMessage = err.error;
+        error: () => {
+          this.infoMessage = "Vous allez recevoir un code de vérification par email.";
+          sessionStorage.setItem('email', this.registerForm.value.email);
+          setTimeout(() => {
+            this.router.navigate(['/verify']);
+          }, 4000);
         },
       });
     }

@@ -1,11 +1,10 @@
 package com.nexora.nexora_crypto_api.service;
 
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.math.BigDecimal;
+import java.util.Map;
 
 public interface CoinGeckoService {
-    BigDecimal getCryptoPrice(String id, String currency);
+    Map<String, Object> getCryptoPrice(String id, String currency);
     CoinInfosForUserDto getCoinDetails(String coinId, String eur);
 }

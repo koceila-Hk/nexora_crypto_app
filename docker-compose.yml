@@ -22,7 +22,8 @@ services:
 
 
   nexora-crypto-api:
-    build: ./nexora-crypto-api
+    image: kousshk/nexora-backend:latest
+   # build: ./nexora-crypto-api
     container_name: backend
     ports:
       - "8080:8080"
@@ -35,7 +36,8 @@ services:
       - nexora-network
 
   nexora-crypto-dashboard:
-    build: ./nexora-crypto-dashboard/webapps/dashboard
+    image: kousshk/nexora-frontend:latest
+    #build: ./nexora-crypto-dashboard/webapps/dashboard
     container_name: frontend
     ports:
       - 4200:80

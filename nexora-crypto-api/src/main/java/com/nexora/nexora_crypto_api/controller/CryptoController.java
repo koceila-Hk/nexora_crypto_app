@@ -21,12 +21,12 @@ public class CryptoController {
 
     private static final Logger logger = LoggerFactory.getLogger(CryptoController.class);
 
-    @GetMapping("/price")
-    public ResponseEntity<BigDecimal> getPrice(@RequestParam String id, @RequestParam(defaultValue = "eur") String currency) {
-
-        BigDecimal price = coinGeckoService.getCryptoPrice(id, currency);
-        return ResponseEntity.ok(price);
-    }
+//    @GetMapping("/price")
+//    public ResponseEntity<BigDecimal> getPrice(@RequestParam String id, @RequestParam(defaultValue = "eur") String currency) {
+//
+//        BigDecimal price = coinGeckoService.getCryptoPrice(id, currency);
+//        return ResponseEntity.ok(price);
+//    }
 
     @GetMapping("/details/{id}")
     public ResponseEntity<CoinInfosForUserDto> getCoinDetails(@PathVariable String id, @RequestParam(defaultValue = "eur") String currency) {

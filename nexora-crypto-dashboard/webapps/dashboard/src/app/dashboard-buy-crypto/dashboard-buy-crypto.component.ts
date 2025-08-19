@@ -61,8 +61,9 @@ export class DashboardBuyCryptoComponent {
 
     // const userId = this.tokenStorage.getUserIdFromToken();
     const userId = this.authService.currentUser()?.id;
-    // console.log(userId);
-    if (!userId) {
+    console.log(userId);
+    if (userId != null) {
+      console.log('after check : ', userId);
       if (this.selectedCoin && this.amountInput > 0) {
         const transaction = {
           userId,

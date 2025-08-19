@@ -10,6 +10,10 @@
 
           <p class="title d-flex justify-content-center mb-4">Bienvenue sur Nexora</p>
 
+          <div *ngIf="infoMessage" class="alert alert-info" role="alert">
+            {{ infoMessage }}
+          </div>
+
           <!-- Pseudonym -->
           <div class="mb-3">
             <label for="pseudonym" class="form-label">Nom d'utilisateur</label>

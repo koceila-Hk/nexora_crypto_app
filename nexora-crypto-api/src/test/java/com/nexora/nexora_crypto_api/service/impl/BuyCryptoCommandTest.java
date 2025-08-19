@@ -5,6 +5,7 @@ import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
+import com.nexora.nexora_crypto_api.service.TransactionService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class BuyCryptoCommandTest {
 
     @Autowired
-    private BuyCryptoCommand buyCryptoCommand;
+    private TransactionService transactionService;
 
     @Autowired
     private UserRepository userRepository;
@@ -71,7 +72,7 @@ class BuyCryptoCommandTest {
         request.setCryptoName("BTC");
 
         // exécution de la commande d'achat
-        buyCryptoCommand.execute(request);
+        transactionService.buyCrypto(request);
 
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
         assertThat(updatedUser.getBalance()).isEqualByComparingTo(new BigDecimal("300"));
@@ -99,7 +100,7 @@ class BuyCryptoCommandTest {
 
         // on attend une exception à l’exécution de la commande
         assertThrows(RuntimeException.class, () -> {
-            buyCryptoCommand.execute(request);
+            transactionService.buyCrypto(request);
         });
 
         // solde n'a pas changé en base

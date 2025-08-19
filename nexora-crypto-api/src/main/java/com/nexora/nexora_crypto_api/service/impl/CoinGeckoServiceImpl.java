@@ -3,7 +3,6 @@ package com.nexora.nexora_crypto_api.service.impl;
 import com.nexora.nexora_crypto_api.model.dto.CoinDetailDto;
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
-import io.micrometer.observation.Observation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,23 +28,58 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
 
     private static final Logger logger = LoggerFactory.getLogger(CoinGeckoServiceImpl.class);
 
-    @Override
-    public BigDecimal getCryptoPrice(String id, String currency) {
-        try {
-            String url = baseUrl + "simple/price?ids=" + id + "&vs_currencies=" + currency;
+//    @Override
+//    public BigDecimal getCryptoPrice(String id, String currency, String icon) {
+//        try {
+//            String url = baseUrl + "simple/price?ids=" + id + "&vs_currencies=" + currency;
+//
+//            ResponseEntity<Map<String, Map<String, BigDecimal>>> response =
+//                    restTemplate.exchange(url, HttpMethod.GET, null,
+//                            new ParameterizedTypeReference<>() {
+//                            });
+//            System.out.println("unitPrice : " + response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO));
+//            return response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO);
+//        } catch (HttpClientErrorException.TooManyRequests e) {
+//            throw new RuntimeException("Many requests to CoinGecko !");
+//        }catch (HttpClientErrorException e) {
+//            throw new RuntimeException("Error : " + e.getStatusCode() + e.getMessage());
+//        }
+//    }
 
-            ResponseEntity<Map<String, Map<String, BigDecimal>>> response =
-                    restTemplate.exchange(url, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<>() {
-                            });
-            System.out.println("unitPrice : " + response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO));
-            return response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO);
+    @Override
+    public Map<String, Object> getCryptoPrice(String id, String currency) {
+        try {
+            // Récupérer le prix
+            String priceUrl = baseUrl + "simple/price?ids=" + id + "&vs_currencies=" + currency;
+            ResponseEntity<Map<String, Map<String, BigDecimal>>> priceResponse =
+                    restTemplate.exchange(priceUrl, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<>() {});
+            BigDecimal price = priceResponse.getBody()
+                    .getOrDefault(id, Map.of())
+                    .getOrDefault(currency, BigDecimal.ZERO);
+
+            // Récupérer l’icône
+            String infoUrl = baseUrl + "coins/" + id;
+            ResponseEntity<Map<String, Object>> infoResponse =
+                    restTemplate.exchange(infoUrl, HttpMethod.GET, null,
+                            new ParameterizedTypeReference<>() {});
+            @SuppressWarnings("unchecked")
+            Map<String, String> imageMap = (Map<String, String>) infoResponse.getBody().get("image");
+            String icon = imageMap != null ? imageMap.get("small") : null;
+
+            // Retourner directement une map
+            return Map.of(
+                    "price", price,
+                    "icon", icon
+            );
+
         } catch (HttpClientErrorException.TooManyRequests e) {
             throw new RuntimeException("Many requests to CoinGecko !");
-        }catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error : " + e.getStatusCode() + e.getMessage());
+        } catch (HttpClientErrorException e) {
+            throw new RuntimeException("Error : " + e.getStatusCode() + " " + e.getMessage());
         }
     }
+
 
     @Override
     public CoinInfosForUserDto getCoinDetails(String coinId, String eur) {

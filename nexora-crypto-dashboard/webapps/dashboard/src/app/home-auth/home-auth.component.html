@@ -19,23 +19,28 @@
       <!-- Bloc droit les cryptos possédez -->
       <div class="col-md-7">
         <div class="card-body">
-          <h2>Voici les cryptos que vous possédez</h2>
-
-          <div *ngFor="let wallet of wallets" class="d-flex justify-content-between align-items-center mt-3 border-bottom pb-2">
-            <div class="d-flex align-items-center">
-              <img [src]="wallet.logoCrypto" [alt]="wallet.logoCrypto" class="me-2" style="width: 24px;">
-              <span>{{ wallet.cryptoName }}</span>
-            </div>
-            <span>{{ wallet.quantity | number:'1.2-4'}}</span>
-            <span *ngIf="wallet.variationPercentage >= 0 ? 'text-success' : 'text-danger'">
-              {{ wallet.variationPercentage >= 0 ? '+' : '' }}{{ wallet.variationPercentage | number:'1.2-2' }}%
-            </span>
+          <div *ngIf="wallets.length === 0; else walletsList">
+            <h2>Aucune transaction faite, votre portefeuille est vide</h2>
           </div>
 
+          <ng-template #walletsList>
+            <h2>Voici les cryptos que vous possédez</h2>
+            <div *ngFor="let wallet of wallets"
+              class="d-flex justify-content-between align-items-center mt-3 border-bottom pb-2">
+              <div class="d-flex align-items-center">
+                <img [src]="wallet.icon" [alt]="wallet.icon" class="me-2" style="width: 24px;">
+                <span>{{ wallet.cryptoName }}</span>
+              </div>
+              <span>{{ wallet.quantity | number:'1.2-5'}}</span>
+              <span *ngIf="wallet.variationPercentage >= 0 ? 'text-success' : 'text-danger'">
+                {{ wallet.variationPercentage >= 0 ? '+' : '' }}{{ wallet.variationPercentage | number:'1.2-2' }}%
+              </span>
+            </div>
+          </ng-template>
         </div>
 
       </div>
-    </div> 
+    </div>
 
     <!-- Historique des transactions -->
     <div class="row justify-content-center mt-4">
@@ -62,7 +67,7 @@
                   <td>{{ transaction.dateTransaction | date:'dd-MM-yyyy' }}</td>
                   <td>{{ transaction.type | transactionType}}</td>
                   <td>{{ transaction.cryptoName }}</td>
-                  <td>{{ transaction.quantity | number:'1.2-4'}}</td>
+                  <td>{{ transaction.quantity | number:'1.2-5'}}</td>
                   <td>{{ transaction.unitPrice | number:'1.2-3' }} €</td>
                   <td>{{ transaction.totalAmount | number:'1.2-3' }} €</td>
                 </tr>
@@ -72,8 +77,8 @@
         </div>
 
       </div>
-    </div> 
-  </div> 
+    </div>
+  </div>
 </section>
 
 <!-- Footer -->
