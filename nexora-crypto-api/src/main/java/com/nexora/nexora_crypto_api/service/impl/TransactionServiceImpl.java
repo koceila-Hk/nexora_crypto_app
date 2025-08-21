@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,9 +53,9 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = new Transaction();
         transaction.setType("BUY");
         transaction.setCryptoName(request.getCryptoName());
-        transaction.setQuantity(request.getQuantity());
-        transaction.setUnitPrice(request.getUnitPrice());
-        transaction.setTotalAmount(totalAmount);
+        transaction.setQuantity(request.getQuantity().setScale(5,RoundingMode.HALF_UP));
+        transaction.setUnitPrice(request.getUnitPrice().setScale(5, RoundingMode.HALF_UP));
+        transaction.setTotalAmount(totalAmount.setScale(5,RoundingMode.HALF_UP));
         transaction.setDateTransaction(LocalDateTime.now());
         transaction.setUser(user);
         transactionRepository.save(transaction);
@@ -88,9 +89,9 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = new Transaction();
         transaction.setType("SELL");
         transaction.setCryptoName(request.getCryptoName());
-        transaction.setQuantity(request.getQuantity());
-        transaction.setUnitPrice(request.getUnitPrice());
-        transaction.setTotalAmount(totalAmount);
+        transaction.setQuantity(request.getQuantity().setScale(5,RoundingMode.HALF_UP));
+        transaction.setUnitPrice(request.getUnitPrice().setScale(5, RoundingMode.HALF_UP));
+        transaction.setTotalAmount(totalAmount.setScale(5,RoundingMode.HALF_UP));
         transaction.setDateTransaction(LocalDateTime.now());
         transaction.setUser(user);
         transactionRepository.save(transaction);

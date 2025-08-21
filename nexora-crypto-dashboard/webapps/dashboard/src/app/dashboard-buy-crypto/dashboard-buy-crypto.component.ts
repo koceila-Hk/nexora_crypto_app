@@ -35,7 +35,7 @@ export class DashboardBuyCryptoComponent {
 
   constructor(private http: HttpClient,
     private router: Router,
-    private tokenStorage: TokenStorageService,
+    // private tokenStorage: TokenStorageService,
     private authService: AuthService) { }
 
   onCoinSelected(coin: InfosCoin): void {
@@ -46,7 +46,11 @@ export class DashboardBuyCryptoComponent {
   calculateConversion(): void {
     if (this.selectedCoin && this.amountInput > 0) {
       const price = this.selectedCoin.currentPrice;
-      this.resultAmount = this.mode === 'buy' ? this.amountInput / price : this.amountInput * price;
+      if (this.mode === 'buy') {
+        this.resultAmount = this.amountInput / price;
+      } else {
+        this.resultAmount = this.amountInput * price;
+      }
       this.errorMessage = '';
     } else {
       this.resultAmount = 0;
@@ -61,16 +65,15 @@ export class DashboardBuyCryptoComponent {
 
     // const userId = this.tokenStorage.getUserIdFromToken();
     const userId = this.authService.currentUser()?.id;
-    console.log(userId);
+    // console.log(userId);
     if (userId != null) {
-      console.log('after check : ', userId);
       if (this.selectedCoin && this.amountInput > 0) {
         const transaction = {
           userId,
           cryptoName: this.selectedCoin.cryptoName,
-          quantity: this.mode === 'buy' ? this.resultAmount : this.amountInput,
+          quantity: this.amountInput,
           unitPrice: this.selectedCoin.currentPrice,
-          totalAmount: this.mode === 'buy' ? this.amountInput : this.resultAmount,
+          totalAmount: this.resultAmount,
           type: this.mode.toUpperCase()
         };
 

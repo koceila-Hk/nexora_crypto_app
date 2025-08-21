@@ -17,7 +17,7 @@ import { AuthService } from '../_services/AuthService';
   templateUrl: './home-auth.component.html',
   styleUrl: './home-auth.component.css'
 })
-export class HomeAuthComponent  {
+export class HomeAuthComponent {
   wallets: AccountInfosWallet[] = [];
   transactions: AccountInfosTransaction[] = [];
   balance: any;
@@ -26,29 +26,21 @@ export class HomeAuthComponent  {
     private walletService: WalletService,
     private userService: UserService,
     private transactionService: TransactionService,
-    private tokenStorage: TokenStorageService,
+    // private tokenStorage: TokenStorageService,
     private authService: AuthService
-  ) { 
-    effect(() => {
-        const user = this.authService.currentUser();
-        // console.log('user :', user);
-        if (user != null) {
-          const userId = user.id;
-          // console.log('userId :', userId);
-          this.balance = user.balance;
+  ) { }
+  ngOnInit() {
+    this.authService.getCurrentUser().subscribe({
+      next: user => {
+        if (!user) return;
+        this.balance = user.balance;
 
-          this.walletService.getWalletsWithVariation(userId).subscribe(data => {
-            this.wallets = data;
-          });
-  
-          this.transactionService.getTransactionsByUserId(userId).subscribe(data => {
-            this.transactions = data;
-          });
-        }
-        // } else {
-        //   console.error("User not found");
-        // }
-    })
+        this.transactionService.getTransactionsByUserId(user.id)
+          .subscribe(data => this.transactions = data);
+        
+        this.walletService.getWalletsWithVariation(user.id)
+          .subscribe(data => this.wallets = data);
+      }
+    });
   }
-
 }
