@@ -72,6 +72,9 @@ public class AuthenticationController {
                     .path("/")
                     .sameSite("Lax")
                     .build();
+//            Strict	Seulement sur ton domaine	Très sécurisé, mais peut bloquer certaines navigations
+//            Lax	Liens normaux OK, POST cross-site bloqué	Bon compromis pour login / refresh token
+//            None	Toujours envoyé	Nécessite HTTPS (Secure=true) et utile pour frontend/backend différents
 
             logger.info("Login successful: {}", loginUserDto.getEmail());
 

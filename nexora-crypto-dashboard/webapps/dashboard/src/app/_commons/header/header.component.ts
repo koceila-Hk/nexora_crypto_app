@@ -15,19 +15,16 @@ export class HeaderComponent implements OnInit {
   // isAuthenticated = false;
   isDarkMode = true;
 
-  get isAuthenticated():boolean {
-    return this.authService.isConnected();
-  }
-
-  constructor(private tokenStorage: TokenStorageService,
-              private router: Router,
-              private authService: AuthService) { }
+  constructor(
+    // private tokenStorage: TokenStorageService,
+    private router: Router,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe({
-      next: () => {},  // tu peux gérer d’éventuelles erreurs ici si besoin
-      error: () => this.authService._currentUser.set(null)
-    });
+    // this.authService.getCurrentUser().subscribe({
+    //   next: () => {},
+    //   error: () => this.authService._currentUser.set(null)
+    // });
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       this.isDarkMode = true;
@@ -60,10 +57,14 @@ export class HeaderComponent implements OnInit {
     return this.isDarkMode ? 'bi-sun-fill' : 'bi-moon-stars-fill';
   }
 
+  get isAuthenticated(): boolean {
+    return this.authService.isConnected();
+  }
+
   logout(): void {
     // this.tokenStorage.signOut();
     this.authService.logout().subscribe(() => {
-        this.router.navigate(['/login']);
+      this.router.navigate(['/login']);
     })
   }
 

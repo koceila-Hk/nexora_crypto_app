@@ -31,7 +31,7 @@
           </div>
         </li>
         <!-- Si non connecté -->
-        <ng-container *ngIf="!isAuthenticated; else loggedInBlock">
+        <ng-container *ngIf="!isAuthenticated; else logged">
           <li class="nav-item me-2">
             <a class="nav-link" routerLink="/login">Connexion</a>
           </li>
@@ -41,7 +41,7 @@
         </ng-container>
 
         <!-- Si connecté -->
-        <ng-template #loggedInBlock>
+        <ng-template #logged>
           <li class="nav-item dropdown">
             <div class="dropdown">
               <a class="d-flex align-items-center profile-icon" href="#" role="button" id="dropdownMenuLink"
