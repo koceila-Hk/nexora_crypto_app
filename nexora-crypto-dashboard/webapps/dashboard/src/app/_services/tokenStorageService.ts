@@ -1,0 +1,48 @@
+import { Injectable } from "@angular/core";
+
+@Injectable({ providedIn: 'root' })
+export class TokenStorageService {
+  private storage = sessionStorage;
+
+  getToken(): string | null {
+    return this.storage.getItem('access_token');
+  }
+
+  getRefreshToken() {
+    return localStorage.getItem('refresh_token');
+  }
+
+  saveToken(token: string): void {
+    this.storage.setItem('access_token', token);
+  }
+
+  saveRefreshToken(refreshToken: string): void {
+    localStorage.setItem('refresh_token', refreshToken);
+  }
+
+  getUserIdFromToken(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.userId || payload.sub || null;
+    } catch (e) {
+      console.error('Erreur de décodage du token', e);
+      return null;
+    }
+  }
+
+  isLoggedIn(): boolean {
+    return this.getToken() !== null;
+  }
+
+  signOut(): void {
+    this.clear();
+  }
+
+  clear(): void {
+    this.storage.clear();
+    localStorage.removeItem('refresh_token');
+  }
+}

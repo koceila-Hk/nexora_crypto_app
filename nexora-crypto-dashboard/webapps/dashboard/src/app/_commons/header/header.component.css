@@ -1,0 +1,116 @@
+/*  Navbar  */
+.navbar {
+  background-color: var(--background-color);
+  transition: background-color 0.3s ease;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+.navbar-brand img {
+  height: 30px;
+  width: 30px;
+}
+
+/* Liens */
+.nav-link {
+  display: flex;
+  justify-content: center;
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+.nav-link:hover {
+  opacity: 0.8;
+}
+
+.navbar-underline {
+  height: 0.25rem;
+  background-color: #2D2D37;
+  width: 88%;
+}
+
+/* .nav-link:hover {
+  color: var(--footer-link-color); 
+} */
+
+/*  Boutons */
+.btn-primary {
+  background-color: #C3B8FD;
+  border-color: #C3B8FD;
+  color: black !important;
+}
+
+.btn-outline-light,
+.btn-outline-dark {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/*  Barre de recherche */
+.search-box {
+  position: relative;
+}
+
+.search-icon {
+  color: var(--text-color);
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-input {
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  margin-left: 8px;
+  border: 1px solid var(--text-color);
+  background: transparent;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.search-box:hover .search-input {
+  width: 160px;
+  opacity: 1;
+  padding: 4px 8px;
+}
+
+/* Icone de thème dark light  */
+.theme-icon {
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+/* Icone de thème  */
+.theme-icon-profile {
+  color: var(--text-color);
+}
+
+.profile-icon {
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.profile-icon:hover {
+  opacity: 0.8;
+}
+
+.dropdown-menu {
+  min-width: 180px;
+  font-size: 14px;
+}
+
+.dropdown-item i {
+  font-size: 16px;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(183,181,181,1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-toggler-icon:hover {
+  opacity: 0.8;
+}

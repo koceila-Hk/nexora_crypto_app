@@ -1,0 +1,22 @@
+.card-body {
+  background-color: var(--card-color);
+  border: 5px solid var(--stroke-border);
+  border-radius: 10px;
+}
+
+.bg-secondary {
+  --bs-bg-opacity:0;
+}
+
+span {
+  color: var(--text-color);
+}
+
+.crypto-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.crypto-item:hover {
+  background-color: #495057; 
+}

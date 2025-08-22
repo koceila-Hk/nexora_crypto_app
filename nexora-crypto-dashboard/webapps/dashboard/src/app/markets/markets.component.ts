@@ -1,85 +1,51 @@
-import { Component } from '@angular/core';
-import { HeaderComponent } from "../common/header/header.component";
-import { FooterComponent } from "../common/footer/footer.component";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CryptoDetailsComponent } from '../common/crypto-details/crypto-details.component';
-import { CoinDetails } from '../services/crypto.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { TokenStorageService } from '../services/tokenStorageService';
+import { CryptoService } from '../_services/crypto.service';
+import { FooterComponent } from "../_commons/footer/footer.component";
+import { HeaderComponent } from "../_commons/header/header.component";
 
 @Component({
-  selector: 'app-markets',
+  selector: 'app-crypto-details',
   standalone: true,
-  imports: [
-    HeaderComponent,
-    FooterComponent,
-    CommonModule,
-    CryptoDetailsComponent,
-    ReactiveFormsModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FooterComponent, HeaderComponent],
   templateUrl: './markets.component.html',
   styleUrl: './markets.component.css'
 })
-export class MarketsComponent {
-  selectedCoin: CoinDetails | null = null;
-  mode: 'buy' | 'sell' = 'buy'; // Mode sélectionné
-  amountInput: number = 0;
-  resultAmount: number = 0;
-  errorMessage: string = '';
+export class MarketsComponent implements OnInit {
+  @Output() coinSelected = new EventEmitter<CoinDetails>();
 
-  constructor(private http: HttpClient, private router: Router, private tokenStorage: TokenStorageService) {}
+  coins: CoinDetails[] = [];
 
-  onCoinSelected(coin: CoinDetails): void {
-    this.selectedCoin = coin;
-    this.calculateConversion();
+  constructor(private cryptoService: CryptoService) { }
+
+  ngOnInit(): void {
+    this.cryptoService.getAllCoinDetails().subscribe({
+      next: data => this.coins = data,
+      error: err => console.error('Erreur de chargement des cryptos', err)
+    });
   }
 
-  calculateConversion(): void {
-    if (this.selectedCoin && this.amountInput > 0) {
-      const price = this.selectedCoin.currentPrice;
-
-      this.resultAmount = this.mode === 'buy'
-        ? this.amountInput / price               // Points ➜ Crypto
-        : this.amountInput * price;             // Crypto ➜ Points
-    } else {
-      this.resultAmount = 0;
-    }
+  getChangeClass(change: number | undefined): string {
+    if (change == null) return '';
+    return change >= 0 ? 'text-success' : 'text-danger';
   }
 
-  submit(): void {
-  //   const userId = this.tokenStorage.getUserIdFromToken();
-  //   console.log(userId);
-  //     if (!userId) {
-  //   this.errorMessage = 'Utilisateur non authentifié';
-  //   return;
-  // }
-    if (this.selectedCoin && this.amountInput > 0) {
-      const transaction = {
-        userId: 3,
-        cryptoName: this.selectedCoin.cryptoName,
-        quantity: this.mode === 'buy' ? this.resultAmount : this.amountInput,
-        unitPrice: this.selectedCoin.currentPrice,
-        totalAmount: this.mode === 'buy' ? this.amountInput : this.resultAmount,
-        type: this.mode.toUpperCase()
-      };
-
-      const apiUrl = `http://localhost:8080/transaction/${this.mode}`;
-
-      this.http.post(apiUrl, transaction).subscribe({
-        next: (res) => {
-          console.log(`${this.mode.toUpperCase()} réussi`, res);
-          this.errorMessage = '';
-          // Redirection éventuelle après succès :
-          // this.router.navigate(['/transactions']);
-        },
-        error: (err) => {
-          console.error(`Erreur lors de la transaction :`, err);
-          this.errorMessage = err.error?.message || 'Erreur inconnue';
-        }
-      });
-    }
+  selectCoin(coin: CoinDetails) {
+    this.coinSelected.emit(coin);
   }
+
+  openCoinInNewTab(coin: any): void {
+    const encodedId = encodeURIComponent(coin.cryptoName.toLowerCase());
+    const url = `${window.location.origin}/#/crypto-chart/${encodedId}`;
+    window.open(url, '_blank');
+  }
+
+
+}
+
+interface CoinDetails {
+  cryptoName: string;
+  icon: string;
+  currentPrice: number;
+  priceChangePercentage: number;
 }

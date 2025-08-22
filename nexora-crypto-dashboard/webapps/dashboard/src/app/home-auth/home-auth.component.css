@@ -1,0 +1,57 @@
+.hero-section {
+  background-color: var(--background-color);
+}
+
+.card {
+  background-color: var(--card-color);
+}
+
+.card-body {
+  background-color: var(--card-color);
+  border: 5px solid var(--stroke-border);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+
+.stroke-row {
+  background-color: var(--stroke-color);
+  border: 8px solid var(--stroke-border);
+  border-radius: 10px;
+}
+
+
+.btn-primary {
+  background-color: #C3B8FD;
+  border-color: #C3B8FD;
+}
+
+.btn {
+  color: black !important;
+}
+
+p {
+  color: var(--text-color);
+}
+
+span {
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.table {
+  --bs-table-bg: var(--card-color);
+}
+
+th {
+  color: var(--title-tb-color);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+td {
+  color: var(--text-color);
+  font-size: 15px;
+  font-weight: 500;
+}

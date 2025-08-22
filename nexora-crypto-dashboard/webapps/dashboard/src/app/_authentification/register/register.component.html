@@ -1,39 +1,84 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="gradient-custom">
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card bg-dark text-white" style="border-radius: 1rem;">
-          <div class="card-body p-5 text-center">
-            <div class="mb-md-5 mt-md-4 pb-5">
-              <h2 class="fw-bold mb-2 text-uppercase">Sign Up</h2>
-              <p class="text-white-50 mb-5">Please enter your information!</p>
+        <div class="card-body p-4">
+          <a class="navbar-brand d-flex align-items-center mb-3">
+            <img src="assets/logoLight-png.png" alt="logo" width="30" height="30" class="me-2">
+            <span class="fw-bold">nexora</span>
+          </a>
 
-              <div class="form-outline form-white mb-4">
-                <input type="text" id="pseudonym" class="form-control form-control-lg" formControlName="pseudonym" />
-                <label class="form-label" for="Pseudonym">Pseudonym</label>
-              </div>
+          <p class="title d-flex justify-content-center mb-4">Bienvenue sur Nexora</p>
 
-              <div class="form-outline form-white mb-4">
-                <input type="email" id="typeEmailX" class="form-control form-control-lg" formControlName="email" />
-                <label class="form-label" for="typeEmailX">Email</label>
-              </div>
+          <div *ngIf="infoMessage" class="alert alert-info" role="alert">
+            {{ infoMessage }}
+          </div>
 
-              <div class="form-outline form-white mb-4">
-                <input type="password" id="typePasswordX" class="form-control form-control-lg" formControlName="password" />
-                <label class="form-label" for="typePasswordX">Password</label>
-              </div>
-
-              <button class="btn btn-outline-light btn-lg px-5" type="submit">Register</button>
+          <!-- Pseudonym -->
+          <div class="mb-3">
+            <label for="pseudonym" class="form-label">Nom d'utilisateur</label>
+            <input type="text" id="pseudonym" class="form-control form-control-lg" formControlName="pseudonym" />
+            <div *ngIf="submit && registerForm.get('pseudonym')?.hasError('required')" class="text-danger mt-1">
+              Le champ ne peut pas être vide.
             </div>
-
-            <div>
-              <p class="mb-0">Already have an account?
-                <a routerLink="/login" class="text-white-50 fw-bold" role="button">Login</a>
-              </p>
+            <div *ngIf="submit && registerForm.get('pseudonym')?.hasError('minlength')" class="text-danger mt-1">
+              Longueur minimum du nom d'utilisateur : 2
             </div>
+          </div>
 
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="typeEmailX" class="form-label">Email</label>
+            <input type="email" id="typeEmailX" class="form-control form-control-lg" formControlName="email" />
+            <div *ngIf="submit && registerForm.get('email')?.hasError('required')" class="text-danger mt-1">
+              Le champ ne peut pas être vide.
+            </div>
+            <div *ngIf="submit && registerForm.get('email')?.hasError('pattern')" class="text-danger mt-1">
+              L'email doit respecter le format.
+            </div>
+          </div>
+
+          <!-- Mot de passe -->
+          <div class="mb-3">
+            <label for="typePasswordX" class="form-label">Mot de passe</label>
+            <input type="password" id="typePasswordX" class="form-control form-control-lg" formControlName="password" />
+            <div *ngIf="submit && registerForm.get('password')?.hasError('required')" class="text-danger mt-1">
+              Le champ ne peut pas être vide.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+            <input type="password" id="confirmPassword" class="form-control form-control-lg"
+              formControlName="confirmPassword" />
+            <div *ngIf="submit && registerForm.get('confirmPassword')?.hasError('required')" class="text-danger mt-1">
+              Veuillez confirmer votre mot de passe.
+            </div>
+            <div *ngIf="submit && registerForm.hasError('passwordMismatch')" class="text-danger mt-1">
+              Les mots de passe ne correspondent pas.
+            </div>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="form-check mb-3">
+            <input type="checkbox" id="acceptTerms" class="form-check-input" formControlName="acceptTerms" />
+            <label class="form-check-label" for="acceptTerms">
+              En créant un compte, j’accepte les
+              <a routerLink="/terms">Conditions d'utilisation</a> et la
+              <a routerLink="/privacy">Politique de confidentialité</a> de Nexora.
+            </label>
+            <div *ngIf="submit && registerForm.get('acceptTerms')?.hasError('required')" class="text-danger mt-2">
+              Vous devez accepter les conditions et notre politique de confidentialité pour créer un compte.
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button class="btn btn-primary" type="submit">Suivant</button>
           </div>
         </div>
+      </div>
+      <div class="mt-4 d-flex justify-content-center">
+        <p style="color: #6F6F6F;">Vous avez déjà un compte ?
+          <a routerLink="/login" class="fw-bold">Connexion</a>
+        </p>
       </div>
     </div>
   </div>

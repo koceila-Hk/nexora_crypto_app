@@ -1,10 +1,51 @@
-.gradient-custom {
-  /* fallback for old browsers */
-  background: #05050F;
+form {
+  background-color: var(--background-color);
+}
+.card-body {
+  background-color: var(--background-color);
+  border: 3px solid #6F6F6F;
+  border-radius: 25px;
+  color: var(--text-color);
+}
 
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+.form-control {
+  background-color: var(--background-color);
+  border: 2px solid #6F6F6F;
+  border-radius: 15px;
+  color: var(--text-color);
+  font-size: 15px;
+}
 
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  /* background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1)); */
+.form-control:focus {
+  border-color: #C3B8FD;
+  box-shadow: 0 0 0 0.25rem rgba(183, 105, 202, 0.25);
+}
+
+/* title  */
+.title {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.form-label {
+  margin-left: 0.5rem;
+}
+
+/*  Boutons */
+.btn-primary {
+  background-color: #C3B8FD;
+  border-color: #C3B8FD;
+  border-radius: 10px;
+  color: black !important;
+}
+
+/* checkbox */
+.form-check-input {
+  background-color: var(--background-color);
+  border: 2px solid #6F6F6F;
+  cursor: pointer;
+}
+
+.form-check-input:checked[type=checkbox] {
+  --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23ff9900' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
 }

@@ -3,21 +3,26 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/envionment';
 
 @Component({
   selector: 'app-verify',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './verify.component.html'
+  templateUrl: './verify.component.html',
+  styleUrl: './verify.component.css'
 })
 export class VerifyComponent implements OnInit {
   verifyForm: FormGroup;
   email: string | undefined;
+  submitted = false;
+  successMessage = '';
+  errorMessage = '';
 
   constructor(
-    private fb: FormBuilder, 
-    private http: HttpClient, 
-    private router: Router,
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router
   ) {
     this.verifyForm = this.fb.group({
       verificationCode: ['', Validators.required]
@@ -32,23 +37,29 @@ export class VerifyComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted = true;
+
     if (this.verifyForm.invalid) return;
 
     const payload = {
       verificationCode: this.verifyForm.value.verificationCode,
       email: this.email
-      
     };
 
-    this.http.post('http://localhost:8080/auth/verify', payload).subscribe({
-      next: (res) => {
-        console.log('Vérification réussie', res);
+    this.http.post(environment.apiUrl + '/auth/verify', payload).subscribe({
+      next: () => {
+        this.successMessage = 'Vérification réussie. Redirection vers la page de connexion...';
+        this.errorMessage = '';
         sessionStorage.removeItem('email');
-        this.router.navigate(['/login']);
+
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3000);
       },
       error: (err) => {
-        console.error('Échec de la vérification', err)
-      } 
+        this.successMessage = '';
+        this.errorMessage = err.error.message;
+      }
     });
   }
 }

@@ -1,0 +1,14 @@
+footer {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+footer a, 
+p,
+h5 {
+  color: var(--text-color);
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

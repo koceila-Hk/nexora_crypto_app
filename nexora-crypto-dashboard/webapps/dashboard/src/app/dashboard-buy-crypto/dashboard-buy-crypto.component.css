@@ -1,0 +1,60 @@
+.hero-section {
+  background-color: var(--background-color);
+}
+
+.btn-purple {
+  background-color: #8a2be2;
+  color: var(--text-color);
+  border: none;
+}
+
+.btn-purple:hover {
+  background-color: #7b32c4;
+}
+
+.stroke-row {
+  background-color: var(--stroke-color);
+  border: 8px solid var(--stroke-border);
+  border-radius: 10px;
+}
+
+
+.btn-toggle {
+  background-color: #2e2544;
+  border: none;
+  color: white;
+  width: 50%;
+}
+
+.btn-toggle.active {
+  background-color: #3f3360;
+}
+
+.card-custom {
+  background-color: #3f3360;
+  border: none;
+  color: white;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.submit-btn {
+  background-color: #c6b3ff;
+  color: black;
+  font-weight: bold;
+}
+
+.crypto-logo {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.text-end {
+  text-align: end;
+}
+
+.bg-secondary {
+  --bs-bg-opacity: 0 !important;
+}

@@ -1,0 +1,20 @@
+        <div class="card bg-secondary text-light">
+          <div class="card-body">
+            <h1>Cryptos disponible sur le marchés</h1>
+            <ul class="list-unstyled mb-0">
+              <li *ngFor="let coin of coins" class="crypto-item d-flex justify-content-between align-items-center mb-2" (click)="selectCoin(coin)">
+                <div class="d-flex align-items-center">
+                  <img *ngIf="coin" [src]="coin.icon" alt="{{ coin.cryptoName }}" width="30" height="30" class="me-2">
+                  <span>{{ coin?.cryptoName || 'Chargement...' }}</span>
+                </div>
+                <span *ngIf="coin">€{{ coin.currentPrice | number:'1.2-3' }}</span>
+                <span *ngIf="coin" [ngClass]="{
+                  'text-success': coin.priceChangePercentage >= 0,
+                  'text-danger': coin.priceChangePercentage < 0
+                }">
+                  {{ coin.priceChangePercentage >= 0 ? '+' : ' '}}{{ coin.priceChangePercentage | number:'1.2-2'}}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
