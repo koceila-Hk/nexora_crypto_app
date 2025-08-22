@@ -7,7 +7,9 @@ services:
     container_name: mysql
     restart: unless-stopped
     environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
 
     ports:
@@ -20,6 +22,16 @@ services:
       timeout: 5s
       retries: 5
 
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: crypto_cache
+    networks:
+      - nexora-network
 
   nexora-crypto-api:
     image: kousshk/nexora-backend:latest
@@ -28,7 +40,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+       mysql:
+         condition: service_healthy
     environment:
       - SECURITY_JWT_SECRET_KEY=${SECURITY_JWT_SECRET_KEY}
       - SPRING_PROFILES_ACTIVE=docker
@@ -45,6 +58,19 @@ services:
       - nexora-network
     depends_on:
       - nexora-crypto-api
+
+  jenkins:
+      image: jenkins/jenkins:lts
+      container_name: jenkins
+      privileged: true
+      user: root
+      ports:
+        - "8081:8080"
+        - "50000:50000"
+      volumes:
+        - /home/${USER}/jenkins_compose/jenkins_configuration:/var/jenkins_home
+        - /var/run/docker.sock:/var/run/docker.sock
+
 
 networks:
   nexora-network:

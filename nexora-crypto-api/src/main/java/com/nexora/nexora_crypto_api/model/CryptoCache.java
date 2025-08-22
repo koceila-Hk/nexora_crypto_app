@@ -24,6 +24,6 @@ public class CryptoCache {
     private BigDecimal price;
     private BigDecimal percentageChange;
 
-    @Indexed(expireAfterSeconds = 60)
+    @Indexed(expireAfterSeconds = 240)
     private Date cachedAt;
 }
