@@ -60,15 +60,15 @@ public class AuthenticationController {
             authenticationService.saveUserToken(authenticatedUser, jwtToken);
 
             ResponseCookie accessCookie = ResponseCookie.from("access_token", jwtToken)
-                    .httpOnly(true)
-                    .secure(true) // à désactiver en local
+                    .httpOnly(false)
+                    .secure(false) // à désactiver en local
                     .path("/")
                     .sameSite("Lax") // Lax
                     .build();
 
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
-                    .httpOnly(true)
-                    .secure(true)
+                    .httpOnly(false)
+                    .secure(false)
                     .path("/")
                     .sameSite("Lax")
                     .build();
