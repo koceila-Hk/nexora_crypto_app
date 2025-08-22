@@ -1,54 +1,37 @@
-.hero-section {
-  background-color: #05050F;
-}
-.btn-purple {
-  background-color: #8a2be2;
-  color: #fff;
-  border: none;
-}
-.btn-purple:hover {
-  background-color: #7b32c4;
+.crypto-section {
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
-.stroke-row {
-  background-color: #0B0B15;
-  border: 8px solid #0E0E18;
-  border-radius: 10px;
+.py-4 {
+    padding-top: 4.5rem !important;
+    padding-bottom: 4.5rem !important;
+}
+.crypto-table-container {
+  max-width: 700px;
+  margin: auto;
 }
 
+.crypto-table {
+  background-color: var(--card-color);
+  border: 5px solid var(--stroke-border);
+}
 
-.btn-toggle {
-      background-color: #2e2544;
-      border: none;
-      color: white;
-      width: 50%;
-    }
+span {
+  color: var(--title-tb-color);
+  font-size: 13px;
+  font-weight: 400;
+}
+.crypto-row:hover {
+  background-color: var(--cta-color);
+  cursor: pointer;
+  border-radius: 8px;
+}
 
-    .btn-toggle.active {
-      background-color: #3f3360;
-    }
+.text-success {
+  color: #00c46b !important;
+}
 
-    .card-custom {
-      background-color: #3f3360;
-      border: none;
-      color: white;
-      padding: 20px;
-      margin-bottom: 15px;
-    }
-
-    .submit-btn {
-      background-color: #c6b3ff;
-      color: black;
-      font-weight: bold;
-    }
-
-    .crypto-logo {
-      width: 30px;
-      height: 30px;
-      vertical-align: middle;
-      margin-left: 10px;
-    }
-
-    .text-end {
-      text-align: end;
-    }
+.text-danger {
+  color: #ff4e4e !important;
+}

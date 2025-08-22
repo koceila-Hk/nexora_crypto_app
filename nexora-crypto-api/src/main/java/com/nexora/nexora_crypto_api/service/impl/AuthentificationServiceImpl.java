@@ -1,21 +1,35 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.dto.LoginUserDto;
-import com.nexora.nexora_crypto_api.dto.RegisterUserDto;
-import com.nexora.nexora_crypto_api.dto.VerifyUserDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexora.nexora_crypto_api.model.Token;
+import com.nexora.nexora_crypto_api.model.dto.LoginUserDto;
+import com.nexora.nexora_crypto_api.model.dto.RegisterUserDto;
+import com.nexora.nexora_crypto_api.model.dto.VerifyUserDto;
 import com.nexora.nexora_crypto_api.model.User;
+import com.nexora.nexora_crypto_api.model.enums.TokenType;
+import com.nexora.nexora_crypto_api.repository.TokenRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
+import com.nexora.nexora_crypto_api.response.AuthenticationResponse;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
 import com.nexora.nexora_crypto_api.service.EmailService;
+import com.nexora.nexora_crypto_api.config.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -30,6 +44,10 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @Override
     public void signup(RegisterUserDto input) throws Exception {
@@ -40,10 +58,10 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
         user.setEnabled(false);
-        sendVerificationEmail(user);
         user.setBalance(BigDecimal.valueOf(1000));
         user.setDateCreation(LocalDateTime.now());
         userRepository.save(user);
+        sendVerificationEmail(user);
     }
 
     @Override
@@ -100,6 +118,96 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         } else {
             throw new RuntimeException("User not found");
         }
+    }
+
+    @Override
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String refreshToken = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("refresh_token".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
+            }
+        }
+
+        if (refreshToken == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Unauthorized: No refresh token cookie");
+            return;
+        }
+
+        String userEmail;
+        try {
+            userEmail = jwtService.extractUsername(refreshToken);
+        } catch (ExpiredJwtException e) {
+            // Le refresh token est expiré
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Refresh token expired");
+            return;
+        } catch (JwtException e) {
+            // Tout autre problème avec le token JWT
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Invalid refresh token");
+            return;
+        }
+
+        if (userEmail == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Invalid refresh token");
+            return;
+        }
+
+        var user = userRepository.findByEmail(userEmail).orElse(null);
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("User not found");
+            return;
+        }
+
+        if (!jwtService.isTokenValid(refreshToken, user)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Invalid refresh token");
+            return;
+        }
+
+        var accessToken = jwtService.generateToken(user);
+
+        revokeAllUserTokens(user);
+        saveUserToken(user, accessToken);
+
+        Cookie accessTokenCookie = new Cookie("access_token", accessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setSecure(true); // à adapter selon environnement
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 15); // 15 minutes par exemple
+        response.addCookie(accessTokenCookie);
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write("{\"message\":\"Access token refreshed\"}");
+    }
+
+
+    public void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    public void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
     }
 
     private void sendVerificationEmail(User user) { //TODO: Update with company logo

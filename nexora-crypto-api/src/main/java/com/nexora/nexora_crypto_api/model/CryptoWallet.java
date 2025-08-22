@@ -2,16 +2,15 @@ package com.nexora.nexora_crypto_api.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Entity
 @Table(name = "crypto_wallet")
@@ -24,7 +23,11 @@ public class CryptoWallet {
     @Column(name = "crypto_name")
     private String cryptoName;
 
+    @Column(precision = 15, scale = 8)
     private BigDecimal quantity;
+
+    @Transient
+    private BigDecimal variationPercentage;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

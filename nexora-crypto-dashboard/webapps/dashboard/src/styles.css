@@ -1,15 +1,55 @@
-/* You can add global styles to this file, and also import other style files */
+app-root {
+  background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+}
+
+app-root h1 {
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 20px;
+}
+
+app-root h2 {
+  color: var(--text-color);
+  font-weight: 400;
+  font-size: 20px;
+}
+
 
 body.dark-theme {
-  background-color: #121212;
-  color: white;
+  --background-color: #05050F;
+  /* --background-color: #121212; */
+  --text-color: white;
+  --section-color: #1A1A2E;
+  --hero-color: #05050F;
+  --cta-color: #262C38;
+  --card-color: #1A1728;
+  --stroke-color: #0B0B15;
+  --stroke-border: #0E0E18;
+  --title-tb-color: #B7B5B5;
+  --footer-bg-color: #05050F;
+  --footer-link-color: white;
 }
 
 body.light-theme {
-  background-color: #f8f9fa;
-  color: black;
+  --background-color: #f8f9fa;
+  --text-color: black;
+  --section-color: #ffffff;
+  --hero-color: #f1f1f1;
+  --cta-color: #e0e0e0;
+  --card-color: #ffffff;
+  --stroke-color: #f8f9fa;
+  --stroke-border: #cccccc;
+  --title-tb-color: #3b3b3b;
+  --footer-bg-color: #f1f1f1;
+  --footer-link-color: black;
 }
 
 body {
+  background-color: var(--background-color);
+  color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
