@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TokenStorageService } from '../../_services/tokenStorageService';
+import { AuthService } from '../../_services/AuthService';
 
 @Component({
   selector: 'app-header',
@@ -11,14 +12,19 @@ import { TokenStorageService } from '../../_services/tokenStorageService';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  isAuthenticated = false;
+  // isAuthenticated = false;
   isDarkMode = true;
 
-  constructor(private tokenStorage: TokenStorageService, private router: Router) { }
+  constructor(
+    // private tokenStorage: TokenStorageService,
+    private router: Router,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.isAuthenticated = this.tokenStorage.isLoggedIn();
-
+    // this.authService.getCurrentUser().subscribe({
+    //   next: () => {},
+    //   error: () => this.authService._currentUser.set(null)
+    // });
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       this.isDarkMode = true;
@@ -51,10 +57,15 @@ export class HeaderComponent implements OnInit {
     return this.isDarkMode ? 'bi-sun-fill' : 'bi-moon-stars-fill';
   }
 
+  get isAuthenticated(): boolean {
+    return this.authService.isConnected();
+  }
+
   logout(): void {
-    this.tokenStorage.signOut();
-    this.isAuthenticated = false;
-    this.router.navigate(['/login']);
+    // this.tokenStorage.signOut();
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/login']);
+    })
   }
 
   navigateAccueil(): void {

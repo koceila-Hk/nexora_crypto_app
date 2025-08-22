@@ -9,6 +9,8 @@
             <span class="fw-bold">nexora</span>
           </a>
           <h1 class="mb-3">Un code vous a été envoyé par email.</h1>
+          <div *ngIf="successMessage" class="text-success mt-3">{{ successMessage }}</div>
+          <div *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</div>
           <div class="mb-4">
             <label class="form-label ms-2" for="verificationCode">Code de vérification</label>
             <input id="verificationCode" type="text" class="form-control form-control-lg"
@@ -22,8 +24,6 @@
               Vérifier
             </button>
           </div>
-          <div *ngIf="successMessage" class="text-success mt-3">{{ successMessage }}</div>
-          <div *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</div>
         </div>
       </div>
     </div>

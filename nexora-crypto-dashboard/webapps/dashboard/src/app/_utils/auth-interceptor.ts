@@ -1,3 +1,54 @@
+import { HttpRequest, HttpHandlerFn, HttpEvent } from '@angular/common/http';
+import { Observable, catchError, switchMap, throwError, BehaviorSubject, filter, take } from 'rxjs';
+import { inject } from '@angular/core';
+import { AuthService } from '../_services/AuthService';
+
+const isRefreshingSubject = new BehaviorSubject<boolean>(false);
+const refreshTokenSubject = new BehaviorSubject<string | null>(null);
+
+export const authInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
+  const authService = inject(AuthService);
+
+  return next(req).pipe(
+    catchError(error => {
+      if (error.status === 401 && !req.url.includes('/auth/refresh-token')) {
+        if (isRefreshingSubject.value) {
+          return refreshTokenSubject.pipe(
+            filter(token => token !== null),
+            take(1),
+            switchMap(() => next(req))
+          );
+        } else {
+          isRefreshingSubject.next(true);
+          refreshTokenSubject.next(null);
+
+          return authService.refreshToken().pipe(
+            switchMap(() => {
+              isRefreshingSubject.next(false);
+              refreshTokenSubject.next('refreshed');
+              return next(req);
+            }),
+            catchError(err => {
+              isRefreshingSubject.next(false);
+              authService.logout().subscribe();
+              return throwError(() => err);
+            })
+          );
+        }
+      }
+      return throwError(() => error);
+    })
+  );
+};
+
+
+
+
+
+
+
+
+
 // import { HttpInterceptorFn } from '@angular/common/http';
 // import { HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 // import { inject } from '@angular/core';
@@ -80,31 +131,3 @@
 //     );
 //   }
 // }
-
-
-import { HttpEvent, HttpHandlerFn, HttpHeaders, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AuthService } from '../_services/AuthService';
-import { Observable, throwError, catchError, switchMap } from 'rxjs';
-
-export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-  const authService = inject(AuthService);
-  
-  return next(req).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        return authService.revokeToken().pipe(
-          switchMap(() => {
-            return next(req);
-          }),
-          catchError((refreshError) => {
-            // Si le rafraîchissement échoue, déconnectez l'utilisateur
-            authService.logout();
-            return throwError(() => refreshError);
-          })
-        );
-      }
-      return throwError(() => error);
-    })
-  );
-}

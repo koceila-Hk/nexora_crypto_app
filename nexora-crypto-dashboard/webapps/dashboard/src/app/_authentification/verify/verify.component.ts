@@ -54,7 +54,7 @@ export class VerifyComponent implements OnInit {
 
         setTimeout(() => {
           this.router.navigate(['/login']);
-        }, 2000);
+        }, 3000);
       },
       error: (err) => {
         this.successMessage = '';

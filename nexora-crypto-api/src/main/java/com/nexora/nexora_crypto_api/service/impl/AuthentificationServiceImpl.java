@@ -13,7 +13,10 @@ import com.nexora.nexora_crypto_api.response.AuthenticationResponse;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
 import com.nexora.nexora_crypto_api.service.EmailService;
 import com.nexora.nexora_crypto_api.config.JwtService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,52 +123,68 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     @Override
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refreshToken = null;
-
-        // Essaye depuis le header Authorization
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            refreshToken = authHeader.substring(7);
-        }
-
-        // Si pas de token dans le header e body JSON
-        if (refreshToken == null) {
-            try {
-                Map<String, String> body = new ObjectMapper().readValue(request.getInputStream(), Map.class);
-                refreshToken = body.get("refreshToken");
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("Refresh token missing or invalid");
-                return;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("refresh_token".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
             }
         }
 
         if (refreshToken == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: No refresh token");
+            response.getWriter().write("Unauthorized: No refresh token cookie");
             return;
         }
 
-        String userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            var user = userRepository.findByEmail(userEmail)
-                    .orElseThrow();
-
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                var authResponse = AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                response.setContentType("application/json");
-                response.getWriter().write("{\"accessToken\":\"" + accessToken + "\", \"refreshToken\":\"" + refreshToken + "\"}");
-                return;
-            }
+        String userEmail;
+        try {
+            userEmail = jwtService.extractUsername(refreshToken);
+        } catch (ExpiredJwtException e) {
+            // Le refresh token est expiré
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Refresh token expired");
+            return;
+        } catch (JwtException e) {
+            // Tout autre problème avec le token JWT
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Invalid refresh token");
+            return;
         }
 
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write("Invalid refresh token");
+        if (userEmail == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Invalid refresh token");
+            return;
+        }
+
+        var user = userRepository.findByEmail(userEmail).orElse(null);
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("User not found");
+            return;
+        }
+
+        if (!jwtService.isTokenValid(refreshToken, user)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Invalid refresh token");
+            return;
+        }
+
+        var accessToken = jwtService.generateToken(user);
+
+        revokeAllUserTokens(user);
+        saveUserToken(user, accessToken);
+
+        Cookie accessTokenCookie = new Cookie("access_token", accessToken);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setSecure(true); // à adapter selon environnement
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 15); // 15 minutes par exemple
+        response.addCookie(accessTokenCookie);
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write("{\"message\":\"Access token refreshed\"}");
     }
 
 

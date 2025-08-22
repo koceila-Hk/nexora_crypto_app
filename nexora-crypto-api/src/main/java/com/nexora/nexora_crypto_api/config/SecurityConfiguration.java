@@ -1,6 +1,7 @@
 package com.nexora.nexora_crypto_api.config;
 
 import com.nexora.nexora_crypto_api.service.JwtAuthenticationFilter;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,12 +38,13 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, LogoutHandler logoutHandler) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/auth/refresh-token", "/users/**", "/crypto/**", "/log").permitAll()
-                        .requestMatchers( "/wallets/**", "/transaction/**").authenticated()
+                        .requestMatchers("/auth/**", "/auth/refresh-token", "/crypto/**", "/log").permitAll()
+                        .requestMatchers( "/users/**", "/wallets/**", "/transaction/**").authenticated()
                 )
                 .exceptionHandling(eh -> eh.disable())
                 .sessionManagement(session -> session
@@ -53,8 +55,12 @@ public class SecurityConfiguration {
                 .logout(logout ->
                         logout.logoutUrl("/auth/logout")
                                 .addLogoutHandler(logoutHandler)
-                                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()));
-
+                                .logoutSuccessHandler((request, response, authentication) -> {
+                                    SecurityContextHolder.clearContext();
+                                    deleteCookie(response, "access_token");
+                                    deleteCookie(response, "refresh_token");
+                                    response.setStatus(HttpServletResponse.SC_OK);
+                                }));
         return http.build();
     }
 
@@ -70,6 +76,16 @@ public class SecurityConfiguration {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+
+    private void deleteCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setPath("/");  // le même path que celui utilisé pour créer le cookie
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);  // if https used
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
     }
 
 //    private AuthenticationEntryPoint unauthorizedEntryPoint() {

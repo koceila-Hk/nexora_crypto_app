@@ -1,14 +1,13 @@
 export class AccountInfosUser {
-    // id: number;
+    id!: number;
     // username: string;
     balance: number | undefined;
-    // ajoute d'autres champs si nécessaire
 }
 
 export class AccountInfosWallet{
     cryptoName!: string;
     quantity: number | undefined;
-    // logoCrypto: string;
+    icon!: string;
     variationPercentage!: number;
 }
 

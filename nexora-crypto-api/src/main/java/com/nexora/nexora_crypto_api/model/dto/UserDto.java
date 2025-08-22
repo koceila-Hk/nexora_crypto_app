@@ -8,5 +8,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class UserDto {
+    private Long id;
     private BigDecimal balance;
 }

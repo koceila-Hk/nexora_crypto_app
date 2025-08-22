@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { TokenStorageService } from '../_services/tokenStorageService';
 import { InfosCoin } from '../_models/account';
 import { environment } from '../../environments/envionment';
+import { AuthService } from '../_services/AuthService';
 
 @Component({
   selector: 'app-markets',
@@ -32,7 +33,10 @@ export class DashboardBuyCryptoComponent {
   resultAmount: number = 0;
   errorMessage: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private tokenStorage: TokenStorageService) { }
+  constructor(private http: HttpClient,
+    private router: Router,
+    // private tokenStorage: TokenStorageService,
+    private authService: AuthService) { }
 
   onCoinSelected(coin: InfosCoin): void {
     this.selectedCoin = coin;
@@ -42,7 +46,11 @@ export class DashboardBuyCryptoComponent {
   calculateConversion(): void {
     if (this.selectedCoin && this.amountInput > 0) {
       const price = this.selectedCoin.currentPrice;
-      this.resultAmount = this.mode === 'buy' ? this.amountInput / price : this.amountInput * price;
+      if (this.mode === 'buy') {
+        this.resultAmount = this.amountInput / price;
+      } else {
+        this.resultAmount = this.amountInput * price;
+      }
       this.errorMessage = '';
     } else {
       this.resultAmount = 0;
@@ -50,39 +58,38 @@ export class DashboardBuyCryptoComponent {
   }
 
   submit(): void {
-    const userId = this.tokenStorage.getUserIdFromToken();
-    // console.log(userId);
-    if (!userId) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
     if (!this.selectedCoin) {
       this.errorMessage = 'Veuillez sélectionner une cryptomonnaie.';
       return;
     }
-    if (this.selectedCoin && this.amountInput > 0) {
-      const transaction = {
-        userId,
-        cryptoName: this.selectedCoin.cryptoName,
-        quantity: this.mode === 'buy' ? this.resultAmount : this.amountInput,
-        unitPrice: this.selectedCoin.currentPrice,
-        totalAmount: this.mode === 'buy' ? this.amountInput : this.resultAmount,
-        type: this.mode.toUpperCase()
-      };
 
-      const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
+    // const userId = this.tokenStorage.getUserIdFromToken();
+    const userId = this.authService.currentUser()?.id;
+    // console.log(userId);
+    if (userId != null) {
+      if (this.selectedCoin && this.amountInput > 0) {
+        const transaction = {
+          userId,
+          cryptoName: this.selectedCoin.cryptoName,
+          quantity: this.amountInput,
+          unitPrice: this.selectedCoin.currentPrice,
+          totalAmount: this.resultAmount,
+          type: this.mode.toUpperCase()
+        };
 
-      this.http.post(apiUrl, transaction).subscribe({
-        next: (res) => {
-          this.errorMessage = '';
-          this.router.navigate(['/home-auth']);
-        },
-        error: (err) => {
-          console.error(`Erreur lors de la transaction :`, err);
-          this.errorMessage = err.error?.message || 'Erreur inconnue';
-        }
-      });
+        const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
+
+        this.http.post(apiUrl, transaction, { withCredentials: true }).subscribe({
+          next: (res) => {
+            this.errorMessage = '';
+            this.router.navigate(['/home-auth']);
+          },
+          error: (err) => {
+            console.error(`Erreur lors de la transaction :`, err);
+            this.errorMessage = err.error?.message || 'Erreur inconnue';
+          }
+        });
+      }
     }
   }
 }

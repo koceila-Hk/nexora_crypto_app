@@ -14,6 +14,6 @@ export class WalletService {
   constructor(private http: HttpClient) { }
 
   getWalletsWithVariation(userId: number): Observable<AccountInfosWallet[]> {
-    return this.http.get<AccountInfosWallet[]>(`${this.baseUrl}/variation/${userId}`);
+    return this.http.get<AccountInfosWallet[]>(`${this.baseUrl}/variation/${userId}`, {withCredentials: true});
   }
 }

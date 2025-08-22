@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CryptoWalletServiceImpl implements CryptoWalletService {
@@ -45,25 +46,28 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
 
             if (!buyData.isEmpty()) {
                 Object[] row = buyData.get(0);
-                BigDecimal totalBuyAmount = (BigDecimal) row[0];
-                BigDecimal totalQuantity = (BigDecimal) row[1];
+                BigDecimal totalBuyAmount = row[0] != null ? (BigDecimal) row[0] : BigDecimal.ZERO;
+                BigDecimal totalQuantity = row[1] != null ? (BigDecimal) row[1] : BigDecimal.ZERO;
 
                 if (totalQuantity.compareTo(BigDecimal.ZERO) > 0) {
                     BigDecimal averageBuyPrice = totalBuyAmount.divide(totalQuantity, 4, RoundingMode.HALF_UP);
-                    BigDecimal currentPrice = coinGeckoService.getCryptoPrice(wallet.getCryptoName().toLowerCase(), "eur");
 
-                    BigDecimal variation = currentPrice.subtract(averageBuyPrice)
-                            .divide(averageBuyPrice, 5, RoundingMode.HALF_UP)
-                            .multiply(BigDecimal.valueOf(100));
+                    Map<String, Object> priceData = coinGeckoService.getCryptoPrice(wallet.getCryptoName().toLowerCase(), "eur");
+                    BigDecimal currentPrice = priceData.get("price") != null ? (BigDecimal) priceData.get("price") : BigDecimal.ZERO;
 
-//                    wallet.setVariationPercentage(variation);
+                    if (currentPrice.compareTo(BigDecimal.ZERO) > 0) {
+                        BigDecimal variation = currentPrice.subtract(averageBuyPrice)
+                                .divide(averageBuyPrice, 5, RoundingMode.HALF_UP)
+                                .multiply(BigDecimal.valueOf(100));
 
-                    WalletDetailDto dto = new WalletDetailDto();
-                    dto.setCryptoName(wallet.getCryptoName());
-                    dto.setQuantity(wallet.getQuantity());
-                    dto.setVariationPercentage(variation);
+                        WalletDetailDto dto = new WalletDetailDto();
+                        dto.setCryptoName(wallet.getCryptoName());
+                        dto.setQuantity(wallet.getQuantity());
+                        dto.setVariationPercentage(variation);
+                        dto.setIcon((String) priceData.get("icon"));
 
-                    result.add(dto);
+                        result.add(dto);
+                    }
                 }
             }
         }

@@ -5,6 +5,7 @@ import com.nexora.nexora_crypto_api.repository.TokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
@@ -43,23 +44,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // ignorer refresh token
+        // Ignore refresh-token endpoint
         if (request.getServletPath().equals("/auth/refresh-token")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwtToken;
-        final String userEmail;
+        String jwtToken = null;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            // Pas de token on laisse passer
+        // token dans le header Authorization
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwtToken = authHeader.substring(7);
+        } else {
+            // token dans les cookies
+            if (request.getCookies() != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    if ("access_token".equals(cookie.getName())) {
+                        jwtToken = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (jwtToken == null) {
+            // Pas de token, passer la requête
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwtToken = authHeader.substring(7);
+        String userEmail;
         try {
             userEmail = jwtService.extractUsername(jwtToken);
         } catch (ExpiredJwtException e) {
