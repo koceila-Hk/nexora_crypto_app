@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -28,18 +24,10 @@ pipeline {
             }
         }
 
-        stage('Check credentials') {
-            steps {
-                script {
-                    echo "DOCKERHUB_CREDENTIALS: ${env.DOCKERHUB_CREDENTIALS}"
-                }
-            }
-        }
-
         stage('Push Images') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS) {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
                         backendImage.push()
                         backendImage.push("latest")
 
