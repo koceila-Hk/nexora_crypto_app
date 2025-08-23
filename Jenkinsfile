@@ -28,6 +28,14 @@ pipeline {
             }
         }
 
+        stage('Check credentials') {
+            steps {
+                script {
+                    echo "DOCKERHUB_CREDENTIALS: ${env.DOCKERHUB_CREDENTIALS}"
+                }
+            }
+        }
+
         stage('Push Images') {
             steps {
                 script {
