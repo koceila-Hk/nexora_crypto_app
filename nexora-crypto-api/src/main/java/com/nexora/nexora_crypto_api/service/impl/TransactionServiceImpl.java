@@ -1,6 +1,6 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CryptoWallet;
+import com.nexora.nexora_crypto_api.model.CoinWallet;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.Transaction;
@@ -31,7 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private CryptoWalletService cryptoWalletService;
+    private CoinWalletService cryptoWalletService;
     @Autowired
     private CryptoWalletRepository walletRepository;
 
@@ -39,14 +39,14 @@ public class TransactionServiceImpl implements TransactionService {
 //        invoker.process(buyCryptoCommand, request);
 
         User user = userService.getUserById(request.getUserId());
-        BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
+        //BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
 
-        if (user.getBalance().compareTo(totalAmount) < 0) {
+        if (user.getBalance().compareTo(request.getTotalAmount()) < 0) {
             throw new RuntimeException("Solde insuffisant");
         }
 
         // deduct balance
-        user.setBalance(user.getBalance().subtract(totalAmount));
+        user.setBalance(user.getBalance().subtract(request.getTotalAmount()));
         userRepository.save(user);
 
         // Add transaction
@@ -55,12 +55,12 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setCryptoName(request.getCryptoName());
         transaction.setQuantity(request.getQuantity().setScale(5,RoundingMode.HALF_UP));
         transaction.setUnitPrice(request.getUnitPrice().setScale(5, RoundingMode.HALF_UP));
-        transaction.setTotalAmount(totalAmount.setScale(5,RoundingMode.HALF_UP));
+        transaction.setTotalAmount(request.getTotalAmount().setScale(5,RoundingMode.HALF_UP));
         transaction.setDateTransaction(LocalDateTime.now());
         transaction.setUser(user);
         transactionRepository.save(transaction);
 
-        CryptoWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
+        CoinWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
         wallet.setQuantity(wallet.getQuantity().add(request.getQuantity()));
         walletRepository.save(wallet);
     }
@@ -69,7 +69,7 @@ public class TransactionServiceImpl implements TransactionService {
 //        invoker.process(sellCryptoCommand, request);
 
         User user = userService.getUserById(request.getUserId());
-        CryptoWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
+        CoinWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
 
         if (wallet.getQuantity().compareTo(request.getQuantity()) < 0) {
             throw new RuntimeException("Crypto insuffisante dans le wallet");

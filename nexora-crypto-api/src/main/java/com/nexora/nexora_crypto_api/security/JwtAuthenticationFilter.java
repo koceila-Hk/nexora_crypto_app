@@ -1,6 +1,5 @@
-package com.nexora.nexora_crypto_api.service;
+package com.nexora.nexora_crypto_api.security;
 
-import com.nexora.nexora_crypto_api.config.JwtService;
 import com.nexora.nexora_crypto_api.repository.TokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

@@ -1,6 +1,6 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CryptoCache;
+import com.nexora.nexora_crypto_api.model.CoinCache;
 import com.nexora.nexora_crypto_api.model.dto.CoinDetailDto;
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.repository.CryptoCacheRepository;
@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 
@@ -36,23 +35,6 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
 
     private static final Logger logger = LoggerFactory.getLogger(CoinGeckoServiceImpl.class);
 
-//    @Override
-//    public BigDecimal getCryptoPrice(String id, String currency, String icon) {
-//        try {
-//            String url = baseUrl + "simple/price?ids=" + id + "&vs_currencies=" + currency;
-//
-//            ResponseEntity<Map<String, Map<String, BigDecimal>>> response =
-//                    restTemplate.exchange(url, HttpMethod.GET, null,
-//                            new ParameterizedTypeReference<>() {
-//                            });
-//            System.out.println("unitPrice : " + response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO));
-//            return response.getBody().getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO);
-//        } catch (HttpClientErrorException.TooManyRequests e) {
-//            throw new RuntimeException("Many requests to CoinGecko !");
-//        }catch (HttpClientErrorException e) {
-//            throw new RuntimeException("Error : " + e.getStatusCode() + e.getMessage());
-//        }
-//    }
 
     @Override
     public Map<String, Object> getCryptoPrice(String id, String currency) {
@@ -127,7 +109,7 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
             String icon = coinDetailDto.getImage().getSmall();
 
             // Sauvegarder en cache Mongo
-            CryptoCache cryptoCache = new CryptoCache();
+            CoinCache cryptoCache = new CoinCache();
             cryptoCache.setId(coinId);
             cryptoCache.setName(coinDetailDto.getName());
             cryptoCache.setSymbol(coinDetailDto.getSymbol());

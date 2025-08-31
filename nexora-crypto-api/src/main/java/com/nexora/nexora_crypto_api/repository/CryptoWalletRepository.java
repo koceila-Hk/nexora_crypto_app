@@ -1,15 +1,14 @@
 package com.nexora.nexora_crypto_api.repository;
 
-import com.nexora.nexora_crypto_api.model.CryptoWallet;
-import com.nexora.nexora_crypto_api.model.User;
+import com.nexora.nexora_crypto_api.model.CoinWallet;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CryptoWalletRepository extends JpaRepository <CryptoWallet, Long> {
-    Optional<CryptoWallet> findByUserIdAndCryptoName(Long userId, String cryptoName);
+public interface CryptoWalletRepository extends JpaRepository <CoinWallet, Long> {
+    Optional<CoinWallet> findByUserIdAndCryptoName(Long userId, String cryptoName);
 
 
-    List<CryptoWallet> findByUserId(Long userId);
+    List<CoinWallet> findByUserId(Long userId);
 }

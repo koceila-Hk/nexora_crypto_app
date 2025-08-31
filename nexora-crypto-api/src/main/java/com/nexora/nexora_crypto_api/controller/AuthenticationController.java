@@ -6,9 +6,8 @@ import com.nexora.nexora_crypto_api.model.dto.LoginUserDto;
 import com.nexora.nexora_crypto_api.model.dto.RegisterUserDto;
 import com.nexora.nexora_crypto_api.model.dto.VerifyUserDto;
 import com.nexora.nexora_crypto_api.model.User;
-import com.nexora.nexora_crypto_api.response.LoginResponse;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
-import com.nexora.nexora_crypto_api.config.JwtService;
+import com.nexora.nexora_crypto_api.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -35,6 +34,11 @@ public class AuthenticationController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
+    /**
+     * Register a new user account
+     * @param registerUserDto
+     * @return success message if registration is ok
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
         try {
@@ -49,19 +53,24 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     *  Auth a user and return jwt and refreshToken as cookies
+     * @param loginUserDto
+     * @return success message with token in cookies
+     */
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
         try {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
-            String jwtToken = jwtService.generateToken(authenticatedUser);
+            String accessToken = jwtService.generateToken(authenticatedUser);
             String refreshToken = jwtService.generateRefreshToken(authenticatedUser);
 
             authenticationService.revokeAllUserTokens(authenticatedUser);
-            authenticationService.saveUserToken(authenticatedUser, jwtToken);
+            authenticationService.saveUserToken(authenticatedUser, accessToken);
 
-            ResponseCookie accessCookie = ResponseCookie.from("access_token", jwtToken)
+            ResponseCookie accessCookie = ResponseCookie.from("access_token", accessToken)
                     .httpOnly(false)
-                    .secure(false) // à désactiver en local
+                    .secure(false) // désactiver en local
                     .path("/")
                     .sameSite("Lax") // Lax
                     .build();
@@ -87,6 +96,7 @@ public class AuthenticationController {
         }
     }
 
+    // Verify user's account with verification code
     @PostMapping("/verify")
     public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
         try {
@@ -99,6 +109,7 @@ public class AuthenticationController {
         }
     }
 
+    // Resend email verification code to the user
     @PostMapping("/resend")
     public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
         try {
@@ -111,10 +122,39 @@ public class AuthenticationController {
         }
     }
 
+    // Refresh accessToken useing refreshToken cookie
     @PostMapping("/refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        try {
+            authenticationService.generateResetToken(email);
+            logger.info("Reset password email sent to: {}", email);
+            return ResponseEntity.ok(Map.of("message", "Email de réinitialisation envoyé"));
+        } catch (Exception e) {
+            logger.warn("forgot password failed: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // reset password using reset token
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+        try {
+            String token = body.get("token");
+            String newPassword = body.get("newPassword");
+            authenticationService.resetPassword(token, newPassword);
+            logger.info("password reset successful for token: {}", token);
+            return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
+        } catch (Exception e) {
+            logger.warn("password reset failed: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
 }
 
 

@@ -1,4 +1,4 @@
-package com.nexora.nexora_crypto_api.config;
+package com.nexora.nexora_crypto_api.security;
 
 import com.nexora.nexora_crypto_api.model.User;
 import io.jsonwebtoken.Claims;
@@ -8,7 +8,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

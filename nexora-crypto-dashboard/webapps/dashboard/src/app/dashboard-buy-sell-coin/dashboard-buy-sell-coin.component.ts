@@ -6,7 +6,7 @@ import { CryptoDetailsComponent } from '../_commons/crypto-details/crypto-detail
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { TokenStorageService } from '../_services/tokenStorageService';
+// import { TokenStorageService } from '../_services/tokenStorageService';
 import { InfosCoin } from '../_models/account';
 import { environment } from '../../environments/envionment';
 import { AuthService } from '../_services/AuthService';
@@ -22,11 +22,11 @@ import { AuthService } from '../_services/AuthService';
     ReactiveFormsModule,
     FormsModule
   ],
-  templateUrl: './dashboard-buy-crypto.component.html',
-  styleUrl: './dashboard-buy-crypto.component.css'
+  templateUrl: './dashboard-buy-sell-coin.component.html',
+  styleUrl: './dashboard-buy-sell-coin.component.css'
 })
 
-export class DashboardBuyCryptoComponent {
+export class DashboardBuySellCoinComponent {
   selectedCoin: InfosCoin | null = null;
   mode: 'buy' | 'sell' = 'buy';
   amountInput: number = 0;
@@ -68,14 +68,27 @@ export class DashboardBuyCryptoComponent {
     // console.log(userId);
     if (userId != null) {
       if (this.selectedCoin && this.amountInput > 0) {
-        const transaction = {
-          userId,
-          cryptoName: this.selectedCoin.cryptoName,
-          quantity: this.amountInput,
-          unitPrice: this.selectedCoin.currentPrice,
-          totalAmount: this.resultAmount,
-          type: this.mode.toUpperCase()
-        };
+        let transaction: any;
+
+        if (this.mode === 'buy') {
+          transaction = {
+            userId,
+            cryptoName: this.selectedCoin.cryptoName,
+            quantity: this.resultAmount,          // quantité achetée
+            unitPrice: this.selectedCoin.currentPrice,
+            totalAmount: this.amountInput,        // montant dépensé
+            type: 'BUY'
+          };
+        } else {
+          transaction = {
+            userId,
+            cryptoName: this.selectedCoin.cryptoName,
+            quantity: this.amountInput,           // quantité vendue
+            unitPrice: this.selectedCoin.currentPrice,
+            totalAmount: this.resultAmount,       // montant obtenu en points
+            type: 'SELL'
+          };
+        }
 
         const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
 

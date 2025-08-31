@@ -13,8 +13,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Document(collection = "crypto_details")
-public class CryptoCache {
+@Document(collection = "coin_details")
+public class CoinCache {
     @Id
     private String id;
 
