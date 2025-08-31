@@ -20,4 +20,7 @@ public interface AuthenticationService {
 
     void revokeAllUserTokens(User user);
     void saveUserToken(User user, String jwtToken);
+
+    void generateResetToken(String email) throws Exception;
+    void resetPassword(String token, String newPassword) throws Exception;
 }

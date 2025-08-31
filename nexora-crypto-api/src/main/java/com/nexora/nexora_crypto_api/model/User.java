@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +45,9 @@ public class User implements UserDetails {
     private LocalDateTime verificationCodeExpiresAt;
 
     private boolean enabled;
+
+    private String resetToken;
+    private Instant tokenExpiryDate;
 
     public User(String pseudonym, String email, String password) {
         this.pseudonym = pseudonym;

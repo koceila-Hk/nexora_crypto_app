@@ -1,6 +1,6 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CryptoWallet;
+import com.nexora.nexora_crypto_api.model.CoinWallet;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
@@ -48,7 +48,7 @@ class BuyCryptoCommandTest {
                 .build();
         user = userRepository.save(user);
 
-        CryptoWallet wallet = CryptoWallet.builder()
+        CoinWallet wallet = CoinWallet.builder()
                 .cryptoName("BTC")
                 .quantity(new BigDecimal("1"))
                 .user(user)
@@ -77,7 +77,7 @@ class BuyCryptoCommandTest {
         User updatedUser = userRepository.findById(user.getId()).orElseThrow();
         assertThat(updatedUser.getBalance()).isEqualByComparingTo(new BigDecimal("300"));
 
-        CryptoWallet updatedWallet = walletRepository.findByUserIdAndCryptoName(user.getId(), "BTC").orElseThrow();
+        CoinWallet updatedWallet = walletRepository.findByUserIdAndCryptoName(user.getId(), "BTC").orElseThrow();
         assertThat(updatedWallet.getQuantity()).isEqualByComparingTo(new BigDecimal("3"));
     }
 

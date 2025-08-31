@@ -1,12 +1,13 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
+import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
-import com.nexora.nexora_crypto_api.model.CryptoWallet;
+import com.nexora.nexora_crypto_api.model.CoinWallet;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
-import com.nexora.nexora_crypto_api.service.CryptoWalletService;
+import com.nexora.nexora_crypto_api.service.CoinWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 @Service
-public class CryptoWalletServiceImpl implements CryptoWalletService {
+public class CoinWalletServiceImpl implements CoinWalletService {
     @Autowired
     private CryptoWalletRepository cryptoWalletRepository;
     @Autowired
@@ -25,10 +26,11 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
     @Autowired
     private CoinGeckoService coinGeckoService;
 
+
     @Override
-    public CryptoWallet getOrCreateWallet(String cryptoName, User user) {
+    public CoinWallet getOrCreateWallet(String cryptoName, User user) {
         return cryptoWalletRepository.findByUserIdAndCryptoName(user.getId(), cryptoName).orElseGet(() -> {
-            CryptoWallet wallet = new CryptoWallet();
+            CoinWallet wallet = new CoinWallet();
             wallet.setUser(user);
             wallet.setCryptoName(cryptoName);
             wallet.setQuantity(BigDecimal.ZERO);
@@ -36,12 +38,14 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
         });
     }
 
+
     @Override
     public List<WalletDetailDto> getWalletsWithVariation(Long userId) {
-        List<CryptoWallet> wallets = cryptoWalletRepository.findByUserId(userId);
+        List<CoinWallet> wallets = cryptoWalletRepository.findByUserId(userId);
         List<WalletDetailDto> result = new ArrayList<>();
 
-        for (CryptoWallet wallet : wallets) {
+        for (CoinWallet wallet : wallets) {
+            // Récupération des totaux d'achat
             List<Object[]> buyData = transactionRepository.findTotalAmountAndQuantityByUserAndCrypto(userId, wallet.getCryptoName());
 
             if (!buyData.isEmpty()) {
@@ -52,10 +56,12 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
                 if (totalQuantity.compareTo(BigDecimal.ZERO) > 0) {
                     BigDecimal averageBuyPrice = totalBuyAmount.divide(totalQuantity, 4, RoundingMode.HALF_UP);
 
-                    Map<String, Object> priceData = coinGeckoService.getCryptoPrice(wallet.getCryptoName().toLowerCase(), "eur");
-                    BigDecimal currentPrice = priceData.get("price") != null ? (BigDecimal) priceData.get("price") : BigDecimal.ZERO;
+                    // Utilisation de getCoinDetails pour récupérer prix et icône
+                    CoinInfosForUserDto coinDetails = coinGeckoService.getCoinDetails(wallet.getCryptoName().toLowerCase(), "eur");
+                    BigDecimal currentPrice = coinDetails.getCurrentPrice() != null ? coinDetails.getCurrentPrice() : BigDecimal.ZERO;
 
                     if (currentPrice.compareTo(BigDecimal.ZERO) > 0) {
+                        // Calcul de la variation en pourcentage
                         BigDecimal variation = currentPrice.subtract(averageBuyPrice)
                                 .divide(averageBuyPrice, 5, RoundingMode.HALF_UP)
                                 .multiply(BigDecimal.valueOf(100));
@@ -64,14 +70,16 @@ public class CryptoWalletServiceImpl implements CryptoWalletService {
                         dto.setCryptoName(wallet.getCryptoName());
                         dto.setQuantity(wallet.getQuantity());
                         dto.setVariationPercentage(variation);
-                        dto.setIcon((String) priceData.get("icon"));
+                        dto.setIcon(coinDetails.getIcon());
 
                         result.add(dto);
                     }
                 }
             }
         }
+
         return result;
     }
+
 
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CryptoService } from '../../_services/crypto.service';
+import { CoinService } from '../../_services/coin.service';
 import { InfosCoin } from '../../_models/account';
 
 @Component({
@@ -15,10 +15,10 @@ export class CryptoDetailsComponent implements OnInit {
 
   coins: InfosCoin[] = [];
 
-  constructor(private cryptoService: CryptoService) { }
+  constructor(private coinService: CoinService) { }
 
   ngOnInit(): void {
-    this.cryptoService.getAllCoinDetails().subscribe({
+    this.coinService.getAllCoinDetails().subscribe({
       next: data => this.coins = data,
       error: err => console.error('Erreur de chargement des cryptos', err)
     });

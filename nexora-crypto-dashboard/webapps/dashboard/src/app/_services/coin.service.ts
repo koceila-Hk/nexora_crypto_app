@@ -7,13 +7,15 @@ import { environment } from '../../environments/envionment';
 @Injectable({
   providedIn: 'root'
 })
-export class CryptoService {
+export class CoinService {
 
-  private baseUrl = environment.apiUrl + '/crypto/details';
+  private baseUrl = environment.apiUrl + '/coin/details';
   private coins = [
     'bitcoin',
-    // 'ethereum',
-    'dogecoin',
+    'ethereum',
+    'solana',
+    'dogecoin'
+
     // 'binancecoin'
     ];
 

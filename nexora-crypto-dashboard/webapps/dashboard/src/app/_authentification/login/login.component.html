@@ -1,45 +1,77 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-        <div class="card-body p-4 ">
-          <a class="navbar-brand d-flex align-items-center mb-3">
-            <img src="assets/logoLight-png.png" alt="logo" width="30" height="30" class="me-2">
-            <span class="fw-bold">nexora</span>
-          </a>
-          <p class="mb-5">Veuilliez entrer votre identifiant et votre mot de passe!</p>
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
 
-          <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-            {{ errorMessage }}
-          </div>
+      <!-- Card Login -->
+      <div class="card-body p-4">
+        <a class="navbar-brand d-flex align-items-center mb-3">
+          <img src="assets/logoLight-png.png" alt="logo" width="30" height="30" class="me-2">
+          <span class="fw-bold">nexora</span>
+        </a>
+
+        <!-- Connexion -->
+        <form *ngIf="!showForgot" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <p class="mb-3">Veuillez entrer votre identifiant et votre mot de passe!</p>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
           <div class="mb-3">
-            <label class="form-label" for="typeEmailX">Email</label>
-            <input type="email" id="typeEmailX" class="form-control form-control-lg" formControlName="email"
-              placeholder="example@gmail.com" />
-            <div *ngIf="submit && loginForm.get('email')?.hasError('required')" class="text-danger">
-              Le champ est requis.
-            </div>
-            <div *ngIf="submit && loginForm.get('email')?.hasError('pattern')" class="text-danger mt-1">
-              L'email doit respecter le format.
+            <label>Email</label>
+            <input type="email" class="form-control" formControlName="email" placeholder="example@gmail.com">
+            <div *ngIf="submit && loginForm.get('email')?.invalid" class="text-danger">
+              Email requis et doit être valide
             </div>
           </div>
+
           <div class="mb-3">
-            <label class="form-label" for="typePasswordX">Mot de passe</label>
-            <input type="password" id="typePasswordX" class="form-control form-control-lg" formControlName="password" />
-            <div *ngIf="submit && loginForm.get('password')?.hasError('required')" class="text-danger">
-              Le champ est requis.
+            <label>Mot de passe</label>
+            <input type="password" class="form-control" formControlName="password" placeholder="Mot de passe">
+            <div *ngIf="submit && loginForm.get('password')?.invalid" class="text-danger">
+              Mot de passe requis
             </div>
           </div>
-          <div class="d-grid mt-4">
+
+          <div class="d-grid mt-3">
             <button class="btn btn-primary" type="submit">Connexion</button>
           </div>
-        </div>
+
+          <p class="mt-3 text-center">
+            <a (click)="toggleForgot()" style="cursor: pointer;">Mot de passe oublié ?</a>
+          </p>
+        </form>
+
+        <!-- Mot de passe oublié -->
+        <form *ngIf="showForgot" [formGroup]="forgotForm" (ngSubmit)="onForgotPassword()">
+          <p>Entrez votre email pour recevoir un lien de réinitialisation :</p>
+
+          <div class="mb-3">
+            <input type="email" class="form-control" formControlName="email" placeholder="example@gmail.com">
+            <div *ngIf="submit && forgotForm.get('email')?.invalid" class="text-danger">
+              Email requis et doit être valide
+            </div>
+          </div>
+
+          <div class="d-grid mt-3">
+            <button class="btn btn-primary" type="submit">Envoyer le lien</button>
+          </div>
+
+          <p class="mt-3 text-center">
+            <a (click)="toggleForgot()" style="cursor: pointer;">Retour à la connexion</a>
+          </p>
+
+          <p *ngIf="message" class="text-success text-center mt-2">{{ message }}</p>
+        </form>
+
       </div>
-      <div class="mt-4 d-flex justify-content-center">
-        <p style="color: #6F6F6F;">Vous n'avez pas de compte ?
-          <a routerLink="/register" class="fw-bold" role="button">Inscription</a>
+
+      <!-- Footer -->
+      <div class="mt-4 text-center">
+        <p style="color: #6F6F6F;">
+          Vous n'avez pas de compte ?
+          <a routerLink="/register" class="fw-bold">Inscription</a>
         </p>
       </div>
+
     </div>
   </div>
-</form>
+</div>

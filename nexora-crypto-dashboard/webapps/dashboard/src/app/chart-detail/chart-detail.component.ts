@@ -1,11 +1,14 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { createChart, IChartApi, LineStyle, Time } from 'lightweight-charts';
 import { InfosCoin } from '../_models/account';
 import { HeaderComponent } from '../_commons/header/header.component';
 import { FooterComponent } from '../_commons/footer/footer.component';
 import { FormsModule } from '@angular/forms';
-import { CryptoService } from '../_services/crypto.service';
+import { CoinService } from '../_services/coin.service';
+import { AuthService } from '../_services/AuthService';
+import { environment } from '../../environments/envionment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-crypto-detail',
@@ -19,12 +22,17 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
   chart!: IChartApi;
   cryptoId: string = '';
   selectedCoin: InfosCoin | null = null;
-
   mode: 'buy' | 'sell' = 'buy';
   amountInput: number = 0;
   resultAmount: number = 0;
+  errorMessage: string = '';
 
-  constructor(private route: ActivatedRoute, private cryptoService: CryptoService) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private coinService: CoinService,
+    private authService: AuthService) { }
   ngAfterViewInit(): void {
     throw new Error('Method not implemented.');
   }
@@ -32,7 +40,7 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.cryptoId = this.route.snapshot.paramMap.get('id') || '';
 
-    this.cryptoService.getAllCoinDetails().subscribe({
+    this.coinService.getAllCoinDetails().subscribe({
       next: (data) => {
         const coin = data.find(c => c.cryptoName.toLowerCase() === this.cryptoId.toLowerCase());
         if (coin) {
@@ -92,7 +100,10 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
     areaSeries.setData(data);
   }
 
-
+  onCoinSelected(coin: InfosCoin): void {
+    this.selectedCoin = coin;
+    this.calculateConversion();
+  }
 
   calculateConversion(): void {
     if (this.selectedCoin && this.amountInput > 0) {
@@ -107,6 +118,51 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
   }
 
   submit(): void {
-    console.log('Submitted', this.mode, this.amountInput, this.resultAmount);
+    console.log('click buy');
+    if (!this.selectedCoin) {
+      this.errorMessage = 'Veuillez sélectionner une cryptomonnaie.';
+      return;
+    }
+
+    // const userId = this.tokenStorage.getUserIdFromToken();
+    const userId = this.authService.currentUser()?.id;
+    // console.log(userId);
+    if (userId != null) {
+      if (this.selectedCoin && this.amountInput > 0) {
+        let transaction: any;
+
+        if (this.mode === 'buy') {
+          transaction = {
+            userId,
+            cryptoName: this.selectedCoin.cryptoName,
+            quantity: this.resultAmount,          // quantité achetée
+            unitPrice: this.selectedCoin.currentPrice,
+            totalAmount: this.amountInput,        // montant dépensé
+            type: 'BUY'
+          };
+        } else {
+          transaction = {
+            userId,
+            cryptoName: this.selectedCoin.cryptoName,
+            quantity: this.amountInput,           // quantité vendue
+            unitPrice: this.selectedCoin.currentPrice,
+            totalAmount: this.resultAmount,       // montant obtenu en points
+            type: 'SELL'
+          };
+        }
+        const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
+
+        this.http.post(apiUrl, transaction, { withCredentials: true }).subscribe({
+          next: (res) => {
+            this.errorMessage = '';
+            this.router.navigate(['/home-auth']);
+          },
+          error: (err) => {
+            console.error(`Erreur lors de la transaction :`, err);
+            this.errorMessage = err.error?.message || 'Erreur inconnue';
+          }
+        });
+      }
+    }
   }
 }
