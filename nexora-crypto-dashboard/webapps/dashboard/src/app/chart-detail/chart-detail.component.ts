@@ -1,22 +1,14 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-<<<<<<< HEAD
-import { ActivatedRoute } from '@angular/router';
-=======
 import { ActivatedRoute, Router } from '@angular/router';
->>>>>>> develop
 import { createChart, IChartApi, LineStyle, Time } from 'lightweight-charts';
 import { InfosCoin } from '../_models/account';
 import { HeaderComponent } from '../_commons/header/header.component';
 import { FooterComponent } from '../_commons/footer/footer.component';
 import { FormsModule } from '@angular/forms';
-<<<<<<< HEAD
-import { CryptoService } from '../_services/crypto.service';
-=======
 import { CoinService } from '../_services/coin.service';
 import { AuthService } from '../_services/AuthService';
 import { environment } from '../../environments/envionment';
 import { HttpClient } from '@angular/common/http';
->>>>>>> develop
 
 @Component({
   selector: 'app-crypto-detail',
@@ -30,14 +22,6 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
   chart!: IChartApi;
   cryptoId: string = '';
   selectedCoin: InfosCoin | null = null;
-<<<<<<< HEAD
-
-  mode: 'buy' | 'sell' = 'buy';
-  amountInput: number = 0;
-  resultAmount: number = 0;
-
-  constructor(private route: ActivatedRoute, private cryptoService: CryptoService) { }
-=======
   mode: 'buy' | 'sell' = 'buy';
   amountInput: number = 0;
   resultAmount: number = 0;
@@ -49,7 +33,6 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private coinService: CoinService,
     private authService: AuthService) { }
->>>>>>> develop
   ngAfterViewInit(): void {
     throw new Error('Method not implemented.');
   }
@@ -57,11 +40,7 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.cryptoId = this.route.snapshot.paramMap.get('id') || '';
 
-<<<<<<< HEAD
-    this.cryptoService.getAllCoinDetails().subscribe({
-=======
     this.coinService.getAllCoinDetails().subscribe({
->>>>>>> develop
       next: (data) => {
         const coin = data.find(c => c.cryptoName.toLowerCase() === this.cryptoId.toLowerCase());
         if (coin) {
@@ -139,9 +118,6 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
   }
 
   submit(): void {
-<<<<<<< HEAD
-    console.log('Submitted', this.mode, this.amountInput, this.resultAmount);
-=======
     console.log('click buy');
     if (!this.selectedCoin) {
       this.errorMessage = 'Veuillez sélectionner une cryptomonnaie.';
@@ -188,6 +164,5 @@ export class ChartDetailComponent implements OnInit, AfterViewInit {
         });
       }
     }
->>>>>>> develop
   }
 }
