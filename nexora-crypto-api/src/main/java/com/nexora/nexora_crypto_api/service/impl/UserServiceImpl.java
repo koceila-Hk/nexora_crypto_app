@@ -21,9 +21,15 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    /**
+     * Récupère un utilisateur à partir de son ID.
+     *
+     * @param userId l'identifiant de l'utilisateur
+     * @return l'utilisateur correspondant
+     * @throws RuntimeException si l'utilisateur n'est pas trouvé
+     */
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
     }
-
 }

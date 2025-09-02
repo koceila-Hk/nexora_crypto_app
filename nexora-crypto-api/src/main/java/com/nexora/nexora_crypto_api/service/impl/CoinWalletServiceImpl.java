@@ -4,7 +4,7 @@ import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
 import com.nexora.nexora_crypto_api.model.CoinWallet;
 import com.nexora.nexora_crypto_api.model.User;
-import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
+import com.nexora.nexora_crypto_api.repository.CoinWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
 import com.nexora.nexora_crypto_api.service.CoinWalletService;
@@ -20,13 +20,21 @@ import java.util.List;
 @Service
 public class CoinWalletServiceImpl implements CoinWalletService {
     @Autowired
-    private CryptoWalletRepository cryptoWalletRepository;
+    private CoinWalletRepository cryptoWalletRepository;
     @Autowired
     private TransactionRepository transactionRepository;
     @Autowired
     private CoinGeckoService coinGeckoService;
 
 
+    /**
+     * Récupère un portefeuille d'un utilisateur pour une cryptomonnaie donnée,
+     * ou en crée un s'il n'existe pas.
+     *
+     * @param cryptoName Nom de la cryptomonnaie
+     * @param user       Utilisateur propriétaire du portefeuille
+     * @return Le portefeuille existant ou nouvellement créé
+     */
     @Override
     public CoinWallet getOrCreateWallet(String cryptoName, User user) {
         return cryptoWalletRepository.findByUserIdAndCryptoName(user.getId(), cryptoName).orElseGet(() -> {
@@ -38,7 +46,13 @@ public class CoinWalletServiceImpl implements CoinWalletService {
         });
     }
 
-
+    /**
+     * Récupère tous les portefeuilles d'un utilisateur avec les variations
+     * de prix par rapport au prix moyen d'achat.
+     *
+     * @param userId ID de l'utilisateur
+     * @return Liste des portefeuilles enrichis avec variations de prix et icônes
+     */
     @Override
     public List<WalletDetailDto> getWalletsWithVariation(Long userId) {
         List<CoinWallet> wallets = cryptoWalletRepository.findByUserId(userId);
@@ -80,6 +94,4 @@ public class CoinWalletServiceImpl implements CoinWalletService {
 
         return result;
     }
-
-
 }

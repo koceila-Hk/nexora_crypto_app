@@ -29,6 +29,9 @@
             <div *ngIf="submit && loginForm.get('password')?.invalid" class="text-danger">
               Mot de passe requis
             </div>
+            <div *ngIf="submit && loginForm.get('password')?.hasError('pattern')" class="text-danger mt-1">
+              Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, une minuscule et un chiffre et un caractère spéciale.
+            </div>
           </div>
 
           <div class="d-grid mt-3">

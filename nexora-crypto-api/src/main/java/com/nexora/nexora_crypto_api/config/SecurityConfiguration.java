@@ -80,25 +80,9 @@ public class SecurityConfiguration {
     private void deleteCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setPath("/");  // le même path que celui utilisé pour créer le cookie
-        cookie.setHttpOnly(false);
-        cookie.setSecure(false);  // if https used
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);  // if https used
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
-
-//    private AuthenticationEntryPoint unauthorizedEntryPoint() {
-//        return (request, response, authException) -> {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.setContentType("application/json");
-//            response.getWriter().write("{\"error\": \"Unauthorized\"}");
-//        };
-//    }
-//
-//    private AccessDeniedHandler accessDeniedHandler() {
-//        return (request, response, accessDeniedException) -> {
-//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//            response.setContentType("application/json");
-//            response.getWriter().write("{\"error\": \"Forbidden\"}");
-//        };
-//    }
 }

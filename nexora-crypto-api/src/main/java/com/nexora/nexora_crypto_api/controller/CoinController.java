@@ -16,6 +16,12 @@ public class CoinController {
 
     private static final Logger logger = LoggerFactory.getLogger(CoinController.class);
 
+    @GetMapping("/details/{id}")
+    public ResponseEntity<CoinInfosForUserDto> getCoinDetails(@PathVariable String id, @RequestParam(defaultValue = "eur") String currency) {
+        CoinInfosForUserDto details = coinGeckoService.getCoinDetails(id, currency);
+        return ResponseEntity.ok(details);
+    }
+
 //    @GetMapping("/price")
 //    public ResponseEntity<BigDecimal> getPrice(@RequestParam String id, @RequestParam(defaultValue = "eur") String currency) {
 //
@@ -23,10 +29,5 @@ public class CoinController {
 //        return ResponseEntity.ok(price);
 //    }
 
-    @GetMapping("/details/{id}")
-    public ResponseEntity<CoinInfosForUserDto> getCoinDetails(@PathVariable String id, @RequestParam(defaultValue = "eur") String currency) {
-        CoinInfosForUserDto details = coinGeckoService.getCoinDetails(id, currency);
-        return ResponseEntity.ok(details);
-    }
 
 }
