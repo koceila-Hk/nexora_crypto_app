@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:nexora-crypto-api/src/main/java/com/nexora/nexora_crypto_api/config/JwtService.java
-package com.nexora.nexora_crypto_api.config;
-========
 package com.nexora.nexora_crypto_api.security;
->>>>>>>> develop:nexora-crypto-api/src/main/java/com/nexora/nexora_crypto_api/security/JwtService.java
 
 import com.nexora.nexora_crypto_api.model.User;
 import io.jsonwebtoken.Claims;
