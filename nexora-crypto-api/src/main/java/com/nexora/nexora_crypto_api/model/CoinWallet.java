@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "crypto_wallet")
-public class CryptoWallet {
+@Table(name = "coin_wallet")
+public class CoinWallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wallet_id")

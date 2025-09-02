@@ -7,7 +7,9 @@ services:
     container_name: mysql
     restart: unless-stopped
     environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
 
     ports:
@@ -20,24 +22,41 @@ services:
       timeout: 5s
       retries: 5
 
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: crypto_cache
+    networks:
+      - nexora-network
 
   nexora-crypto-api:
-    image: kousshk/nexora-backend:latest
-   # build: ./nexora-crypto-api
+    #image: kousshk/nexora-backend:latest
+    build: ./nexora-crypto-api
     container_name: backend
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+       mysql:
+         condition: service_healthy
     environment:
       - SECURITY_JWT_SECRET_KEY=${SECURITY_JWT_SECRET_KEY}
+      - SECURITY_JWT_EXPIRATION_TIME=${SECURITY_JWT_EXPIRATION_TIME}
+      - APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION=${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION}
+      - spring.mail.username=${SPRING_MAIL_USERNAME}
+      - spring.mail.password=${SPRING_MAIL_PASSWORD}
+      - coingecko.api.url=${COINGECKO_API_URL}
+      - frontend.url=${FRONTEND_URL}
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - nexora-network
 
   nexora-crypto-dashboard:
-    image: kousshk/nexora-frontend:latest
-    #build: ./nexora-crypto-dashboard/webapps/dashboard
+    #image: kousshk/nexora-frontend:latest
+    build: ./nexora-crypto-dashboard/webapps/dashboard
     container_name: frontend
     ports:
       - 4200:80
@@ -46,6 +65,29 @@ services:
     depends_on:
       - nexora-crypto-api
 
+
+
+  sonarqube:
+      image: sonarqube:9.9-community
+      container_name: sonarqube
+      ports:
+        - "9000:9000"
+      environment:
+        - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+      volumes:
+        - sonarqube_data:/opt/sonarqube/data
+        - sonarqube_extensions:/opt/sonarqube/extensions
+        - sonarqube_logs:/opt/sonarqube/logs
+
+volumes:
+      sonarqube_data:
+      sonarqube_extensions:
+      sonarqube_logs:
+
+
 networks:
   nexora-network:
     driver: bridge
+
+
+

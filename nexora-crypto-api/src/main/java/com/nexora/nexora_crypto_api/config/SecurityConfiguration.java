@@ -1,6 +1,6 @@
 package com.nexora.nexora_crypto_api.config;
 
-import com.nexora.nexora_crypto_api.service.JwtAuthenticationFilter;
+import com.nexora.nexora_crypto_api.security.JwtAuthenticationFilter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
@@ -43,7 +41,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/auth/refresh-token", "/crypto/**", "/log").permitAll()
+                        .requestMatchers("/auth/**", "/auth/refresh-token", "/coin/**").permitAll()
                         .requestMatchers( "/users/**", "/wallets/**", "/transaction/**").authenticated()
                 )
                 .exceptionHandling(eh -> eh.disable())
@@ -87,20 +85,4 @@ public class SecurityConfiguration {
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
-
-//    private AuthenticationEntryPoint unauthorizedEntryPoint() {
-//        return (request, response, authException) -> {
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.setContentType("application/json");
-//            response.getWriter().write("{\"error\": \"Unauthorized\"}");
-//        };
-//    }
-//
-//    private AccessDeniedHandler accessDeniedHandler() {
-//        return (request, response, accessDeniedException) -> {
-//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//            response.setContentType("application/json");
-//            response.getWriter().write("{\"error\": \"Forbidden\"}");
-//        };
-//    }
 }

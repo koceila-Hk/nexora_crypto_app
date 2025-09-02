@@ -51,4 +51,13 @@ refreshToken(): Observable<AccountInfosUser> {
         tap(user => this._currentUser.set(user))
       );
   }
+
+    // --- MOT DE PASSE OUBLIE ---
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(environment.apiUrl + `/auth/forgot-password?email=${email}`, {}, { withCredentials: true });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(environment.apiUrl + '/auth/reset-password', { token, newPassword }, { withCredentials: true });
+  }
 }

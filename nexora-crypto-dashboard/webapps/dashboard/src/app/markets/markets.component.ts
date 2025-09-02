@@ -1,8 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CryptoService } from '../_services/crypto.service';
+import { CoinService } from '../_services/coin.service';
 import { FooterComponent } from "../_commons/footer/footer.component";
 import { HeaderComponent } from "../_commons/header/header.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crypto-details',
@@ -16,10 +17,14 @@ export class MarketsComponent implements OnInit {
 
   coins: CoinDetails[] = [];
 
-  constructor(private cryptoService: CryptoService) { }
+  constructor(
+    private coinsService: CoinService,
+    private router: Router
+  ) 
+{ }
 
   ngOnInit(): void {
-    this.cryptoService.getAllCoinDetails().subscribe({
+    this.coinsService.getAllCoinDetails().subscribe({
       next: data => this.coins = data,
       error: err => console.error('Erreur de chargement des cryptos', err)
     });
@@ -36,8 +41,9 @@ export class MarketsComponent implements OnInit {
 
   openCoinInNewTab(coin: any): void {
     const encodedId = encodeURIComponent(coin.cryptoName.toLowerCase());
-    const url = `${window.location.origin}/#/crypto-chart/${encodedId}`;
-    window.open(url, '_blank');
+    // const url = `${window.location.origin}/#/crypto-chart/${encodedId}`;
+    // window.open(url, '_blank');
+    this.router.navigate([`/crypto-chart/${encodedId}`]);
   }
 
 
