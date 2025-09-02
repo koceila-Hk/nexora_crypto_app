@@ -4,7 +4,7 @@ import com.nexora.nexora_crypto_api.model.CoinWallet;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.Transaction;
-import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
+import com.nexora.nexora_crypto_api.repository.CoinWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
 import com.nexora.nexora_crypto_api.service.*;
@@ -18,12 +18,6 @@ import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-//    @Autowired
-//    private TransactionInvoker invoker;
-//    @Autowired
-//    private BuyCryptoCommand buyCryptoCommand;
-//    @Autowired
-//    private SellCryptoCommand sellCryptoCommand;
     @Autowired
     private UserService userService;
     @Autowired
@@ -31,12 +25,19 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private CoinWalletService cryptoWalletService;
+    private CoinWalletService coinWalletService;
     @Autowired
-    private CryptoWalletRepository walletRepository;
+    private CoinWalletRepository walletRepository;
 
+
+    /**
+     * Effectue l'achat d'une cryptomonnaie pour un utilisateur donné.
+     * Vérifie le solde, met à jour le portefeuille, crée la transaction.
+     *
+     * @param request DTO contenant les informations de l'achat
+     * @throws RuntimeException si le solde est insuffisant
+     */
     public void buyCrypto(TransactionDto request) {
-//        invoker.process(buyCryptoCommand, request);
 
         User user = userService.getUserById(request.getUserId());
         //BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
@@ -49,33 +50,32 @@ public class TransactionServiceImpl implements TransactionService {
         user.setBalance(user.getBalance().subtract(request.getTotalAmount()));
         userRepository.save(user);
 
-        // Add transaction
-        Transaction transaction = new Transaction();
-        transaction.setType("BUY");
-        transaction.setCryptoName(request.getCryptoName());
-        transaction.setQuantity(request.getQuantity().setScale(5,RoundingMode.HALF_UP));
-        transaction.setUnitPrice(request.getUnitPrice().setScale(5, RoundingMode.HALF_UP));
-        transaction.setTotalAmount(request.getTotalAmount().setScale(5,RoundingMode.HALF_UP));
-        transaction.setDateTransaction(LocalDateTime.now());
-        transaction.setUser(user);
-        transactionRepository.save(transaction);
+        // create transaction
+        createTransaction("BUY", request, user);
 
-        CoinWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
+        CoinWallet wallet = coinWalletService.getOrCreateWallet(request.getCryptoName(), user);
         wallet.setQuantity(wallet.getQuantity().add(request.getQuantity()));
         walletRepository.save(wallet);
     }
 
+    /**
+     * Effectue la vente d'une cryptomonnaie pour un utilisateur.
+     * Vérifie le solde du portefeuille, ajoute l'argent à l'utilisateur et enregistre la transaction.
+     *
+     * @param request DTO contenant les informations de la vente
+     * @throws RuntimeException si le portefeuille ne contient pas assez de cryptomonnaie
+     */
     public void sellCrypto(TransactionDto request) {
-//        invoker.process(sellCryptoCommand, request);
 
         User user = userService.getUserById(request.getUserId());
-        CoinWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
+        CoinWallet wallet = coinWalletService.getOrCreateWallet(request.getCryptoName(), user);
 
         if (wallet.getQuantity().compareTo(request.getQuantity()) < 0) {
             throw new RuntimeException("Crypto insuffisante dans le wallet");
         }
 
         BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
+        request.setTotalAmount(totalAmount);
 
         // Déduire les cryptos du wallet
         wallet.setQuantity(wallet.getQuantity().subtract(request.getQuantity()));
@@ -86,20 +86,38 @@ public class TransactionServiceImpl implements TransactionService {
         userRepository.save(user);
 
         // create transaction
-        Transaction transaction = new Transaction();
-        transaction.setType("SELL");
-        transaction.setCryptoName(request.getCryptoName());
-        transaction.setQuantity(request.getQuantity().setScale(5,RoundingMode.HALF_UP));
-        transaction.setUnitPrice(request.getUnitPrice().setScale(5, RoundingMode.HALF_UP));
-        transaction.setTotalAmount(totalAmount.setScale(5,RoundingMode.HALF_UP));
-        transaction.setDateTransaction(LocalDateTime.now());
-        transaction.setUser(user);
-        transactionRepository.save(transaction);
+        createTransaction("SELL", request, user);
     }
 
+
+    /**
+     * Récupère toutes les transactions d'un utilisateur donné.
+     *
+     * @param userId ID de l'utilisateur
+     * @return Liste des transactions de l'utilisateur
+     */
     @Override
     public List<Transaction> getAllTransactionsById(Long userId) {
         return transactionRepository.findByUserId((userId));
+    }
+
+    /**
+     * Crée et sauvegarde une transaction dans la base.
+     *
+     * @param type   Type de transaction ("BUY" ou "SELL")
+     * @param request Données issues de l'opération de transaction
+     * @param user   Utilisateur lié à la transaction
+     */
+    private void createTransaction(String type, TransactionDto request, User user) {
+        Transaction transaction = new Transaction();
+        transaction.setType(type);
+        transaction.setCryptoName(request.getCryptoName());
+        transaction.setQuantity(request.getQuantity().setScale(5,RoundingMode.HALF_UP));
+        transaction.setUnitPrice(request.getUnitPrice().setScale(5, RoundingMode.HALF_UP));
+        transaction.setTotalAmount(request.getTotalAmount().setScale(5,RoundingMode.HALF_UP));
+        transaction.setDateTransaction(LocalDateTime.now());
+        transaction.setUser(user);
+        transactionRepository.save(transaction);
     }
 
 }

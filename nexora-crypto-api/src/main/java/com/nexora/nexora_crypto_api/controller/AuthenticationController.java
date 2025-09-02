@@ -69,15 +69,15 @@ public class AuthenticationController {
             authenticationService.saveUserToken(authenticatedUser, accessToken);
 
             ResponseCookie accessCookie = ResponseCookie.from("access_token", accessToken)
-                    .httpOnly(false)
-                    .secure(false) // désactiver en local
+                    .httpOnly(true)
+                    .secure(true) // désactiver en local
                     .path("/")
                     .sameSite("Lax") // Lax
                     .build();
 
             ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
-                    .httpOnly(false)
-                    .secure(false)
+                    .httpOnly(true)
+                    .secure(true)
                     .path("/")
                     .sameSite("Lax")
                     .build();

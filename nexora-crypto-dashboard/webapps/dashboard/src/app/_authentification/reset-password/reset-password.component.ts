@@ -31,7 +31,7 @@ export class ResetPasswordComponent {
 
     // Formulaire pour saisir le nouveau mot de passe
     this.resetForm = this.fb.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{12,}$')]],
       confirmPassword: ['', Validators.required],
     },
       { validators: this.passwordMatchValidator }

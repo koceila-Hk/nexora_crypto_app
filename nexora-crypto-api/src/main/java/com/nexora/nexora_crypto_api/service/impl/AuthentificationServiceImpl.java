@@ -22,10 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -60,7 +60,7 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         user.setDateCreation(LocalDateTime.now());
 
         // Générer code de vérification
-        String code = String.valueOf(new Random().nextInt(900000) + 100000);
+        String code = String.valueOf(new SecureRandom().nextInt(900000) + 100000);
         user.setVerificationCode(code);
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
 
@@ -108,14 +108,13 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     // ------------------- RESEND VERIFICATION CODE -------------------
     @Override
     public void resendVerificationCode(String email) throws Exception {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new Exception("Utilisateur non trouvé"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new Exception("Utilisateur non trouvé"));
 
         if (user.isEnabled()) {
             throw new Exception("Compte déjà vérifié");
         }
 
-        String code = String.valueOf(new Random().nextInt(900000) + 100000);
+        String code = String.valueOf(new SecureRandom().nextInt(900000) + 100000);
         user.setVerificationCode(code);
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusHours(1));
         userRepository.save(user);
@@ -196,8 +195,7 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     // ------------------- FORGOT PASSWORD -------------------
     @Override
     public void generateResetToken(String email) throws Exception {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new Exception("Utilisateur non trouvé"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new Exception("Utilisateur non trouvé"));
 
         String token = UUID.randomUUID().toString();
         user.setResetToken(token);
@@ -210,8 +208,7 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     // ------------------- RESET PASSWORD -------------------
     @Override
     public void resetPassword(String token, String newPassword) throws Exception {
-        User user = userRepository.findByResetToken(token)
-                .orElseThrow(() -> new Exception("Token invalide"));
+        User user = userRepository.findByResetToken(token).orElseThrow(() -> new Exception("Token invalide"));
 
         if (user.getTokenExpiryDate().isBefore(Instant.now())) {
             throw new Exception("Token expiré");
@@ -225,8 +222,8 @@ public class AuthentificationServiceImpl implements AuthenticationService {
 
 
     private String generateVerificationCode() {
-        Random random = new Random();
-        int code = random.nextInt(900000) + 100000;
+        SecureRandom secureRandom = new SecureRandom();
+        int code = secureRandom.nextInt(900000) + 100000;
         return String.valueOf(code);
     }
 }
