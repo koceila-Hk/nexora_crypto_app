@@ -110,7 +110,7 @@ class AuthenticationControllerTest {
 
         // Assert
         assertThat(result.getStatusCodeValue()).isEqualTo(200);
-        assertThat(result.getBody()).isEqualTo("Verification code sent");
+        assertThat(result.getBody()).isEqualTo(Map.of("message", "Verification code sent"));
         verify(authenticationService, times(1)).resendVerificationCode(email);
     }
 

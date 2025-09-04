@@ -53,9 +53,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwtToken = null;
 
         // token dans le header Authorization
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7);
-        } else {
+//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//            jwtToken = authHeader.substring(7);
+//        } else {
             // token dans les cookies
             if (request.getCookies() != null) {
                 for (Cookie cookie : request.getCookies()) {
@@ -65,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             }
-        }
+//        }
 
         if (jwtToken == null) {
             // Pas de token, passer la requête

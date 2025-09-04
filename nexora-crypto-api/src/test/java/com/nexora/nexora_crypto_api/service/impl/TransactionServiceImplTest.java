@@ -87,7 +87,7 @@ class TransactionServiceImplTest {
         verify(coinWalletRepository).save(wallet);
         verify(transactionRepository).save(any(Transaction.class));
 
-        assertEquals(BigDecimal.valueOf(1500), user.getBalance());
+        assertTrue(user.getBalance().compareTo(BigDecimal.valueOf(1500)) == 0);
         assertEquals(BigDecimal.valueOf(0.5), wallet.getQuantity());
     }
 
