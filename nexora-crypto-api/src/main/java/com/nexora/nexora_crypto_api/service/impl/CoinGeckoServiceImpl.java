@@ -58,9 +58,7 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
                 throw new RuntimeException("Price is null for id= " + id);
             }
 
-            BigDecimal price = priceResponse.getBody()
-                    .getOrDefault(id, Map.of())
-                    .getOrDefault(currency, BigDecimal.ZERO);
+            BigDecimal price = priceBody.getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO);
 
             // l’icône
             String infoUrl = baseUrl + "coins/" + id;
@@ -73,7 +71,7 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
             }
 
             @SuppressWarnings("unchecked")
-            Map<String, String> imageMap = (Map<String, String>) infoResponse.getBody().get("image");
+            Map<String, String> imageMap = (Map<String, String>) infosBody.get("image");
             String icon = imageMap != null ? imageMap.get("small") : null;
 
             // Return map
@@ -126,7 +124,7 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
      * @param eur    La devise "eur"
      * @return Objet DTO contenant les détails nécessaires à l'affichage pour l'utilisateur
      */
-    private CoinInfosForUserDto fetchAndCacheCoinGecko(String coinId, String eur) {
+    public CoinInfosForUserDto fetchAndCacheCoinGecko(String coinId, String eur) {
         try{
             String url = baseUrl + "coins/" + coinId;
             ResponseEntity<CoinDetailDto> response = restTemplate.exchange(

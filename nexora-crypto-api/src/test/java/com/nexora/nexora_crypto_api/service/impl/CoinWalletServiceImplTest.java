@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,8 +84,67 @@ class CoinWalletServiceImplTest {
         assertEquals(BigDecimal.ZERO, result.getQuantity());
     }
 
+    @Test
+    void getWalletsWithVariation_shouldReturnWalletsWithCorrectVariation() {
 
-//    @Test
-//    void getWalletsWithVariation_shouldReturnWalletDetails() {
-//    }
+        User user = new User();
+        user.setId(1L);
+
+        // Mock portefeuille
+        CoinWallet wallet = new CoinWallet();
+        wallet.setCryptoName("ethereum");
+        wallet.setQuantity(new BigDecimal("2.0"));
+
+        when(coinWalletRepository.findByUserId(user.getId()))
+                .thenReturn(List.of(wallet));
+
+        // Mock transactions pour calcul de prix moyen
+        Object[] transactionData = new Object[]{new BigDecimal("4000"), new BigDecimal("2.0")};
+        when(transactionRepository.findTotalAmountAndQuantityByUserAndCrypto(user.getId(), "ethereum"))
+                .thenReturn(Collections.singletonList(transactionData));
+
+
+        // Mock CoinGeckoService
+        CoinInfosForUserDto coinDetails = new CoinInfosForUserDto();
+        coinDetails.setCurrentPrice(new BigDecimal("2500")); // prix actuel
+        coinDetails.setIcon("eth_icon_url");
+
+        when(coinGeckoService.getCoinDetails("ethereum", "eur"))
+                .thenReturn(coinDetails);
+
+        // Execute
+        List<WalletDetailDto> result = coinWalletService.getWalletsWithVariation(user.getId());
+
+        assertEquals(1, result.size());
+
+        WalletDetailDto dto = result.get(0);
+        assertEquals("ethereum", dto.getCryptoName());
+        assertEquals(new BigDecimal("2.0"), dto.getQuantity());
+        assertEquals("eth_icon_url", dto.getIcon());
+
+        // Variation = (2500 - 2000) / 2000 * 100 = 25%
+        assertEquals(new BigDecimal("25.00000"), dto.getVariationPercentage());
+    }
+
+    @Test
+    void getWalletsWithVariation_shouldSkipWalletWithNoTransactions() {
+        User user = new User();
+        user.setId(1L);
+
+        CoinWallet wallet = new CoinWallet();
+        wallet.setCryptoName("litecoin");
+
+        when(coinWalletRepository.findByUserId(user.getId()))
+                .thenReturn(List.of(wallet));
+
+        // Pas de transactions pour ce portefeuille
+        when(transactionRepository.findTotalAmountAndQuantityByUserAndCrypto(user.getId(), "litecoin"))
+                .thenReturn(List.of());
+
+        List<WalletDetailDto> result = coinWalletService.getWalletsWithVariation(user.getId());
+
+        // Pas de DTO généré car pas de transaction
+        assertTrue(result.isEmpty());
+    }
+
 }

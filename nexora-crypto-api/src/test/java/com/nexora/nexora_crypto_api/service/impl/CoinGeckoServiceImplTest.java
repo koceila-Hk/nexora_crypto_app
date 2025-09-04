@@ -3,13 +3,9 @@ package com.nexora.nexora_crypto_api.service.impl;
 import com.nexora.nexora_crypto_api.model.CoinCache;
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.repository.CoinCacheRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -20,11 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CoinGeckoServiceImplTest {
+class CoinGeckoServiceImplTest {
 
     @Mock
     private CoinCacheRepository coinCacheRepository;
 
+    @Spy
     @InjectMocks
     private CoinGeckoServiceImpl coinGeckoService;
 
@@ -42,6 +39,7 @@ public class CoinGeckoServiceImplTest {
 
     @Test
     void getCoinDetails_shouldReturnFromCache() {
+        // GIVEN un cache existant
         CoinCache cache = new CoinCache();
         cache.setId("bitcoin");
         cache.setName("Bitcoin");
@@ -53,13 +51,37 @@ public class CoinGeckoServiceImplTest {
 
         when(coinCacheRepository.findById("bitcoin")).thenReturn(Optional.of(cache));
 
+        // WHEN
         CoinInfosForUserDto result = coinGeckoService.getCoinDetails("bitcoin", "eur");
 
+        // THEN
         assertNotNull(result);
         assertEquals("Bitcoin", result.getCryptoName());
         assertEquals("btc", result.getSymbol());
         assertEquals("icon_url", result.getIcon());
         assertEquals(new BigDecimal("30000.00"), result.getCurrentPrice());
         assertEquals(new BigDecimal("5.2"), result.getPriceChangePercentage());
+        verify(coinCacheRepository, never()).save(any());
     }
+
+    @Test
+    void getCoinDetails_shouldFetchAndCache_whenCacheEmpty() {
+        when(coinCacheRepository.findById("ethereum")).thenReturn(Optional.empty());
+
+        // Mock du résultat de fetchAndCacheCoinGecko pour éviter appel réel
+        CoinInfosForUserDto mockedCoin = new CoinInfosForUserDto(
+                "Ethereum", "eth", "icon_url", new BigDecimal("3000.00"), new BigDecimal("5.5")
+        );
+        doReturn(mockedCoin).when(coinGeckoService).fetchAndCacheCoinGecko("ethereum", "eur");
+
+        CoinInfosForUserDto result = coinGeckoService.getCoinDetails("ethereum", "eur");
+
+        assertNotNull(result);
+        assertEquals("Ethereum", result.getCryptoName());
+        assertEquals("eth", result.getSymbol());
+
+        // Vérifie que save n'est jamais appelé puisque fetch est mocké
+        verify(coinCacheRepository, never()).save(any());
+    }
+
 }

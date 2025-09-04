@@ -41,10 +41,12 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/auth/refresh-token", "/coin/**").permitAll()
+                        .requestMatchers("/auth/**", "/auth/**", "/coin/**").permitAll()
                         .requestMatchers( "/users/**", "/wallets/**", "/transaction/**").authenticated()
                 )
-                .exceptionHandling(eh -> eh.disable())
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -80,8 +82,8 @@ public class SecurityConfiguration {
     private void deleteCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setPath("/");  // le même path que celui utilisé pour créer le cookie
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);  // if https used
+        cookie.setHttpOnly(false);
+        cookie.setSecure(false);  // if https used
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }

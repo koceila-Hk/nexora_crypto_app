@@ -7,9 +7,7 @@ services:
     container_name: mysql
     restart: unless-stopped
     environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
 
     ports:
@@ -29,7 +27,7 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: crypto_cache
+      MONGO_INITDB_DATABASE: coin_cache #delete
     networks:
       - nexora-network
 

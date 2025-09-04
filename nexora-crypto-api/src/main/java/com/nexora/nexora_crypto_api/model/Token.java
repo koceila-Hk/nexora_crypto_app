@@ -20,8 +20,8 @@ public class Token {
     @Column(unique=true)
     private String token;
 
-    @Enumerated(EnumType.STRING)
-    public TokenType tokenType = TokenType.BEARER;
+//    @Enumerated(EnumType.STRING)
+//    public TokenType tokenType = TokenType.BEARER;
 
     public boolean revoked;
 

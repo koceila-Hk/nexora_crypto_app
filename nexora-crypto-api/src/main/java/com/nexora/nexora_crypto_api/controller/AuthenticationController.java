@@ -8,6 +8,7 @@ import com.nexora.nexora_crypto_api.model.dto.VerifyUserDto;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
 import com.nexora.nexora_crypto_api.security.JwtService;
+import com.nexora.nexora_crypto_api.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    private static final String MESSAGE = "message";
+    private static final String ERROR = "error";
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
@@ -40,16 +43,16 @@ public class AuthenticationController {
      * @return success message if registration is ok
      */
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterUserDto registerUserDto) {
         try {
             authenticationService.signup(registerUserDto);
 
             logger.info("Signup successful: {}", registerUserDto.getEmail());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Registration successfully"));
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(MESSAGE, "Registration successfully"));
         } catch (Exception e) {
             logger.error("Signup failed: {}, errorMessage: {}", registerUserDto.getEmail(), e.getMessage());
-            return null;
+            return ResponseEntity.badRequest().body(Map.of(ERROR, e.getMessage()));
         }
     }
 
@@ -59,7 +62,7 @@ public class AuthenticationController {
      * @return success message with token in cookies
      */
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<Map<String, String>> authenticate(@RequestBody LoginUserDto loginUserDto) {
         try {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
             String accessToken = jwtService.generateToken(authenticatedUser);
@@ -68,57 +71,43 @@ public class AuthenticationController {
             authenticationService.revokeAllUserTokens(authenticatedUser);
             authenticationService.saveUserToken(authenticatedUser, accessToken);
 
-            ResponseCookie accessCookie = ResponseCookie.from("access_token", accessToken)
-                    .httpOnly(true)
-                    .secure(true) // désactiver en local
-                    .path("/")
-                    .sameSite("Lax") // Lax
-                    .build();
-
-            ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .sameSite("Lax")
-                    .build();
-//            Strict	Seulement sur ton domaine	Très sécurisé, mais peut bloquer certaines navigations
-//            Lax	Liens normaux OK, POST cross-site bloqué	Bon compromis pour login / refresh token
-//            None	Toujours envoyé	Nécessite HTTPS (Secure=true) et utile pour frontend/backend différents
+            ResponseCookie accessCookie = CookieUtil.createAccessTokenCookie(accessToken, jwtService.getExpirationTime());
+            ResponseCookie refreshCookie = CookieUtil.createRefreshTokenCookie(refreshToken, jwtService.getRefreshExpirationTime());
 
             logger.info("Login successful: {}", loginUserDto.getEmail());
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, accessCookie.toString(), refreshCookie.toString())
-                    .body(Map.of("message", "Connexion réussie"));
+                    .body(Map.of(MESSAGE, "Connexion réussie"));
         } catch (Exception e) {
             logger.error("Login failed: {}, errorMessage: {}", loginUserDto.getEmail(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(ERROR, e.getMessage()));
         }
     }
 
     // Verify user's account with verification code
     @PostMapping("/verify")
-    public ResponseEntity<?> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
+    public ResponseEntity<Map<String, String>> verifyUser(@RequestBody VerifyUserDto verifyUserDto) {
         try {
             authenticationService.verifyUser(verifyUserDto);
             logger.info("Verify successful: {}", verifyUserDto.getEmail());
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message","Account verified successfully"));
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(MESSAGE,"Account verified successfully"));
         } catch (Exception e) {
             logger.warn("Verify failed: {}, errorMessage: {}", verifyUserDto.getEmail(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Not authenticate"));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(ERROR, "Not authenticate"));
         }
     }
 
     // Resend email verification code to the user
     @PostMapping("/resend")
-    public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
+    public ResponseEntity<Map<String, String>> resendVerificationCode(@RequestParam String email) {
         try {
             authenticationService.resendVerificationCode(email);
             logger.info("Resend successful: {}", email);
-            return ResponseEntity.ok("Verification code sent");
+            return ResponseEntity.ok( Map.of(MESSAGE, "Verification code sent"));
         } catch (Exception e) {
             logger.warn("Resend failed: {}, errorMessage: {}", email, e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of(ERROR, e.getMessage()));
         }
     }
 
@@ -129,29 +118,29 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestParam String email) {
         try {
             authenticationService.generateResetToken(email);
             logger.info("Reset password email sent to: {}", email);
-            return ResponseEntity.ok(Map.of("message", "Email de réinitialisation envoyé"));
+            return ResponseEntity.ok(Map.of(MESSAGE, "Email de réinitialisation envoyé"));
         } catch (Exception e) {
             logger.warn("forgot password failed: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of(ERROR, e.getMessage()));
         }
     }
 
     // reset password using reset token
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> body) {
         try {
             String token = body.get("token");
             String newPassword = body.get("newPassword");
             authenticationService.resetPassword(token, newPassword);
             logger.info("password reset successful for token: {}", token);
-            return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès"));
+            return ResponseEntity.ok(Map.of(MESSAGE, "Mot de passe réinitialisé avec succès"));
         } catch (Exception e) {
             logger.warn("password reset failed: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(Map.of(ERROR, e.getMessage()));
         }
     }
 
