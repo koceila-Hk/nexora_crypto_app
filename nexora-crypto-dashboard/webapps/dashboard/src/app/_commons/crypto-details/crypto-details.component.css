@@ -18,5 +18,10 @@ span {
 }
 
 .crypto-item:hover {
-  background-color: #495057; 
+  background-color: #49505777; 
+}
+
+.active-coin {
+  background: #515960; 
+  border-radius: 8px;
 }

@@ -15,6 +15,7 @@ import { ContactComponent } from './_legal/contact/contact.component';
 import { CookiesComponent } from './_legal/cookies/cookies.component';
 import { MentionsLegalesComponent } from './_legal/mentions-legales/mentions-legales.component';
 import { ResetPasswordComponent } from './_authentification/reset-password/reset-password.component';
+import { DemoComponent } from './demo/demo.component';
 
 export const routes: Routes = [
   { path: 'register', component: RegisterComponent  },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'buy&sell-coin', component: DashboardBuySellCoinComponent},
   { path: 'crypto-details', component: CryptoDetailsComponent},
   { path: 'crypto-chart/:id', component: ChartDetailComponent },
+  { path: 'demo', component: DemoComponent },
   { path: 'terms', component: TermsOfUseComponent},
   { path: 'privacy', component: PrivacyPolicyComponent},
   { path: 'contact', component: ContactComponent },

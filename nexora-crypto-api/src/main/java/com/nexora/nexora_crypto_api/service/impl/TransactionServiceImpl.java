@@ -44,7 +44,6 @@ public class TransactionServiceImpl implements TransactionService {
         if (user.getBalance().compareTo(totalAmount) < 0) {
             throw new RuntimeException("Solde insuffisant");
         }
-
         request.setTotalAmount(totalAmount);
 
         // deduct balance

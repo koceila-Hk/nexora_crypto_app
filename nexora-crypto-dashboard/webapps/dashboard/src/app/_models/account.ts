@@ -27,9 +27,9 @@ export class InfosCoin{
     priceChangePercentage!: number;
 }
 
-interface CoinDetails {
-  cryptoName: string;
-  icon: string;
-  currentPrice: number;
-  priceChangePercentage: number;
+export class CoinDetails {
+  cryptoName!: string;
+  icon!: string;
+  currentPrice!: number;
+  priceChangePercentage!: number;
 }
