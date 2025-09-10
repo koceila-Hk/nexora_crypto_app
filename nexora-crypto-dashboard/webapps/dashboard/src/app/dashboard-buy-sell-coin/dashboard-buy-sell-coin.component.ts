@@ -27,7 +27,7 @@ import { AuthService } from '../_services/AuthService';
 })
 
 export class DashboardBuySellCoinComponent {
-  selectedCoin: InfosCoin | null = null;
+  selectedCoin?: InfosCoin;
   mode: 'buy' | 'sell' = 'buy';
   amountInput: number = 0;
   resultAmount: number = 0;
@@ -104,5 +104,6 @@ export class DashboardBuySellCoinComponent {
         });
       }
     }
+    this.router.navigate(['/login'])
   }
 }

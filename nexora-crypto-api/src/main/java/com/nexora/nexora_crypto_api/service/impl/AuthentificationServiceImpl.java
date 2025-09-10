@@ -1,12 +1,9 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.Token;
 import com.nexora.nexora_crypto_api.model.dto.LoginUserDto;
 import com.nexora.nexora_crypto_api.model.dto.RegisterUserDto;
 import com.nexora.nexora_crypto_api.model.dto.VerifyUserDto;
 import com.nexora.nexora_crypto_api.model.User;
-import com.nexora.nexora_crypto_api.model.enums.TokenType;
-import com.nexora.nexora_crypto_api.repository.TokenRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
 import com.nexora.nexora_crypto_api.utils.CookieUtil;
@@ -44,8 +41,6 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     private EmailService emailService;
     @Autowired
     private JwtService jwtService;
-    @Autowired
-    private TokenRepository tokenRepository;
 
     // ------------------- SIGNUP -------------------
     @Override
@@ -84,7 +79,6 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword())
         );
-
         return user;
     }
 
@@ -137,14 +131,12 @@ public class AuthentificationServiceImpl implements AuthenticationService {
 
         if (refreshToken == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Pas de token");
             return;
         }
 
         String email = jwtService.extractUsername(refreshToken);
         if (email == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Token invalide");
             return;
         }
 
@@ -153,41 +145,14 @@ public class AuthentificationServiceImpl implements AuthenticationService {
 
         if (!jwtService.isTokenValid(refreshToken, user)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Token invalide");
             return;
         }
 
         String accessToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, accessToken);
 
         ResponseCookie accessCookie = CookieUtil.createAccessTokenCookie(accessToken, jwtService.getExpirationTime());
 
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-
-    }
-
-    // ------------------- SAVE TOKEN -------------------
-    @Override
-    public void saveUserToken(User user, String jwtToken) {
-        Token token = new Token();
-        token.setUser(user);
-        token.setToken(jwtToken);
-//        token.setTokenType(TokenType.BEARER);
-        token.setExpired(false);
-        token.setRevoked(false);
-        tokenRepository.save(token);
-    }
-
-    // ------------------- REVOKE TOKENS -------------------
-    @Override
-    public void revokeAllUserTokens(User user) {
-        var tokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        for (Token t : tokens) {
-            t.setExpired(true);
-            t.setRevoked(true);
-        }
-        tokenRepository.saveAll(tokens);
     }
 
     // ------------------- FORGOT PASSWORD -------------------

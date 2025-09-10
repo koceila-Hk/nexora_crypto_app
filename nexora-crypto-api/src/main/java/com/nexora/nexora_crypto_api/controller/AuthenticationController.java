@@ -68,9 +68,6 @@ public class AuthenticationController {
             String accessToken = jwtService.generateToken(authenticatedUser);
             String refreshToken = jwtService.generateRefreshToken(authenticatedUser);
 
-            authenticationService.revokeAllUserTokens(authenticatedUser);
-            authenticationService.saveUserToken(authenticatedUser, accessToken);
-
             ResponseCookie accessCookie = CookieUtil.createAccessTokenCookie(accessToken, jwtService.getExpirationTime());
             ResponseCookie refreshCookie = CookieUtil.createRefreshTokenCookie(refreshToken, jwtService.getRefreshExpirationTime());
 

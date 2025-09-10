@@ -4,7 +4,7 @@ import { CoinService } from '../_services/coin.service';
 import { FooterComponent } from "../_commons/footer/footer.component";
 import { HeaderComponent } from "../_commons/header/header.component";
 import { Router } from '@angular/router';
-
+import { CoinDetails } from '../_models/account';
 @Component({
   selector: 'app-crypto-details',
   standalone: true,
@@ -47,11 +47,4 @@ export class MarketsComponent implements OnInit {
   }
 
 
-}
-
-interface CoinDetails {
-  cryptoName: string;
-  icon: string;
-  currentPrice: number;
-  priceChangePercentage: number;
 }

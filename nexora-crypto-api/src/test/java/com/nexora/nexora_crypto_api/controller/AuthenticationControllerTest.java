@@ -71,8 +71,6 @@ class AuthenticationControllerTest {
         when(authenticationService.authenticate(loginDto)).thenReturn(user);
         when(jwtService.generateToken(user)).thenReturn("access-token");
         when(jwtService.generateRefreshToken(user)).thenReturn("refresh-token");
-        doNothing().when(authenticationService).revokeAllUserTokens(user);
-        doNothing().when(authenticationService).saveUserToken(user, "access-token");
 
         // Act
         ResponseEntity<?> result = controller.authenticate(loginDto);
