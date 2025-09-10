@@ -13,7 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -35,16 +34,18 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, LogoutHandler logoutHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(Customizer.withDefaults())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/auth/refresh-token", "/coin/**").permitAll()
+                        .requestMatchers("/auth/**", "/coin/**").permitAll()
                         .requestMatchers( "/users/**", "/wallets/**", "/transaction/**").authenticated()
                 )
-                .exceptionHandling(eh -> eh.disable())
+                .exceptionHandling(eh -> eh
+                        .authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -52,7 +53,6 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
                         logout.logoutUrl("/auth/logout")
-                                .addLogoutHandler(logoutHandler)
                                 .logoutSuccessHandler((request, response, authentication) -> {
                                     SecurityContextHolder.clearContext();
                                     deleteCookie(response, "access_token");
@@ -79,9 +79,9 @@ public class SecurityConfiguration {
 
     private void deleteCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
-        cookie.setPath("/");  // le même path que celui utilisé pour créer le cookie
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);  // if https used
+        cookie.setSecure(true);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }

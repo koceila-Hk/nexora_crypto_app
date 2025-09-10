@@ -1,12 +1,12 @@
 package com.nexora.nexora_crypto_api.security;
 
-import com.nexora.nexora_crypto_api.repository.TokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,18 +22,16 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository;
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
             UserDetailsService userDetailsService,
-            HandlerExceptionResolver handlerExceptionResolver,
-            TokenRepository tokenRepository) {
+            HandlerExceptionResolver handlerExceptionResolver) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.tokenRepository = tokenRepository;
     }
 
     @Override
@@ -53,9 +51,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwtToken = null;
 
         // token dans le header Authorization
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7);
-        } else {
+//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//            jwtToken = authHeader.substring(7);
+//        } else {
             // token dans les cookies
             if (request.getCookies() != null) {
                 for (Cookie cookie : request.getCookies()) {
@@ -65,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                 }
             }
-        }
+//        }
 
         if (jwtToken == null) {
             // Pas de token, passer la requête
@@ -87,11 +85,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            boolean isTokenValid = tokenRepository.findByToken(jwtToken)
-                    .map(token -> !token.isExpired() && !token.isRevoked())
-                    .orElse(false);
-
-            if (jwtService.isTokenValid(jwtToken, userDetails) && isTokenValid) {
+            if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

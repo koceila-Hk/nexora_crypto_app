@@ -1,20 +1,20 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.Token;
 import com.nexora.nexora_crypto_api.model.dto.LoginUserDto;
 import com.nexora.nexora_crypto_api.model.dto.RegisterUserDto;
 import com.nexora.nexora_crypto_api.model.dto.VerifyUserDto;
 import com.nexora.nexora_crypto_api.model.User;
-import com.nexora.nexora_crypto_api.model.enums.TokenType;
-import com.nexora.nexora_crypto_api.repository.TokenRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
 import com.nexora.nexora_crypto_api.service.AuthenticationService;
+import com.nexora.nexora_crypto_api.utils.CookieUtil;
 import com.nexora.nexora_crypto_api.utils.EmailService;
 import com.nexora.nexora_crypto_api.security.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,8 +41,6 @@ public class AuthentificationServiceImpl implements AuthenticationService {
     private EmailService emailService;
     @Autowired
     private JwtService jwtService;
-    @Autowired
-    private TokenRepository tokenRepository;
 
     // ------------------- SIGNUP -------------------
     @Override
@@ -81,7 +79,6 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword())
         );
-
         return user;
     }
 
@@ -134,14 +131,12 @@ public class AuthentificationServiceImpl implements AuthenticationService {
 
         if (refreshToken == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Pas de token");
             return;
         }
 
         String email = jwtService.extractUsername(refreshToken);
         if (email == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Token invalide");
             return;
         }
 
@@ -150,46 +145,14 @@ public class AuthentificationServiceImpl implements AuthenticationService {
 
         if (!jwtService.isTokenValid(refreshToken, user)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Token invalide");
             return;
         }
 
         String accessToken = jwtService.generateToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, accessToken);
 
-        Cookie cookie = new Cookie("access_token", accessToken);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(900); // 15 min
-        response.addCookie(cookie);
+        ResponseCookie accessCookie = CookieUtil.createAccessTokenCookie(accessToken, jwtService.getExpirationTime());
 
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write("{\"message\":\"Token rafraîchi\"}");
-    }
-
-    // ------------------- SAVE TOKEN -------------------
-    @Override
-    public void saveUserToken(User user, String jwtToken) {
-        Token token = new Token();
-        token.setUser(user);
-        token.setToken(jwtToken);
-        token.setTokenType(TokenType.BEARER);
-        token.setExpired(false);
-        token.setRevoked(false);
-        tokenRepository.save(token);
-    }
-
-    // ------------------- REVOKE TOKENS -------------------
-    @Override
-    public void revokeAllUserTokens(User user) {
-        var tokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        for (Token t : tokens) {
-            t.setExpired(true);
-            t.setRevoked(true);
-        }
-        tokenRepository.saveAll(tokens);
+        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
     }
 
     // ------------------- FORGOT PASSWORD -------------------

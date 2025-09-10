@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,11 +39,12 @@ public class TransactionServiceImpl implements TransactionService {
     public void buyCrypto(TransactionDto request) {
 
         User user = userService.getUserById(request.getUserId());
-        //BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
+        BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
 
-        if (user.getBalance().compareTo(request.getTotalAmount()) < 0) {
+        if (user.getBalance().compareTo(totalAmount) < 0) {
             throw new RuntimeException("Solde insuffisant");
         }
+        request.setTotalAmount(totalAmount);
 
         // deduct balance
         user.setBalance(user.getBalance().subtract(request.getTotalAmount()));
@@ -112,9 +112,9 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = new Transaction();
         transaction.setType(type);
         transaction.setCryptoName(request.getCryptoName());
-        transaction.setQuantity(request.getQuantity().setScale(5,RoundingMode.HALF_UP));
-        transaction.setUnitPrice(request.getUnitPrice().setScale(5, RoundingMode.HALF_UP));
-        transaction.setTotalAmount(request.getTotalAmount().setScale(5,RoundingMode.HALF_UP));
+        transaction.setQuantity(request.getQuantity());
+        transaction.setUnitPrice(request.getUnitPrice());
+        transaction.setTotalAmount(request.getTotalAmount());
         transaction.setDateTransaction(LocalDateTime.now());
         transaction.setUser(user);
         transactionRepository.save(transaction);
