@@ -10,8 +10,8 @@
   background-color: #7b32c4;
 }
 .stroke-row {
-  background-color: #0B0B15;
-  border: 8px solid #0E0E18;
+  background-color: var(--stroke-color);
+  border: 8px solid var(--stroke-border);
 }
 .btn-toggle {
   background-color: #2e2544;

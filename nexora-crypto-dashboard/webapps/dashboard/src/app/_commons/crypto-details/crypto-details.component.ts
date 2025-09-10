@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoinService } from '../../_services/coin.service';
 import { InfosCoin } from '../../_models/account';
@@ -12,6 +12,7 @@ import { InfosCoin } from '../../_models/account';
 })
 export class CryptoDetailsComponent implements OnInit {
   @Output() coinSelected = new EventEmitter<InfosCoin>();
+  @Input() selectedCoin?: InfosCoin;
 
   coins: InfosCoin[] = [];
 

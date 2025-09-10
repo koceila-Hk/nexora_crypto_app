@@ -8,7 +8,7 @@
         <div *ngIf="errorMessage" class="alert alert-danger text-center">
           {{errorMessage}}
         </div>
-        <app-crypto-details (coinSelected)="onCoinSelected($event)"></app-crypto-details>
+        <app-crypto-details (coinSelected)="onCoinSelected($event)" [selectedCoin]="selectedCoin"></app-crypto-details>
       </div>
 
       <!-- Formulaire achat/vente -->

@@ -71,8 +71,6 @@ class AuthenticationControllerTest {
         when(authenticationService.authenticate(loginDto)).thenReturn(user);
         when(jwtService.generateToken(user)).thenReturn("access-token");
         when(jwtService.generateRefreshToken(user)).thenReturn("refresh-token");
-        doNothing().when(authenticationService).revokeAllUserTokens(user);
-        doNothing().when(authenticationService).saveUserToken(user, "access-token");
 
         // Act
         ResponseEntity<?> result = controller.authenticate(loginDto);
@@ -110,7 +108,7 @@ class AuthenticationControllerTest {
 
         // Assert
         assertThat(result.getStatusCodeValue()).isEqualTo(200);
-        assertThat(result.getBody()).isEqualTo("Verification code sent");
+        assertThat(result.getBody()).isEqualTo(Map.of("message", "Verification code sent"));
         verify(authenticationService, times(1)).resendVerificationCode(email);
     }
 

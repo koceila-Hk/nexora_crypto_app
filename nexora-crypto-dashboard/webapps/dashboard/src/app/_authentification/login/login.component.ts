@@ -62,7 +62,6 @@ export class LoginComponent {
 
   // Afficher / masquer formulaire mot de passe oublié
   toggleForgot() {
-    console.log('password click', this.showForgot);
     this.showForgot = !this.showForgot;
   }
 
