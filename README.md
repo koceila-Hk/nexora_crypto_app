@@ -10,12 +10,12 @@
 ## 🔍 Aperçu de l'application
 
 <p align="center">
+  <img src="images/maquette(5).png" width="400"/>
+  <img src="images/maquette(6).png" width="400"/>
   <img src="images/maquette(1).png" width="400"/>
   <img src="images/maquette(2).png" width="400"/>
   <img src="images/maquette(3).png" width="400"/>
   <img src="images/maquette(4).png" width="400"/>
-  <img src="images/maquette(5).png" width="400"/>
-  <img src="images/maquette(6).png" width="400"/>
 </p>
 
 ---
@@ -101,20 +101,20 @@ docker-compose up -d
 
 <img src="images/diagramme_activite.jpeg" width="400"/>
 
-### Diagramme d'entité-association (MCD)
+### Diagramme d'entité
 
-![Entités](images/diagramme_entite.png)
+<img src="images/diagramme_entite.png" width="400"/>
 
 ---
 ## Conception de la base de données
 
 ### MCD
 
-![Modèle Conceptuel de Données](images/MCD.png)
+<img src="images/MCD.png" width="400"/>
 
 ### Dictionnaire de données
 
-![Dictionnaire de données](images/Dictionnaire_donnees.png)
+<img src="images/Dictionnaire_donnees.png" width="400"/>
 ---
 
 ##  Auteur
