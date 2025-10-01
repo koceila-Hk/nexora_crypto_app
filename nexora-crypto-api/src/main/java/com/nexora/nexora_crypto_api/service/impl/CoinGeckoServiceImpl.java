@@ -1,9 +1,9 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CoinCache;
+import com.nexora.nexora_crypto_api.model.CryptoCache;
 import com.nexora.nexora_crypto_api.model.dto.CoinDetailDto;
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
-import com.nexora.nexora_crypto_api.repository.CoinCacheRepository;
+import com.nexora.nexora_crypto_api.repository.CryptoCacheRepository;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ import java.util.Map;
 public class CoinGeckoServiceImpl implements CoinGeckoService {
 
     @Autowired
-    private CoinCacheRepository cryptoCacheRepository;
+    private CryptoCacheRepository cryptoCacheRepository;
 
     @Value("${coingecko.api.url}")
     String baseUrl;
@@ -36,56 +36,6 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
 
     private static final Logger logger = LoggerFactory.getLogger(CoinGeckoServiceImpl.class);
 
-
-    /**
-     * Récupère le prix actuel et l'icône d'une cryptomonnaie en appelant l'API CoinGecko.
-     *
-     * @param id       L'identifiant de la cryptomonnaie "bitcoin" "ethereum"
-     * @param currency La devise dans laquelle retourner le prix "eur"
-     * @return Une map contenant le prix actuel "price" et l'icône "icon" de la crypto
-     * @throws RuntimeException en cas d'erreur avec l'API CoinGecko
-     */
-    @Override
-    public Map<String, Object> getCryptoPrice(String id, String currency) {
-        try {
-            // le prix
-            String priceUrl = baseUrl + "simple/price?ids=" + id + "&vs_currencies=" + currency;
-            ResponseEntity<Map<String, Map<String, BigDecimal>>> priceResponse = restTemplate.exchange(priceUrl, HttpMethod.GET, null,
-                    new ParameterizedTypeReference<>() {});
-
-            Map<String, Map<String, BigDecimal>> priceBody = priceResponse.getBody();
-            if (priceBody == null) {
-                throw new RuntimeException("Price is null for id= " + id);
-            }
-
-            BigDecimal price = priceBody.getOrDefault(id, Map.of()).getOrDefault(currency, BigDecimal.ZERO);
-
-            // l’icône
-            String infoUrl = baseUrl + "coins/" + id;
-            ResponseEntity<Map<String, Object>> infoResponse = restTemplate.exchange(infoUrl, HttpMethod.GET, null,
-                            new ParameterizedTypeReference<>() {});
-
-            Map<String, Object> infosBody = infoResponse.getBody();
-            if (infosBody == null) {
-                throw new RuntimeException("Infos res body null for id= " + id);
-            }
-
-            @SuppressWarnings("unchecked")
-            Map<String, String> imageMap = (Map<String, String>) infosBody.get("image");
-            String icon = imageMap != null ? imageMap.get("small") : null;
-
-            // Return map
-            return Map.of(
-                    "price", price,
-                    "icon", icon
-            );
-
-        } catch (HttpClientErrorException.TooManyRequests e) {
-            throw new RuntimeException("Many requests to CoinGecko !");
-        } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error : " + e.getStatusCode() + " " + e.getMessage());
-        }
-    }
 
     /**
      * Récupère les détails d'une cryptomonnaie à partir du cache mongodb ou de l'API CoinGecko.
@@ -147,7 +97,7 @@ public class CoinGeckoServiceImpl implements CoinGeckoService {
             String icon = coinDetailDto.getImage().getSmall();
 
             // Sauvegarder en cache Mongo
-            CoinCache cryptoCache = new CoinCache();
+            CryptoCache cryptoCache = new CryptoCache();
             cryptoCache.setId(coinId);
             cryptoCache.setName(coinDetailDto.getName());
             cryptoCache.setSymbol(coinDetailDto.getSymbol());

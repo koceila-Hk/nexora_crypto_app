@@ -21,6 +21,9 @@
             <div *ngIf="submit && loginForm.get('email')?.invalid" class="text-danger">
               Email requis et doit être valide
             </div>
+            <div *ngIf="loginForm.get('email')?.hasError('pattern')" class="text-danger mt-1">
+              Email non conforme.
+            </div>
           </div>
 
           <div class="mb-3">
@@ -29,13 +32,24 @@
             <div *ngIf="submit && loginForm.get('password')?.invalid" class="text-danger">
               Mot de passe requis
             </div>
-            <div *ngIf="submit && loginForm.get('password')?.hasError('pattern')" class="text-danger mt-1">
-              Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, une minuscule et un chiffre et un caractère spéciale.
+            <div *ngIf="loginForm.get('password')?.hasError('pattern')" class="text-danger mt-1">
+              Le mot de passe doit contenir au moins 12 caractères, dont une majuscule, une minuscule et un chiffre et
+              un caractère spéciale.
+            </div>
+          </div>
+
+          <div class="form-check my-3">
+            <input class="form-check-input" type="checkbox" formControlName="captcha" id="captchaCheck">
+            <label class="form-check-label" for="captchaCheck">
+              Je confirme que je ne suis pas un robot
+            </label>
+            <div *ngIf="submit && loginForm.get('captcha')?.invalid" class="text-danger mt-1">
+              Veuillez cocher cette case
             </div>
           </div>
 
           <div class="d-grid mt-3">
-            <button class="btn btn-primary" type="submit">Connexion</button>
+            <button class="btn btn-primary" type="submit" [disabled]="!loginForm.valid">Connexion</button>
           </div>
 
           <p class="mt-3 text-center">

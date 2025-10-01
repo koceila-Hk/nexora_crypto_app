@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.nexora.nexora_crypto_api.model.CoinWallet;
+import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +18,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class CoinWalletRepositoryTest {
+class CryptoWalletRepositoryTest {
 
     @Mock
-    private CoinWalletRepository coinWalletRepository;
+    private CryptoWalletRepository cryptoWalletRepository;
 
     private User user;
-    private CoinWallet wallet1;
-    private CoinWallet wallet2;
+    private CryptoWallet wallet1;
+    private CryptoWallet wallet2;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +33,7 @@ class CoinWalletRepositoryTest {
         user.setId(1L);
         user.setEmail("user@example.com");
 
-        wallet1 = CoinWallet.builder()
+        wallet1 = CryptoWallet.builder()
                 .id(100L)
                 .user(user)
                 .cryptoName("BTC")
@@ -41,7 +41,7 @@ class CoinWalletRepositoryTest {
                 .variationPercentage(BigDecimal.valueOf(10.0))
                 .build();
 
-        wallet2 = CoinWallet.builder()
+        wallet2 = CryptoWallet.builder()
                 .id(101L)
                 .user(user)
                 .cryptoName("ETH")
@@ -53,10 +53,10 @@ class CoinWalletRepositoryTest {
     @Test
     void findByUserIdAndCryptoName_shouldReturnWallet() {
         // Arrange
-        when(coinWalletRepository.findByUserIdAndCryptoName(1L, "BTC")).thenReturn(Optional.of(wallet1));
+        when(cryptoWalletRepository.findByUserIdAndCryptoName(1L, "BTC")).thenReturn(Optional.of(wallet1));
 
         // Act
-        Optional<CoinWallet> result = coinWalletRepository.findByUserIdAndCryptoName(1L, "BTC");
+        Optional<CryptoWallet> result = cryptoWalletRepository.findByUserIdAndCryptoName(1L, "BTC");
 
         // Assert
         assertThat(result).isPresent();
@@ -67,18 +67,18 @@ class CoinWalletRepositoryTest {
 
     @Test
     void findByUserIdAndCryptoName_shouldReturnEmpty_whenNotFound() {
-        when(coinWalletRepository.findByUserIdAndCryptoName(1L, "DOGE")).thenReturn(Optional.empty());
+        when(cryptoWalletRepository.findByUserIdAndCryptoName(1L, "DOGE")).thenReturn(Optional.empty());
 
-        Optional<CoinWallet> result = coinWalletRepository.findByUserIdAndCryptoName(1L, "DOGE");
+        Optional<CryptoWallet> result = cryptoWalletRepository.findByUserIdAndCryptoName(1L, "DOGE");
 
         assertThat(result).isEmpty();
     }
 
     @Test
     void findByUserId_shouldReturnWallets() {
-        when(coinWalletRepository.findByUserId(1L)).thenReturn(Arrays.asList(wallet1, wallet2));
+        when(cryptoWalletRepository.findByUserId(1L)).thenReturn(Arrays.asList(wallet1, wallet2));
 
-        List<CoinWallet> result = coinWalletRepository.findByUserId(1L);
+        List<CryptoWallet> result = cryptoWalletRepository.findByUserId(1L);
 
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getCryptoName()).isEqualTo("BTC");
@@ -89,9 +89,9 @@ class CoinWalletRepositoryTest {
 
     @Test
     void findByUserId_shouldReturnEmptyList_whenNoWallets() {
-        when(coinWalletRepository.findByUserId(2L)).thenReturn(Collections.emptyList());
+        when(cryptoWalletRepository.findByUserId(2L)).thenReturn(Collections.emptyList());
 
-        List<CoinWallet> result = coinWalletRepository.findByUserId(2L);
+        List<CryptoWallet> result = cryptoWalletRepository.findByUserId(2L);
 
         assertThat(result).isEmpty();
     }

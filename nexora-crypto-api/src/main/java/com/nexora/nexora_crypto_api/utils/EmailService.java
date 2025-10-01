@@ -32,7 +32,7 @@ public class EmailService {
         emailSender.send(message);
     }
 
-    public void sendVerificationEmail(User user) { //TODO: Update with company logo
+    public void sendVerificationEmail(User user) {
         String subject = "Account Verification";
         String verificationCode = "VERIFICATION CODE " + user.getVerificationCode();
         String htmlMessage = "<html>"
@@ -56,8 +56,6 @@ public class EmailService {
     }
 
     public void sendResetPasswordEmail(String to, String token)  {
-
-
         String resetLink = frontendUrl + "/#/reset-password?token=" + token;
         String subject = "Réinitialisation de votre mot de passe";
         String htmlMessage = "<html><body>"

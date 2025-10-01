@@ -2,12 +2,12 @@ package com.nexora.nexora_crypto_api.service.impl;
 
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
-import com.nexora.nexora_crypto_api.model.CoinWallet;
+import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.User;
-import com.nexora.nexora_crypto_api.repository.CoinWalletRepository;
+import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
-import com.nexora.nexora_crypto_api.service.CoinWalletService;
+import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +18,9 @@ import java.util.List;
 
 
 @Service
-public class CoinWalletServiceImpl implements CoinWalletService {
+public class CryptoWalletServiceImpl implements CryptoWalletService {
     @Autowired
-    private CoinWalletRepository cryptoWalletRepository;
+    private CryptoWalletRepository cryptoWalletRepository;
     @Autowired
     private TransactionRepository transactionRepository;
     @Autowired
@@ -36,9 +36,9 @@ public class CoinWalletServiceImpl implements CoinWalletService {
      * @return Le portefeuille existant ou nouvellement créé
      */
     @Override
-    public CoinWallet getOrCreateWallet(String cryptoName, User user) {
+    public CryptoWallet getOrCreateWallet(String cryptoName, User user) {
         return cryptoWalletRepository.findByUserIdAndCryptoName(user.getId(), cryptoName).orElseGet(() -> {
-            CoinWallet wallet = new CoinWallet();
+            CryptoWallet wallet = new CryptoWallet();
             wallet.setUser(user);
             wallet.setCryptoName(cryptoName);
             wallet.setQuantity(BigDecimal.ZERO);
@@ -55,10 +55,10 @@ public class CoinWalletServiceImpl implements CoinWalletService {
      */
     @Override
     public List<WalletDetailDto> getWalletsWithVariation(Long userId) {
-        List<CoinWallet> wallets = cryptoWalletRepository.findByUserId(userId);
+        List<CryptoWallet> wallets = cryptoWalletRepository.findByUserId(userId);
         List<WalletDetailDto> result = new ArrayList<>();
 
-        for (CoinWallet wallet : wallets) {
+        for (CryptoWallet wallet : wallets) {
             // Récupération des totaux d'achat
             List<Object[]> buyData = transactionRepository.findTotalAmountAndQuantityByUserAndCrypto(userId, wallet.getCryptoName());
 
