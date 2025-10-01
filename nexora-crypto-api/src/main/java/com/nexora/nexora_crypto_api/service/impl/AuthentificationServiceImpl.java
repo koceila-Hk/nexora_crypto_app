@@ -176,7 +176,6 @@ public class AuthentificationServiceImpl implements AuthenticationService {
         if (user.getTokenExpiryDate().isBefore(Instant.now())) {
             throw new Exception("Token expiré");
         }
-
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setResetToken(null);
         user.setTokenExpiryDate(null);

@@ -19,7 +19,8 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
-                    frontendImage = docker.build("kousshk/nexora-frontend:${env.BUILD_NUMBER}", "./nexora-crypto-dashboard/webapps/dashboard")
+                    frontendImage = docker.build("kousshk/nexora-frontend:${env.BUILD_NUMBER}",
+                    "./nexora-crypto-dashboard/webapps/dashboard")
                 }
             }
         }
