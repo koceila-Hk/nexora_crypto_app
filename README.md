@@ -106,11 +106,11 @@ docker-compose up -d
 
 ### MCD
 
-(images/MCD.png)
+![Modèle Conceptuel de Données](images/MCD.png)
 
 ### Dictionnaire de données
 
-(images/Dictionnaire_donnees.png)
+![Dictionnaire de données](images/Dictionnaire_donnees.png)
 ---
 
 ##  Auteur
