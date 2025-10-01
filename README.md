@@ -7,12 +7,16 @@
 
 ## Aperçu de l'application
 
-![Mockup 1](images/maquette(1).png)  
-![Mockup 2](images/maquette(2).png)  
-![Mockup 3](images/maquette(3).png)  
-![Mockup 4](images/maquette(4).png)  
-![Mockup 5](images/maquette(5).png)  
-![Mockup 6](images/maquette(6).png)
+## 🔍 Aperçu de l'application
+
+<p align="center">
+  <img src="images/maquette(1).png" width="400"/>
+  <img src="images/maquette(2).png" width="400"/>
+  <img src="images/maquette(3).png" width="400"/>
+  <img src="images/maquette(4).png" width="400"/>
+  <img src="images/maquette(5).png" width="400"/>
+  <img src="images/maquette(6).png" width="400"/>
+</p>
 
 ---
 
@@ -83,19 +87,19 @@ docker-compose up -d
 
 ### Diagramme de classes
 
-![Diagramme de classe](images/diagramme_classe.png)
+<img src="images/diagramme_classe.png" width="400"/>
 
 ### Diagramme de séquence
 
-![Diagramme de séquence](images/diagramme_sequence.jpeg)
+<img src="images/diagramme_sequence.jpeg" width="400"/>
 
 ### Diagramme de cas d’utilisation
 
-![Use Case](images/diagramme_use_case.png)
+<img src="images/diagramme_use_case.jpeg" width="400"/>
 
 ### Diagramme d’activité
 
-![Activité](images/diagramme_activite.jpeg)
+<img src="images/diagramme_activite.jpeg" width="400"/>
 
 ### Diagramme d'entité-association (MCD)
 
