@@ -7,12 +7,12 @@
 
 ## Aperçu de l'application
 
-![Mockup 1](images/maquette%20(1).png)  
-![Mockup 2](images/maquette%20(2).png)  
-![Mockup 3](images/maquette%20(3).png)  
-![Mockup 4](images/maquette%20(4).png)  
-![Mockup 5](images/maquette%20(5).png)  
-![Mockup 6](images/maquette%20(6).png)
+![Mockup 1](images/maquette(1).png)  
+![Mockup 2](images/maquette(2).png)  
+![Mockup 3](images/maquette(3).png)  
+![Mockup 4](images/maquette(4).png)  
+![Mockup 5](images/maquette(5).png)  
+![Mockup 6](images/maquette(6).png)
 
 ---
 
@@ -87,7 +87,7 @@ docker-compose up -d
 
 ### Diagramme de séquence
 
-![Diagramme de séquence](images/diagramme_sequence.png)
+![Diagramme de séquence](images/diagramme_sequence.jpeg)
 
 ### Diagramme de cas d’utilisation
 
@@ -95,7 +95,7 @@ docker-compose up -d
 
 ### Diagramme d’activité
 
-![Activité](images/diagramme_activite.png)
+![Activité](images/diagramme_activite.jpeg)
 
 ### Diagramme d'entité-association (MCD)
 
