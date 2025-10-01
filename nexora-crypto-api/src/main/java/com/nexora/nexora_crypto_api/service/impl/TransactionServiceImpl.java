@@ -1,10 +1,10 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CoinWallet;
+import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.Transaction;
-import com.nexora.nexora_crypto_api.repository.CoinWalletRepository;
+import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
 import com.nexora.nexora_crypto_api.service.*;
@@ -24,9 +24,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private CoinWalletService coinWalletService;
+    private CryptoWalletService cryptoWalletService;
     @Autowired
-    private CoinWalletRepository walletRepository;
+    private CryptoWalletRepository walletRepository;
 
 
     /**
@@ -53,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
         // create transaction
         createTransaction("BUY", request, user);
 
-        CoinWallet wallet = coinWalletService.getOrCreateWallet(request.getCryptoName(), user);
+        CryptoWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
         wallet.setQuantity(wallet.getQuantity().add(request.getQuantity()));
         walletRepository.save(wallet);
     }
@@ -68,7 +68,7 @@ public class TransactionServiceImpl implements TransactionService {
     public void sellCrypto(TransactionDto request) {
 
         User user = userService.getUserById(request.getUserId());
-        CoinWallet wallet = coinWalletService.getOrCreateWallet(request.getCryptoName(), user);
+        CryptoWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
 
         if (wallet.getQuantity().compareTo(request.getQuantity()) < 0) {
             throw new RuntimeException("Crypto insuffisante dans le wallet");

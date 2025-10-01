@@ -57,7 +57,6 @@ export class VerifyComponent implements OnInit {
         }, 3000);
       },
       error: (err) => {
-        this.successMessage = '';
         this.errorMessage = err.error.message;
       }
     });

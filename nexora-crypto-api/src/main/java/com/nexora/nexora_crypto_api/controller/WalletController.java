@@ -1,7 +1,7 @@
 package com.nexora.nexora_crypto_api.controller;
 
 import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
-import com.nexora.nexora_crypto_api.service.CoinWalletService;
+import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/wallets")
 public class WalletController {
     @Autowired
-    private CoinWalletService cryptoWalletService;
+    private CryptoWalletService cryptoWalletService;
 
     @GetMapping("/variation/{userId}")
     public ResponseEntity<List<WalletDetailDto>> getWalletsWithVariation(@PathVariable Long userId) {

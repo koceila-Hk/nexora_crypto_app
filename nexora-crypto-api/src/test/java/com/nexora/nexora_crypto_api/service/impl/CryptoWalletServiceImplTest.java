@@ -1,10 +1,10 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CoinWallet;
+import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
-import com.nexora.nexora_crypto_api.repository.CoinWalletRepository;
+import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.service.CoinGeckoService;
 import org.junit.jupiter.api.AfterEach;
@@ -26,10 +26,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CoinWalletServiceImplTest {
+class CryptoWalletServiceImplTest {
 
     @Mock
-    private CoinWalletRepository coinWalletRepository;
+    private CryptoWalletRepository cryptoWalletRepository;
 
     @Mock
     private TransactionRepository transactionRepository;
@@ -38,7 +38,7 @@ class CoinWalletServiceImplTest {
     private CoinGeckoService coinGeckoService;
 
     @InjectMocks
-    private CoinWalletServiceImpl coinWalletService;
+    private CryptoWalletServiceImpl coinWalletService;
 
     private AutoCloseable mocks;
 
@@ -57,10 +57,10 @@ class CoinWalletServiceImplTest {
         User user = new User();
         user.setId(1L);
 
-        CoinWallet wallet = new CoinWallet();
-        when(coinWalletRepository.findByUserIdAndCryptoName(1L, "bitcoin")).thenReturn(Optional.of(wallet));
+        CryptoWallet wallet = new CryptoWallet();
+        when(cryptoWalletRepository.findByUserIdAndCryptoName(1L, "bitcoin")).thenReturn(Optional.of(wallet));
 
-        CoinWallet result = coinWalletService.getOrCreateWallet("bitcoin", user);
+        CryptoWallet result = coinWalletService.getOrCreateWallet("bitcoin", user);
         assertEquals(wallet, result);
     }
 
@@ -69,16 +69,16 @@ class CoinWalletServiceImplTest {
         User user = new User();
         user.setId(1L);
 
-        when(coinWalletRepository.findByUserIdAndCryptoName(1L, "bitcoin")).thenReturn(Optional.empty());
+        when(cryptoWalletRepository.findByUserIdAndCryptoName(1L, "bitcoin")).thenReturn(Optional.empty());
 
-        CoinWallet savedWallet = new CoinWallet();
+        CryptoWallet savedWallet = new CryptoWallet();
         savedWallet.setCryptoName("bitcoin");
         savedWallet.setQuantity(BigDecimal.ZERO);
         savedWallet.setUser(user);
 
-        when(coinWalletRepository.save(any())).thenReturn(savedWallet);
+        when(cryptoWalletRepository.save(any())).thenReturn(savedWallet);
 
-        CoinWallet result = coinWalletService.getOrCreateWallet("bitcoin", user);
+        CryptoWallet result = coinWalletService.getOrCreateWallet("bitcoin", user);
 
         assertEquals("bitcoin", result.getCryptoName());
         assertEquals(BigDecimal.ZERO, result.getQuantity());
@@ -91,11 +91,11 @@ class CoinWalletServiceImplTest {
         user.setId(1L);
 
         // Mock portefeuille
-        CoinWallet wallet = new CoinWallet();
+        CryptoWallet wallet = new CryptoWallet();
         wallet.setCryptoName("ethereum");
         wallet.setQuantity(new BigDecimal("2.0"));
 
-        when(coinWalletRepository.findByUserId(user.getId()))
+        when(cryptoWalletRepository.findByUserId(user.getId()))
                 .thenReturn(List.of(wallet));
 
         // Mock transactions pour calcul de prix moyen
@@ -131,10 +131,10 @@ class CoinWalletServiceImplTest {
         User user = new User();
         user.setId(1L);
 
-        CoinWallet wallet = new CoinWallet();
+        CryptoWallet wallet = new CryptoWallet();
         wallet.setCryptoName("litecoin");
 
-        when(coinWalletRepository.findByUserId(user.getId()))
+        when(cryptoWalletRepository.findByUserId(user.getId()))
                 .thenReturn(List.of(wallet));
 
         // Pas de transactions pour ce portefeuille

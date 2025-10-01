@@ -32,6 +32,7 @@ export class DashboardBuySellCoinComponent {
   amountInput: number = 0;
   resultAmount: number = 0;
   errorMessage: string = '';
+  infoMessage: string | undefined;
 
   constructor(private http: HttpClient,
     private router: Router,
@@ -66,44 +67,48 @@ export class DashboardBuySellCoinComponent {
     // const userId = this.tokenStorage.getUserIdFromToken();
     const userId = this.authService.currentUser()?.id;
     // console.log(userId);
-    if (userId != null) {
-      if (this.selectedCoin && this.amountInput > 0) {
-        let transaction: any;
-
-        if (this.mode === 'buy') {
-          transaction = {
-            userId,
-            cryptoName: this.selectedCoin.cryptoName,
-            quantity: this.resultAmount,          // quantité achetée
-            unitPrice: this.selectedCoin.currentPrice,
-            totalAmount: this.amountInput,        // montant dépensé
-            type: 'BUY'
-          };
-        } else {
-          transaction = {
-            userId,
-            cryptoName: this.selectedCoin.cryptoName,
-            quantity: this.amountInput,           // quantité vendue
-            unitPrice: this.selectedCoin.currentPrice,
-            totalAmount: this.resultAmount,       // montant obtenu en points
-            type: 'SELL'
-          };
-        }
-
-        const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
-
-        this.http.post(apiUrl, transaction, { withCredentials: true }).subscribe({
-          next: (res) => {
-            this.errorMessage = '';
-            this.router.navigate(['/home-auth']);
-          },
-          error: (err) => {
-            console.error(`Erreur lors de la transaction :`, err);
-            this.errorMessage = err.error?.message || 'Erreur inconnue';
-          }
-        });
-      }
+    if (!userId) {
+      this.router.navigate(['/login']);
+      return;
     }
-    this.router.navigate(['/login'])
+    if (this.selectedCoin && this.amountInput > 0) {
+      let transaction: any;
+
+      if (this.mode === 'buy') {
+        transaction = {
+          userId,
+          cryptoName: this.selectedCoin.cryptoName,
+          quantity: this.resultAmount,          // quantité achetée
+          unitPrice: this.selectedCoin.currentPrice,
+          totalAmount: this.amountInput,        // montant dépensé
+          type: 'BUY'
+        };
+      } else {
+        transaction = {
+          userId,
+          cryptoName: this.selectedCoin.cryptoName,
+          quantity: this.amountInput,           // quantité vendue
+          unitPrice: this.selectedCoin.currentPrice,
+          totalAmount: this.resultAmount,       // montant obtenu en points
+          type: 'SELL'
+        };
+      }
+
+      const apiUrl = environment.apiUrl + `/transaction/${this.mode}`;
+
+      this.http.post(apiUrl, transaction, { withCredentials: true }).subscribe({
+        next: (res) => {
+          this.infoMessage = 'Transaction effectuée avec succès';
+          setTimeout(() => {
+            this.router.navigate(['/home-auth']);
+          }, 3000);
+        },
+        error: (err) => {
+          console.error(`Erreur lors de la transaction :`, err);
+          this.errorMessage = err.error?.message || 'Erreur inconnue';
+        }
+      });
+    }
+
   }
 }
