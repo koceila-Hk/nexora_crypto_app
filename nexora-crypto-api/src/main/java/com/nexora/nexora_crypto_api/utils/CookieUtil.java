@@ -6,9 +6,9 @@ public class CookieUtil {
     public static ResponseCookie createAccessTokenCookie(String token, long expirationMs) {
         return ResponseCookie.from("access_token", token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
-                .sameSite("Lax")
+                .sameSite("Strict")
                 .maxAge(expirationMs)
                 .build();
     }
@@ -16,9 +16,9 @@ public class CookieUtil {
     public static ResponseCookie createRefreshTokenCookie(String token, long expirationMs) {
         return ResponseCookie.from("refresh_token", token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
-                .sameSite("Lax")
+                .sameSite("Strict")
                 .maxAge(expirationMs)
                 .build();
     }

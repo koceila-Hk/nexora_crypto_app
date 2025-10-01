@@ -1,13 +1,13 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CoinWallet;
+import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
-import com.nexora.nexora_crypto_api.repository.CoinWalletRepository;
+import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
-import com.nexora.nexora_crypto_api.service.CoinWalletService;
+import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import com.nexora.nexora_crypto_api.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,10 +39,10 @@ class TransactionServiceImplTest {
     private UserRepository userRepository;
 
     @Mock
-    private CoinWalletService coinWalletService;
+    private CryptoWalletService cryptoWalletService;
 
     @Mock
-    private CoinWalletRepository coinWalletRepository;
+    private CryptoWalletRepository cryptoWalletRepository;
 
     @InjectMocks
     private TransactionServiceImpl transactionService;
@@ -73,18 +73,18 @@ class TransactionServiceImplTest {
         transactionDto.setUnitPrice(BigDecimal.valueOf(1000));
         transactionDto.setTotalAmount(BigDecimal.valueOf(500));
 
-        CoinWallet wallet = new CoinWallet();
+        CryptoWallet wallet = new CryptoWallet();
         wallet.setQuantity(BigDecimal.ZERO);
 
         when(userService.getUserById(userId)).thenReturn(user);
-        when(coinWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
+        when(cryptoWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
 
         // Act
         transactionService.buyCrypto(transactionDto);
 
         // Assert
         verify(userRepository).save(user);
-        verify(coinWalletRepository).save(wallet);
+        verify(cryptoWalletRepository).save(wallet);
         verify(transactionRepository).save(any(Transaction.class));
 
         assertTrue(user.getBalance().compareTo(BigDecimal.valueOf(1500)) == 0);
@@ -118,7 +118,7 @@ class TransactionServiceImplTest {
         user.setId(userId);
         user.setBalance(BigDecimal.valueOf(1000));
 
-        CoinWallet wallet = new CoinWallet();
+        CryptoWallet wallet = new CryptoWallet();
         wallet.setQuantity(BigDecimal.valueOf(2));
 
         TransactionDto dto = new TransactionDto();
@@ -128,11 +128,11 @@ class TransactionServiceImplTest {
         dto.setUnitPrice(BigDecimal.valueOf(300));
 
         when(userService.getUserById(userId)).thenReturn(user);
-        when(coinWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
+        when(cryptoWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
 
         transactionService.sellCrypto(dto);
 
-        verify(coinWalletRepository).save(wallet);
+        verify(cryptoWalletRepository).save(wallet);
         verify(userRepository).save(user);
         verify(transactionRepository).save(any(Transaction.class));
 
@@ -145,7 +145,7 @@ class TransactionServiceImplTest {
         Long userId = 1L;
         User user = new User();
 
-        CoinWallet wallet = new CoinWallet();
+        CryptoWallet wallet = new CryptoWallet();
         wallet.setQuantity(BigDecimal.ZERO);
 
         TransactionDto dto = new TransactionDto();
@@ -154,7 +154,7 @@ class TransactionServiceImplTest {
         dto.setQuantity(BigDecimal.ONE);
 
         when(userService.getUserById(userId)).thenReturn(user);
-        when(coinWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
+        when(cryptoWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
 
         assertThrows(RuntimeException.class, () -> transactionService.sellCrypto(dto));
         verify(transactionRepository, never()).save(any());

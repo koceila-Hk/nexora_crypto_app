@@ -1,7 +1,7 @@
 package com.nexora.nexora_crypto_api.controller;
 
 import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
-import com.nexora.nexora_crypto_api.service.CoinWalletService;
+import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -19,7 +19,7 @@ class WalletControllerTest {
     private WalletController walletController;
 
     @Mock
-    private CoinWalletService cryptoWalletService;
+    private CryptoWalletService cryptoWalletService;
 
     @BeforeEach
     void setUp() {

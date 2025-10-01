@@ -1,8 +1,8 @@
 package com.nexora.nexora_crypto_api.service.impl;
 
-import com.nexora.nexora_crypto_api.model.CoinCache;
+import com.nexora.nexora_crypto_api.model.CryptoCache;
 import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
-import com.nexora.nexora_crypto_api.repository.CoinCacheRepository;
+import com.nexora.nexora_crypto_api.repository.CryptoCacheRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class CoinGeckoServiceImplTest {
 
     @Mock
-    private CoinCacheRepository coinCacheRepository;
+    private CryptoCacheRepository cryptoCacheRepository;
 
     @Spy
     @InjectMocks
@@ -40,7 +40,7 @@ class CoinGeckoServiceImplTest {
     @Test
     void getCoinDetails_shouldReturnFromCache() {
         // GIVEN un cache existant
-        CoinCache cache = new CoinCache();
+        CryptoCache cache = new CryptoCache();
         cache.setId("bitcoin");
         cache.setName("Bitcoin");
         cache.setSymbol("btc");
@@ -49,7 +49,7 @@ class CoinGeckoServiceImplTest {
         cache.setPercentageChange(new BigDecimal("5.2"));
         cache.setCachedAt(new Date());
 
-        when(coinCacheRepository.findById("bitcoin")).thenReturn(Optional.of(cache));
+        when(cryptoCacheRepository.findById("bitcoin")).thenReturn(Optional.of(cache));
 
         // WHEN
         CoinInfosForUserDto result = coinGeckoService.getCoinDetails("bitcoin", "eur");
@@ -61,12 +61,12 @@ class CoinGeckoServiceImplTest {
         assertEquals("icon_url", result.getIcon());
         assertEquals(new BigDecimal("30000.00"), result.getCurrentPrice());
         assertEquals(new BigDecimal("5.2"), result.getPriceChangePercentage());
-        verify(coinCacheRepository, never()).save(any());
+        verify(cryptoCacheRepository, never()).save(any());
     }
 
     @Test
     void getCoinDetails_shouldFetchAndCache_whenCacheEmpty() {
-        when(coinCacheRepository.findById("ethereum")).thenReturn(Optional.empty());
+        when(cryptoCacheRepository.findById("ethereum")).thenReturn(Optional.empty());
 
         // Mock du résultat de fetchAndCacheCoinGecko pour éviter appel réel
         CoinInfosForUserDto mockedCoin = new CoinInfosForUserDto(
@@ -81,7 +81,7 @@ class CoinGeckoServiceImplTest {
         assertEquals("eth", result.getSymbol());
 
         // Vérifie que save n'est jamais appelé puisque fetch est mocké
-        verify(coinCacheRepository, never()).save(any());
+        verify(cryptoCacheRepository, never()).save(any());
     }
 
 }

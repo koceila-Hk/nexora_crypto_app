@@ -8,6 +8,9 @@
         <div *ngIf="errorMessage" class="alert alert-danger text-center">
           {{errorMessage}}
         </div>
+        <div *ngIf="infoMessage" class="alert alert-success text-center">
+          {{infoMessage}}
+        </div>
         <app-crypto-details (coinSelected)="onCoinSelected($event)" [selectedCoin]="selectedCoin"></app-crypto-details>
       </div>
 
