@@ -11,6 +11,8 @@ services:
       - "3307:3306"
     networks:
       - nexora-network
+    volumes:
+      - mysql-dev-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
@@ -24,6 +26,8 @@ services:
       - "27017:27017"
     networks:
       - nexora-network
+    volumes:
+      - mongodb-dev-data:/data/db
 
   nexora-crypto-api:
     image: kousshk/nexora-backend:latest
@@ -34,6 +38,7 @@ services:
       mysql:
         condition: service_healthy
     environment:
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       SECURITY_JWT_SECRET_KEY: ${SECURITY_JWT_SECRET_KEY}
       SECURITY_JWT_EXPIRATION_TIME: ${SECURITY_JWT_EXPIRATION_TIME}
       APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION: ${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION}
@@ -63,5 +68,7 @@ networks:
   nexora-network:
     driver: bridge
 
-
+volumes:
+  mysql-dev-data:
+  mongodb-dev-data:
 
