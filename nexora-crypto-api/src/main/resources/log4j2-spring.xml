@@ -1,51 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <Configuration>
 
-    <!-- Setting up log path and log file name -->
     <Properties>
-        <property name="LOG_PATH" value="./logs" />
-        <property name="LOG_FILE_NAME" value="application-log4j2" />
+        <Property name="LOG_PATH">/logs</Property>
+        <Property name="LOG_FILE_NAME">backend</Property>
     </Properties>
 
-    <!-- Setting up logging pattern for console logging -->
     <Appenders>
+
         <Console name="ConsoleOutput" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%style{%d{ISO8601}}{white} %highlight{%-5level} [%style{%t}{bright,yellow}] : %msg%n%throwable"
-                    disableAnsi="false" />
+                    pattern="%d{ISO8601} %-5level [%t] %logger{36} - %msg%n%throwable"/>
         </Console>
 
-        <!-- Setting the filename and logging pattern for log file. Also setting
-             up a rolling policy with rolling done daily and when file size is 10MB -->
         <RollingFile name="LogFile"
                      fileName="${LOG_PATH}/${LOG_FILE_NAME}.log"
-                     filePattern="${LOG_PATH}/$${date:yyyy-MM}/application-log4j2-%d{dd-MMMM-yyyy}-%i.log.gz">
+                     filePattern="${LOG_PATH}/backend-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level : %msg%n
-                </pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
             </PatternLayout>
+
             <Policies>
-                <OnStartupTriggeringPolicy />
-                <SizeBasedTriggeringPolicy size="10 MB" />
                 <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10MB" />
             </Policies>
+
+            <DefaultRolloverStrategy max="14"/>
         </RollingFile>
+
     </Appenders>
 
     <Loggers>
 
-        <!-- Logging at INFO level -->
         <Root level="info">
-            <AppenderRef ref="ConsoleOutput" />
-            <AppenderRef ref="LogFile" />
+            <AppenderRef ref="ConsoleOutput"/>
+            <AppenderRef ref="LogFile"/>
         </Root>
 
-        <!-- Logging at TRACE level -->
-        <logger name="com.log" level="trace" additivity="false">
-            <appender-ref ref="LogFile" />
-            <appender-ref ref="ConsoleOutput" />
-        </logger>
+        <!-- Optionnel : logs détaillés Mongo / SQL -->
+        <Logger name="org.springframework.data.mongodb" level="info"/>
+        <Logger name="org.hibernate.SQL" level="warn"/>
 
     </Loggers>
 
