@@ -1,6 +1,7 @@
 package com.nexora.nexora_crypto_api.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.*;
 
@@ -52,7 +53,7 @@ class UserControllerTest {
         when(userMapper.toDto(user)).thenReturn(userDto);
 
         // Act
-        ResponseEntity<UserDto> response = userController.getBalance(1L);
+        ResponseEntity<UserDto> response = userController.getBalance(1L, user);
 
         // Assert
         assertThat(response).isNotNull();
@@ -65,13 +66,25 @@ class UserControllerTest {
     @Test
     void getBalance_shouldReturnNotFound_whenUserDoesNotExist() {
         // Arrange
+        User other = new User();
+        other.setId(2L);
         when(userService.getUserById(2L)).thenReturn(null);
 
         // Act
-        ResponseEntity<UserDto> response = userController.getBalance(2L);
+        ResponseEntity<UserDto> response = userController.getBalance(2L, other);
 
         // Assert
         assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
         assertThat(response.getBody()).isNull();
+    }
+
+    @Test
+    void getBalance_shouldReturnForbidden_whenRequestingAnotherUser() {
+        // Act : l'utilisateur 1 demande le solde de l'utilisateur 2
+        ResponseEntity<UserDto> response = userController.getBalance(2L, user);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(FORBIDDEN);
+        verifyNoInteractions(userService);
     }
 }

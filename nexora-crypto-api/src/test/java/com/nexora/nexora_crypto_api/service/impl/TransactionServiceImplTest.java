@@ -3,10 +3,12 @@ package com.nexora.nexora_crypto_api.service.impl;
 import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.model.User;
+import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
 import com.nexora.nexora_crypto_api.repository.TransactionRepository;
 import com.nexora.nexora_crypto_api.repository.UserRepository;
+import com.nexora.nexora_crypto_api.service.CoinGeckoService;
 import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import com.nexora.nexora_crypto_api.service.UserService;
 import org.junit.jupiter.api.AfterEach;
@@ -44,6 +46,9 @@ class TransactionServiceImplTest {
     @Mock
     private CryptoWalletRepository cryptoWalletRepository;
 
+    @Mock
+    private CoinGeckoService coinGeckoService;
+
     @InjectMocks
     private TransactionServiceImpl transactionService;
 
@@ -57,6 +62,12 @@ class TransactionServiceImplTest {
     @AfterEach
     void tearDown() throws Exception {
         mocks.close();
+    }
+
+    private void mockPrice(String coinId, long price) {
+        CoinInfosForUserDto coin = new CoinInfosForUserDto();
+        coin.setCurrentPrice(BigDecimal.valueOf(price));
+        when(coinGeckoService.getCoinDetails(coinId, "eur")).thenReturn(coin);
     }
 
     @Test
@@ -76,6 +87,7 @@ class TransactionServiceImplTest {
         CryptoWallet wallet = new CryptoWallet();
         wallet.setQuantity(BigDecimal.ZERO);
 
+        mockPrice("bitcoin", 1000);
         when(userService.getUserById(userId)).thenReturn(user);
         when(cryptoWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
 
@@ -105,6 +117,7 @@ class TransactionServiceImplTest {
         dto.setUnitPrice(BigDecimal.valueOf(200));
         dto.setTotalAmount(BigDecimal.valueOf(200));
 
+        mockPrice("bitcoin", 200);
         when(userService.getUserById(userId)).thenReturn(user);
 
         assertThrows(RuntimeException.class, () -> transactionService.buyCrypto(dto));
@@ -127,6 +140,7 @@ class TransactionServiceImplTest {
         dto.setQuantity(BigDecimal.valueOf(1));
         dto.setUnitPrice(BigDecimal.valueOf(300));
 
+        mockPrice("bitcoin", 300);
         when(userService.getUserById(userId)).thenReturn(user);
         when(cryptoWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
 
@@ -153,6 +167,7 @@ class TransactionServiceImplTest {
         dto.setCryptoName("bitcoin");
         dto.setQuantity(BigDecimal.ONE);
 
+        mockPrice("bitcoin", 300);
         when(userService.getUserById(userId)).thenReturn(user);
         when(cryptoWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
 
@@ -169,5 +184,91 @@ class TransactionServiceImplTest {
 
         List<Transaction> result = transactionService.getAllTransactionsById(userId);
         assertEquals(1, result.size());
+    }
+
+    @Test
+    void buyCrypto_shouldIgnoreClientPriceAndUseServerPrice() {
+        Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
+        user.setBalance(BigDecimal.valueOf(2000));
+
+        TransactionDto dto = new TransactionDto();
+        dto.setUserId(userId);
+        dto.setCryptoName("Bitcoin");
+        dto.setQuantity(BigDecimal.ONE);
+        dto.setUnitPrice(new BigDecimal("0.01")); // prix falsifié par le client
+
+        CryptoWallet wallet = new CryptoWallet();
+        wallet.setQuantity(BigDecimal.ZERO);
+
+        mockPrice("bitcoin", 1500);
+        when(userService.getUserById(userId)).thenReturn(user);
+        when(cryptoWalletService.getOrCreateWallet("Bitcoin", user)).thenReturn(wallet);
+
+        transactionService.buyCrypto(dto);
+
+        assertEquals(0, user.getBalance().compareTo(BigDecimal.valueOf(500)));
+        assertEquals(0, dto.getUnitPrice().compareTo(BigDecimal.valueOf(1500)));
+    }
+
+    @Test
+    void sellCrypto_shouldIgnoreClientPriceAndUseServerPrice() {
+        Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
+        user.setBalance(BigDecimal.ZERO);
+
+        CryptoWallet wallet = new CryptoWallet();
+        wallet.setQuantity(BigDecimal.ONE);
+
+        TransactionDto dto = new TransactionDto();
+        dto.setUserId(userId);
+        dto.setCryptoName("bitcoin");
+        dto.setQuantity(BigDecimal.ONE);
+        dto.setUnitPrice(BigDecimal.valueOf(1_000_000)); // prix falsifié par le client
+
+        mockPrice("bitcoin", 300);
+        when(userService.getUserById(userId)).thenReturn(user);
+        when(cryptoWalletService.getOrCreateWallet("bitcoin", user)).thenReturn(wallet);
+
+        transactionService.sellCrypto(dto);
+
+        assertEquals(0, user.getBalance().compareTo(BigDecimal.valueOf(300)));
+    }
+
+    @Test
+    void buyCrypto_shouldRejectNegativeQuantity() {
+        TransactionDto dto = new TransactionDto();
+        dto.setUserId(1L);
+        dto.setCryptoName("bitcoin");
+        dto.setQuantity(BigDecimal.valueOf(-10));
+
+        assertThrows(RuntimeException.class, () -> transactionService.buyCrypto(dto));
+        verifyNoInteractions(userService, userRepository, transactionRepository);
+    }
+
+    @Test
+    void sellCrypto_shouldRejectZeroQuantity() {
+        TransactionDto dto = new TransactionDto();
+        dto.setUserId(1L);
+        dto.setCryptoName("bitcoin");
+        dto.setQuantity(BigDecimal.ZERO);
+
+        assertThrows(RuntimeException.class, () -> transactionService.sellCrypto(dto));
+        verifyNoInteractions(userService, userRepository, transactionRepository);
+    }
+
+    @Test
+    void buyCrypto_shouldFail_whenPriceUnavailable() {
+        TransactionDto dto = new TransactionDto();
+        dto.setUserId(1L);
+        dto.setCryptoName("bitcoin");
+        dto.setQuantity(BigDecimal.ONE);
+
+        mockPrice("bitcoin", 0);
+
+        assertThrows(RuntimeException.class, () -> transactionService.buyCrypto(dto));
+        verifyNoInteractions(userRepository, transactionRepository);
     }
 }
