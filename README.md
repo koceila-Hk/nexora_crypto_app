@@ -5,8 +5,6 @@
 
 ---
 
-## Aperçu de l'application
-
 ## 🔍 Aperçu de l'application
 
 <p align="center">
@@ -23,63 +21,126 @@
 ## Fonctionnalités principales
 
 - Inscription avec vérification par e-mail
-- Connexion sécurisée via JWT
+- Connexion sécurisée via JWT (cookies HttpOnly)
 - Achat / vente de cryptomonnaies avec suivi de solde
 - Portefeuille avec variation de prix en temps réel
 - Historique des transactions
-- Mode sombre & claire
+- Mode sombre & clair
 
 ---
 
-## Lancement du projet en local
+## Stack technique
+
+- **Backend** : Java 17, Spring Boot, Spring Security, JWT
+- **Frontend** : Angular
+- **Bases de données** : MySQL (données métier), MongoDB (cache des prix CoinGecko)
+- **Infra** : Docker, Docker Compose, Nginx, Jenkins
+
+---
+
+## Structure du projet
+
+- `nexora-crypto-api/` : API REST Spring Boot
+- `nexora-crypto-dashboard/webapps/dashboard/` : application Angular
+- `docker-compose.yml` : déploiement (MySQL, MongoDB, backend, frontend)
+- `docker-compose.dev.yml` : services de développement local (MySQL, MongoDB, Mailpit)
+
+---
+
+## Développement en local
+
+Aucune donnée ni aucun secret de production n'est nécessaire : les e-mails sont interceptés par [Mailpit](https://mailpit.axllent.org/).
 
 ### Prérequis
 
 - Docker & Docker Compose
+- Java 17
+- Node.js et npm
 
 ### Étapes
 
 1. Cloner le projet :
 ```bash
-https://github.com/votre-utilisateur/nexora-crypto.git](https://github.com/koceila-Hk/nexora_crypto_app.git
+git clone https://github.com/koceila-Hk/nexora_crypto_app.git
 cd nexora_crypto_app
 ```
 
-2. Créer un fichier `.env` à la racine du projet avec le contenu suivant :
-
-```env
-MYSQL_ROOT_PASSWORD=root
-MYSQL_DATABASE:database
-MYSQL_USER:root
-MYSQL_PASSWORD:root
-
-MONGO_INITDB_ROOT_USERNAME:root
-MONGO_INITDB_ROOT_PASSWORD:root
-
-COINGECKO_API_URL=https://api.coingecko.com/api/v3/
-
-SPRING_MAIL_USERNAME=okokok@email.com
-SPRING_MAIL_PASSWORD:motdepasse
-SPRING_JWT_SECRET:clejwtsecrete
-SECURITY_JWT_EXPIRATION_TIME:800000
-APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION:604800000
-```
-
-3. Lancer les services :
+2. Lancer les services de développement :
 ```bash
-docker-compose up -d
+docker compose -f docker-compose.dev.yml up -d
 ```
 
-4. Accéder à l'application :
-- Backend : http://localhost:8080
+3. Lancer le backend (le profil `local` est actif par défaut) :
+```bash
+cd nexora-crypto-api
+./mvnw spring-boot:run
+```
+
+4. Lancer le frontend :
+```bash
+cd nexora-crypto-dashboard/webapps/dashboard
+npm install
+npm start
+```
+
+5. Accéder à l'application :
 - Frontend : http://localhost:4200
+- Backend : http://localhost:8080
+- E-mails (codes de vérification, réinitialisation) : http://localhost:8025
 
 ---
 
+## Déploiement avec Docker Compose
 
-- `backend/` : API REST Spring Boot
-- `frontend/` : Application Angular
-- `docker-compose.yml` : orchestration de la base MySQL, MongoDB et des conteneurs app
+1. Créer un fichier `.env` à la racine du projet (il est ignoré par git, ne jamais le commiter) :
+
+```env
+# MySQL
+MYSQL_ROOT_PASSWORD=xxxxx
+MYSQL_DATABASE=xxxxxx
+
+# JWT
+SECURITY_JWT_SECRET_KEY=xxxxxx
+SECURITY_JWT_EXPIRATION_TIME=xxxxx
+APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION=xxxxxx
+
+# Mail (SMTP Brevo)
+SPRING_MAIL_HOST=smtp-relay.brevo.com
+SPRING_MAIL_PORT=587
+SPRING_MAIL_USERNAME=votre-login@smtp-brevo.com
+SPRING_MAIL_PASSWORD=votre-cle-smtp
+APP_MAIL_FROM=noreply@votre-domaine.fr
+
+# URLs
+COINGECKO_API_URL=https://api.coingecko.com/api/v3/
+FRONTEND_URL=http://localhost:4200
+```
+
+> Les secrets n'ont pas de valeur par défaut : si l'un d'eux manque, le backend refuse de démarrer.
+
+2. Lancer les services :
+```bash
+docker compose up -d
+```
+
+3. Accéder à l'application :
+- Frontend : http://localhost:4200
+- Backend : http://localhost:8080
+
+---
+
+## Configuration du backend
+
+La configuration Spring est découpée par profil, dans `nexora-crypto-api/src/main/resources/` :
+
+| Fichier | Rôle |
+|---|---|
+| `application.properties` | Configuration commune, toujours chargée |
+| `application-local.properties` | Profil `local` (par défaut) : services de `docker-compose.dev.yml`, aucun secret |
+| `application-docker.properties` | Profil `docker` (production) : valeurs lues depuis les variables d'environnement du `.env` |
+| `application-test.properties` | Profil `test` : base H2 en mémoire, utilisé par `mvn test` |
+
+Un profil ne contient que les valeurs qui diffèrent de `application.properties`.
 
 ---
 
@@ -93,11 +154,11 @@ docker-compose up -d
 
 <img src="images/diagramme_sequence.jpeg" width="400"/>
 
-### Diagramme de cas d’utilisation
+### Diagramme de cas d'utilisation
 
-<img src="images/diagramme_use_case.jpeg" width="400"/>
+<img src="images/diagramme_use_case.png" width="400"/>
 
-### Diagramme d’activité
+### Diagramme d'activité
 
 <img src="images/diagramme_activite.jpeg" width="400"/>
 
@@ -106,6 +167,7 @@ docker-compose up -d
 <img src="images/diagramme_entite.png" width="400"/>
 
 ---
+
 ## Conception de la base de données
 
 ### MCD
@@ -115,17 +177,18 @@ docker-compose up -d
 ### Dictionnaire de données
 
 <img src="images/Dictionnaire_donnees.png" width="400"/>
+
 ---
 
-##  Auteur
+## Auteur
 
-Koceila Habarek – Projet CDA – Concepteur Développeur d’Applications
+Koceila Habarek – Projet CDA – Concepteur Développeur d'Applications
 
 ---
 
 ## Contact
 
-Pour toute remarque, suggestion ou amélioration, merci d’ouvrir une **issue** ou un **pull request**.
+Pour toute remarque, suggestion ou amélioration, merci d'ouvrir une **issue** ou une **pull request**.
 
 ---
 
