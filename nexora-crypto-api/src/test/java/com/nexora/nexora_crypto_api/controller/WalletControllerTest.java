@@ -1,5 +1,6 @@
 package com.nexora.nexora_crypto_api.controller;
 
+import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.WalletDetailDto;
 import com.nexora.nexora_crypto_api.service.CryptoWalletService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +22,13 @@ class WalletControllerTest {
     @Mock
     private CryptoWalletService cryptoWalletService;
 
+    private User currentUser;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        currentUser = new User();
+        currentUser.setId(1L);
     }
 
     @Test
@@ -45,7 +50,7 @@ class WalletControllerTest {
                 .thenReturn(List.of(wallet1, wallet2));
 
         // Act
-        ResponseEntity<List<WalletDetailDto>> response = walletController.getWalletsWithVariation(userId);
+        ResponseEntity<List<WalletDetailDto>> response = walletController.getWalletsWithVariation(userId, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -59,16 +64,24 @@ class WalletControllerTest {
     @Test
     void getWalletsWithVariation_shouldReturnEmptyList_whenNull() {
         // Arrange
-        Long userId = 2L;
+        Long userId = 1L;
         when(cryptoWalletService.getWalletsWithVariation(userId)).thenReturn(null);
 
         // Act
-        ResponseEntity<List<WalletDetailDto>> response = walletController.getWalletsWithVariation(userId);
+        ResponseEntity<List<WalletDetailDto>> response = walletController.getWalletsWithVariation(userId, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).isEmpty();
 
         verify(cryptoWalletService, times(1)).getWalletsWithVariation(userId);
+    }
+
+    @Test
+    void getWalletsWithVariation_shouldReturnForbidden_whenRequestingAnotherUser() {
+        ResponseEntity<List<WalletDetailDto>> response = walletController.getWalletsWithVariation(2L, currentUser);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(403);
+        verifyNoInteractions(cryptoWalletService);
     }
 }

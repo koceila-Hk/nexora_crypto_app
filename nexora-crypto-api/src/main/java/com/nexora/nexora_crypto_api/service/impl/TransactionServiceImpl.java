@@ -2,6 +2,7 @@ package com.nexora.nexora_crypto_api.service.impl;
 
 import com.nexora.nexora_crypto_api.model.CryptoWallet;
 import com.nexora.nexora_crypto_api.model.User;
+import com.nexora.nexora_crypto_api.model.dto.CoinInfosForUserDto;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.model.Transaction;
 import com.nexora.nexora_crypto_api.repository.CryptoWalletRepository;
@@ -27,6 +28,8 @@ public class TransactionServiceImpl implements TransactionService {
     private CryptoWalletService cryptoWalletService;
     @Autowired
     private CryptoWalletRepository walletRepository;
+    @Autowired
+    private CoinGeckoService coinGeckoService;
 
 
     /**
@@ -38,6 +41,7 @@ public class TransactionServiceImpl implements TransactionService {
      */
     public void buyCrypto(TransactionDto request) {
 
+        applyServerPrice(request);
         User user = userService.getUserById(request.getUserId());
         BigDecimal totalAmount = request.getQuantity().multiply(request.getUnitPrice());
 
@@ -67,6 +71,7 @@ public class TransactionServiceImpl implements TransactionService {
      */
     public void sellCrypto(TransactionDto request) {
 
+        applyServerPrice(request);
         User user = userService.getUserById(request.getUserId());
         CryptoWallet wallet = cryptoWalletService.getOrCreateWallet(request.getCryptoName(), user);
 
@@ -99,6 +104,28 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> getAllTransactionsById(Long userId) {
         return transactionRepository.findByUserId((userId));
+    }
+
+    /**
+     * Valide la quantité et remplace le prix envoyé par le client par le prix CoinGecko.
+     *
+     * @param request Données de la transaction, modifiées en place
+     * @throws RuntimeException si la quantité ou le prix est invalide
+     */
+    private void applyServerPrice(TransactionDto request) {
+        if (request.getCryptoName() == null || request.getCryptoName().isBlank()) {
+            throw new RuntimeException("Crypto invalide");
+        }
+        if (request.getQuantity() == null || request.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Quantité invalide");
+        }
+
+        CoinInfosForUserDto coin = coinGeckoService.getCoinDetails(request.getCryptoName().toLowerCase(), "eur");
+        BigDecimal price = coin != null ? coin.getCurrentPrice() : null;
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Prix indisponible");
+        }
+        request.setUnitPrice(price);
     }
 
     /**

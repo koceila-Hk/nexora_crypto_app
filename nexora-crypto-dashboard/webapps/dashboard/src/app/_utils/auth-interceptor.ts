@@ -11,7 +11,7 @@ export const authInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): O
 
   return next(req).pipe(
     catchError(error => {
-      if (error.status === 401 && !req.url.includes('/auth/refresh-token')) {
+      if (error.status === 401 && !req.url.includes('/api/auth/refresh-token')) {
         if (isRefreshingSubject.value) {
           return refreshTokenSubject.pipe(
             filter(token => token !== null),

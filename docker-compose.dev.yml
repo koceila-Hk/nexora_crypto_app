@@ -1,0 +1,39 @@
+# Environnement de dév local
+name: nexora-dev
+
+services:
+
+  mysql-dev:
+    image: mysql:8.4
+    container_name: nexora-mysql-dev
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_crypto_app
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - mysql-dev-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  mongodb-dev:
+    image: mongo:6
+    container_name: nexora-mongodb-dev
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb-dev-data:/data/db
+
+  # Faux serveur SMTP : intercepte tous les mails, consultables sur http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:v1.21
+    container_name: nexora-mailpit
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
+volumes:
+  mysql-dev-data:
+  mongodb-dev-data:

@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         // Ignore refresh-token endpoint
-        if (request.getServletPath().equals("/auth/refresh-token")) {
+        if (request.getServletPath().equals("/api/auth/refresh-token")) {
             filterChain.doFilter(request, response);
             return;
         }

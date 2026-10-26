@@ -31,6 +31,7 @@ class EmailServiceTest {
         // Injection manuelle du JavaMailSender mocké
         ReflectionTestUtils.setField(emailService, "emailSender", mailSender);
         ReflectionTestUtils.setField(emailService, "frontendUrl", "http://localhost:4200");
+        ReflectionTestUtils.setField(emailService, "from", "test@nexora.local");
 
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
     }
