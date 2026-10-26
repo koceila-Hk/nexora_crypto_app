@@ -7,13 +7,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
-
     ports:
       - "3307:3306"
     networks:
       - nexora-network
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
 
@@ -27,56 +26,38 @@ services:
       - nexora-network
 
   nexora-crypto-api:
-    #image: kousshk/nexora-backend:latest
-    build: ./nexora-crypto-api
+    image: kousshk/nexora-backend:latest
     container_name: backend
     ports:
       - "8080:8080"
     depends_on:
-       mysql:
-         condition: service_healthy
+      mysql:
+        condition: service_healthy
     environment:
-      - SECURITY_JWT_SECRET_KEY=${SECURITY_JWT_SECRET_KEY}
-      - SECURITY_JWT_EXPIRATION_TIME=${SECURITY_JWT_EXPIRATION_TIME}
-      - APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION=${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION}
-      - spring.mail.username=${SPRING_MAIL_USERNAME}
-      - spring.mail.password=${SPRING_MAIL_PASSWORD}
-      - coingecko.api.url=${COINGECKO_API_URL}
-      - frontend.url=${FRONTEND_URL}
-      - SPRING_PROFILES_ACTIVE=docker
+      SECURITY_JWT_SECRET_KEY: ${SECURITY_JWT_SECRET_KEY}
+      SECURITY_JWT_EXPIRATION_TIME: ${SECURITY_JWT_EXPIRATION_TIME}
+      APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION: ${APPLICATION_SECURITY_JWT_REFRESH_TOKEN_EXPIRATION}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT}
+      APP_MAIL_FROM: ${APP_MAIL_FROM}
+      COINGECKO_API_URL: ${COINGECKO_API_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/nexora_db
     networks:
       - nexora-network
 
   nexora-crypto-dashboard:
-    #image: kousshk/nexora-frontend:latest
-    build: ./nexora-crypto-dashboard/webapps/dashboard
+    image: kousshk/nexora-frontend:latest
     container_name: frontend
     ports:
-      - 4200:80
-    networks:
-      - nexora-network
+      - "4200:80"
     depends_on:
       - nexora-crypto-api
-
-
-
-  sonarqube:
-      image: sonarqube:9.9-community
-      container_name: sonarqube
-      ports:
-        - "9000:9000"
-      environment:
-        - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
-      volumes:
-        - sonarqube_data:/opt/sonarqube/data
-        - sonarqube_extensions:/opt/sonarqube/extensions
-        - sonarqube_logs:/opt/sonarqube/logs
-
-volumes:
-      sonarqube_data:
-      sonarqube_extensions:
-      sonarqube_logs:
-
+    networks:
+      - nexora-network
 
 networks:
   nexora-network:
