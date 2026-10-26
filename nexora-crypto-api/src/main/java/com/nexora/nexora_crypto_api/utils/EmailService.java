@@ -16,6 +16,9 @@ public class EmailService {
     @Value("${frontend.url}")
     private String frontendUrl;
 
+    @Value("${app.mail.from}")
+    private String from;
+
     @Autowired
     private JavaMailSender emailSender;
 
@@ -26,6 +29,7 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         helper.setTo(to);
+        helper.setFrom(from);
         helper.setSubject(subject);
         helper.setText(text, true);
 

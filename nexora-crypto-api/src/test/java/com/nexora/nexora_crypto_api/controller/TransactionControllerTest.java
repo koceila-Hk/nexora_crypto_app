@@ -1,6 +1,7 @@
 package com.nexora.nexora_crypto_api.controller;
 
 import com.nexora.nexora_crypto_api.model.Transaction;
+import com.nexora.nexora_crypto_api.model.User;
 import com.nexora.nexora_crypto_api.model.dto.TransactionDto;
 import com.nexora.nexora_crypto_api.response.ApiResponse;
 import com.nexora.nexora_crypto_api.service.TransactionService;
@@ -24,10 +25,13 @@ class TransactionControllerTest {
     private TransactionService transactionService;
 
     private TransactionDto transactionDto;
+    private User currentUser;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        currentUser = new User();
+        currentUser.setId(1L);
         transactionDto = new TransactionDto();
         transactionDto.setCryptoName("BTC");
         transactionDto.setQuantity(BigDecimal.valueOf(1.5));
@@ -42,7 +46,7 @@ class TransactionControllerTest {
         doNothing().when(transactionService).buyCrypto(transactionDto);
 
         // Act
-        ResponseEntity<ApiResponse> response = transactionController.buyCrypto(transactionDto);
+        ResponseEntity<ApiResponse> response = transactionController.buyCrypto(transactionDto, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -56,7 +60,7 @@ class TransactionControllerTest {
         doThrow(new RuntimeException("Not enough balance")).when(transactionService).buyCrypto(transactionDto);
 
         // Act
-        ResponseEntity<ApiResponse> response = transactionController.buyCrypto(transactionDto);
+        ResponseEntity<ApiResponse> response = transactionController.buyCrypto(transactionDto, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
@@ -71,7 +75,7 @@ class TransactionControllerTest {
         doNothing().when(transactionService).sellCrypto(transactionDto);
 
         // Act
-        ResponseEntity<ApiResponse> response = transactionController.sellCrypto(transactionDto);
+        ResponseEntity<ApiResponse> response = transactionController.sellCrypto(transactionDto, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -85,7 +89,7 @@ class TransactionControllerTest {
         doThrow(new RuntimeException("Not enough crypto")).when(transactionService).sellCrypto(transactionDto);
 
         // Act
-        ResponseEntity<ApiResponse> response = transactionController.sellCrypto(transactionDto);
+        ResponseEntity<ApiResponse> response = transactionController.sellCrypto(transactionDto, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(400);
@@ -107,7 +111,7 @@ class TransactionControllerTest {
         when(transactionService.getAllTransactionsById(userId)).thenReturn(List.of(transaction));
 
         // Act
-        ResponseEntity<List<TransactionDto>> response = transactionController.getAllTransacations(userId);
+        ResponseEntity<List<TransactionDto>> response = transactionController.getAllTransacations(userId, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
@@ -120,15 +124,47 @@ class TransactionControllerTest {
     @Test
     void getAllTransactions_shouldReturnEmptyList_whenNoTransaction() {
         // Arrange
-        long userId = 2L;
+        long userId = 1L;
         when(transactionService.getAllTransactionsById(userId)).thenReturn(List.of());
 
         // Act
-        ResponseEntity<List<TransactionDto>> response = transactionController.getAllTransacations(userId);
+        ResponseEntity<List<TransactionDto>> response = transactionController.getAllTransacations(userId, currentUser);
 
         // Assert
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).isEmpty();
         verify(transactionService, times(1)).getAllTransactionsById(userId);
+    }
+
+    // ====== AUTHORIZATION ======
+    @Test
+    void buyCrypto_shouldUseAuthenticatedUserId_notClientUserId() {
+        // Arrange : le client tente d'acheter pour l'utilisateur 99
+        transactionDto.setUserId(99L);
+
+        // Act
+        transactionController.buyCrypto(transactionDto, currentUser);
+
+        // Assert
+        assertThat(transactionDto.getUserId()).isEqualTo(1L);
+        verify(transactionService).buyCrypto(transactionDto);
+    }
+
+    @Test
+    void sellCrypto_shouldUseAuthenticatedUserId_notClientUserId() {
+        transactionDto.setUserId(99L);
+
+        transactionController.sellCrypto(transactionDto, currentUser);
+
+        assertThat(transactionDto.getUserId()).isEqualTo(1L);
+        verify(transactionService).sellCrypto(transactionDto);
+    }
+
+    @Test
+    void getAllTransactions_shouldReturnForbidden_whenRequestingAnotherUser() {
+        ResponseEntity<List<TransactionDto>> response = transactionController.getAllTransacations(2L, currentUser);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(403);
+        verifyNoInteractions(transactionService);
     }
 }
