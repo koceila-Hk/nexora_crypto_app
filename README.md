@@ -156,7 +156,7 @@ Un profil ne contient que les valeurs qui diffèrent de `application.properties`
 
 ### Diagramme de cas d'utilisation
 
-<img src="images/diagramme_use_case.png" width="400"/>
+<img src="images/use_case.png" width="400"/>
 
 ### Diagramme d'activité
 
