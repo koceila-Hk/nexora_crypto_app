@@ -40,7 +40,7 @@ jobs:
           printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
           printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/id_deploy
-          ssh -i ~/.ssh/id_deploy -o ConnectTimeout=15 "deploy@$HOST" "$VERSION"
+          ssh -p 2222 -i ~/.ssh/id_deploy -o ConnectTimeout=15 "deploy@$HOST" "$VERSION"
 
       - name: Fermer le tunnel
         if: always()
